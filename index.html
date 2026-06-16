@@ -3,73 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flatpack Generator</title>
+<title>DesignMD Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,700;1,9..144,900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f172a;--panel:#1e293b;--accent:#F15A24;--border:rgba(255,255,255,0.1);--text:#f8fafc;--muted:#94a3b8}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
-body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
-.app{display:flex;height:100vh}
+:root {
+  --bg: #0E0D0B; 
+  --panel: #15130F; 
+  --accent: #C7472A; 
+  --border: #2A2620; 
+  --text: #F2EADD; 
+  --muted: #8B847A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); 
+  color: var(--text); 
+  height: 100vh; 
+  overflow: hidden;
+  font-family: 'Inter Tight', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 100;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  opacity: 0.04; mix-blend-mode: overlay;
+}
+.app { display: flex; height: 100vh; position: relative; z-index: 2; }
 
-.panel{width:450px;min-width:450px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.panel-scroll{flex:1;overflow-y:auto;padding:0 16px 16px}
-.panel-scroll::-webkit-scrollbar{width:6px}
-.panel-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
-.panel-header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.panel-header h1{font-size:1rem;font-weight:800;color:var(--accent)}
-.panel-header span{font-size:0.75rem;color:var(--muted)}
+.panel { width: 450px; min-width: 450px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.panel-scroll { flex: 1; overflow-y: auto; padding: 0 16px 16px; }
+.panel-scroll::-webkit-scrollbar { width: 6px; }
+.panel-scroll::-webkit-scrollbar-thumb { background: rgba(242, 234, 221, 0.1); border-radius: 3px; }
+.panel-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.panel-header h1 { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 1.25rem; font-weight: 500; color: var(--accent); }
+.panel-header span { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--muted); }
 
-.section{padding:14px 0;border-bottom:1px solid var(--border)}
-.section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:10px}
+.section { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.section-title { font-family: 'Geist Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 10px; }
 
-label{font-size:0.75rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px}
-input[type="text"],textarea,select{width:100%;background:rgba(15,23,42,0.6);border:1px solid var(--border);color:white;padding:8px 10px;border-radius:6px;font-size:0.85rem;outline:none}
-input[type="text"]:focus,textarea:focus{border-color:var(--accent)}
-textarea{resize:vertical;min-height:60px;font-family:'Inter',sans-serif}
+label { font-size: 0.75rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
+input[type="text"], textarea, select { width: 100%; background: #0E0D0B; border: 1px solid var(--border); color: white; padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; }
+input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: vertical; min-height: 60px; }
 
-.row{display:flex;align-items:center;gap:8px;margin-top:8px}
-.row label{margin-bottom:0;white-space:nowrap}
-input[type="range"]{flex:1;accent-color:var(--accent);cursor:pointer}
-.slider-val{font-size:0.75rem;color:var(--text);min-width:36px;text-align:right}
+.row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.row label { margin-bottom: 0; white-space: nowrap; }
+input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
+.slider-val { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--text); min-width: 36px; text-align: right; }
 
-.color-grid{display:flex;gap:6px;flex-wrap:wrap}
-.color-swatch{width:36px;height:36px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:border-color 0.15s}
-.color-swatch:hover{border-color:rgba(255,255,255,0.3)}
-.color-swatch.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(241,90,36,0.3)}
+.color-grid { display: flex; gap: 6px; flex-wrap: wrap; }
+.color-swatch { width: 36px; height: 36px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
+.color-swatch:hover { border-color: rgba(255,255,255,0.3); }
+.color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(199, 71, 42, 0.3); }
 
-.small-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.05);color:var(--text);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s}
-.small-btn:hover{background:rgba(255,255,255,0.1)}
-.small-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+.small-btn { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.small-btn:hover { background: rgba(255,255,255,0.07); }
+.small-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
-.btn-group{display:flex;gap:4px}
-.font-btn{width:34px;height:30px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.8rem;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
-.font-btn.active{background:var(--accent);border-color:var(--accent);color:white}
-.font-btn:hover:not(.active){background:rgba(255,255,255,0.1)}
+.btn-group { display: flex; gap: 4px; }
+.font-btn { width: 34px; height: 30px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.8rem; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+.font-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+.font-btn:hover:not(.active) { background: rgba(255,255,255,0.05); }
 
-.color-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.15s}
-.color-btn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(241,90,36,0.3)}
-.color-btn:hover:not(.active){border-color:rgba(255,255,255,0.3)}
+.color-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; }
+.color-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(199, 71, 42, 0.3); }
+.color-btn:hover:not(.active) { border-color: rgba(255,255,255,0.3); }
 
-.btn-primary{width:100%;padding:14px;border:none;border-radius:8px;background:var(--accent);color:white;font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.15s;box-shadow:0 4px 14px rgba(241,90,36,0.4)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(241,90,36,0.5)}
+.btn-primary { width: 100%; padding: 14px; border: none; border-radius: 8px; background: var(--accent); color: white; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(199, 71, 42, 0.4); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(199, 71, 42, 0.5); }
 
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
-.toggle-row label{margin-bottom:0;font-size:0.8rem;color:var(--text)}
-.toggle-row input[type="checkbox"]{accent-color:var(--accent);width:18px;height:18px;cursor:pointer}
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
+.toggle-row label { margin-bottom: 0; font-size: 0.8rem; color: var(--text); }
+.toggle-row input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
 
-.canvas-area{flex:1;display:flex;justify-content:center;align-items:center;background:#020617;overflow:hidden;position:relative}
-canvas{display:block;max-height:calc(100vh - 40px);max-width:calc(100% - 40px);cursor:grab;box-shadow:0 20px 60px rgba(0,0,0,0.5);border-radius:4px}
-canvas:active{cursor:grabbing}
-.hint{font-size:0.65rem;color:var(--muted);font-weight:400}
+.canvas-area { flex: 1; display: flex; justify-content: center; align-items: center; background: #080706; overflow: hidden; position: relative; }
+canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 40px); cursor: grab; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border-radius: 4px; }
+canvas:active { cursor: grabbing; }
+.hint { font-size: 0.65rem; color: var(--muted); font-weight: 400; }
 </style>
 </head>
 <body>
+<div class="grain"></div>
 <div class="app">
 <aside class="panel">
 <div class="panel-header">
-<h1>Flatpack Generator</h1>
+<h1>DesignMD Generator</h1>
 <span>1080 x 1350 (4:5)</span>
 </div>
 <div class="panel-scroll">
@@ -77,14 +97,14 @@ canvas:active{cursor:grabbing}
 <div class="section">
 <div class="section-title">Tło</div>
 <div class="color-grid" id="bgColors">
-<button class="color-swatch active" style="background:#073024" onclick="setBgColor('#073024')"></button>
-<button class="color-swatch" style="background:#0D0D0D" onclick="setBgColor('#0D0D0D')"></button>
-<button class="color-swatch" style="background:#F15A24" onclick="setBgColor('#F15A24')"></button>
-<button class="color-swatch" style="background:#E83A7F" onclick="setBgColor('#E83A7F')"></button>
-<button class="color-swatch" style="background:#FFFFFF;border:1px solid #555" onclick="setBgColor('#FFFFFF')"></button>
+<button class="color-swatch active" style="background:#0E0D0B" onclick="setBgColor('#0E0D0B')"></button>
+<button class="color-swatch" style="background:#15130F" onclick="setBgColor('#15130F')"></button>
+<button class="color-swatch" style="background:#C7472A" onclick="setBgColor('#C7472A')"></button>
+<button class="color-swatch" style="background:#F2EADD" onclick="setBgColor('#F2EADD')"></button>
+<button class="color-swatch" style="background:#8B847A" onclick="setBgColor('#8B847A')"></button>
 </div>
 <div class="row" style="margin-top:10px">
-<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient P→R</button>
+<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient DesignMD</button>
 <label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Z dysku</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
@@ -98,13 +118,13 @@ canvas:active{cursor:grabbing}
 
 <div class="section">
 <div class="section-title">Nadtytuł</div>
-<input type="text" id="kickerText" placeholder="np. SERIA · DESIGN I BRANDING" oninput="draw()">
+<input type="text" id="kickerText" value="DESIGN SPECIFICATION" placeholder="np. DESIGN SPECIFICATION" oninput="draw()">
 <div class="row" style="margin-top:8px">
 <label>Kolor:</label>
 <div class="btn-group">
-<button class="color-btn active" style="background:#F15A24" onclick="setKickerColor('#F15A24',this)"></button>
-<button class="color-btn" style="background:#E83A7F" onclick="setKickerColor('#E83A7F',this)"></button>
-<button class="color-btn" style="background:#FFF" onclick="setKickerColor('#FFFFFF',this)"></button>
+<button class="color-btn active" style="background:#C7472A" onclick="setKickerColor('#C7472A',this)"></button>
+<button class="color-btn" style="background:#F2EADD" onclick="setKickerColor('#F2EADD',this)"></button>
+<button class="color-btn" style="background:#8B847A" onclick="setKickerColor('#8B847A',this)"></button>
 </div>
 </div>
 </div>
@@ -129,7 +149,7 @@ canvas:active{cursor:grabbing}
 </div>
 
 <label style="margin-top:12px; margin-bottom:2px">Edycja pojedynczych słów:</label>
-<div style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 4px;" id="wordsEditorContainer">
+<div style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.5); border-radius: 6px; padding: 4px;" id="wordsEditorContainer">
   <!-- Dynamic word editors list -->
 </div>
 </div>
@@ -141,9 +161,9 @@ canvas:active{cursor:grabbing}
 <div class="row" style="margin-top:8px">
 <label>Kolor:</label>
 <div class="btn-group">
-<button class="color-btn active" style="background:#FFF" onclick="setParaColor('#FFFFFF',this)"></button>
-<button class="color-btn" style="background:#F15A24" onclick="setParaColor('#F15A24',this)"></button>
-<button class="color-btn" style="background:#E83A7F" onclick="setParaColor('#E83A7F',this)"></button>
+<button class="color-btn active" style="background:#8B847A" onclick="setParaColor('#8B847A',this)"></button>
+<button class="color-btn" style="background:#F2EADD" onclick="setParaColor('#F2EADD',this)"></button>
+<button class="color-btn" style="background:#C7472A" onclick="setParaColor('#C7472A',this)"></button>
 </div>
 </div>
 <div class="row" style="margin-top:8px">
@@ -157,7 +177,7 @@ canvas:active{cursor:grabbing}
 
 <div class="section">
 <div class="section-title">Stopka & Numeracja</div>
-<input type="text" id="brandText" value="FLATPACK" oninput="draw()" style="margin-bottom:8px">
+<input type="text" id="brandText" value="DESIGNMD.CC" oninput="draw()" style="margin-bottom:8px">
 <div class="row">
 <label>Pozycja:</label>
 <select id="brandAlign" onchange="onBrandAlignChange(this.value)" style="width:auto;flex:1">
@@ -197,10 +217,10 @@ canvas:active{cursor:grabbing}
 </main>
 </div>
 
-<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
-  <div style="background:#0f172a; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
+<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(14,13,11,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
+  <div style="background:#15130F; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom:12px">
-      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text);font-family:'Inter',sans-serif">Podgląd publikacji na Instagramie</h2>
+      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text);font-family:'Fraunces',serif;font-style:italic">Podgląd publikacji na Instagramie</h2>
       <button class="small-btn" onclick="closePreview()" style="font-size:1.2rem; line-height:1; padding: 4px 10px">&times;</button>
     </div>
     
@@ -219,7 +239,7 @@ canvas:active{cursor:grabbing}
           <button id="toggleGrid45" class="small-btn active" onclick="setGridUploadFormat('45')">Format uploadu: 4:5</button>
           <button id="toggleGrid11" class="small-btn" onclick="setGridUploadFormat('11')">Format uploadu: 1:1</button>
         </div>
-        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#1e293b; padding:4px; border-radius:8px; border:1px solid var(--border)">
+        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#15130F; padding:4px; border-radius:8px; border:1px solid var(--border)">
         </div>
       </div>
     </div>
@@ -236,30 +256,38 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const M = 80;
 
+let grainPattern = null;
+const grainImg = new Image();
+grainImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>";
+grainImg.onload = function() {
+  grainPattern = ctx.createPattern(grainImg, 'repeat');
+  draw();
+};
+
 const state = {
   bgType: 'color',
-  bgColor: '#073024',
+  bgColor: '#0E0D0B',
   bgPhoto: null,
   bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
   gradient: false,
 
-  kickerText: '',
-  kickerColor: '#F15A24',
+  kickerText: 'DESIGN SPECIFICATION',
+  kickerColor: '#C7472A',
   kickerX: 150, kickerY: 150,
 
-  mainText: 'SPÓŹNIANIE SIĘ LIDERÓW obniża morale I DAJE PRZYZWOLENIE NA niską efektywność',
+  mainText: 'Pour any website\'s DESIGN DNA into a spec.',
   words: [],
   titleX: 150, titleY: 300,
   titleSize: 100,
   titleLH: 0.95,
   wordSpacing: 20,
 
-  paraText: '',
+  paraText: 'REAL CSS VARIABLES, REAL MEDIA BREAKPOINTS, REAL INTERACTION STATES EXTRACTED FROM THE LIVE DOM.',
   paraX: 150, paraY: 850,
   paraAlign: 'left',
-  paraColor: '#FFFFFF',
+  paraColor: '#8B847A',
 
-  brandText: 'FLATPACK',
+  brandText: 'DESIGNMD.CC',
   brandAlign: 'left',
   brandX: 150, // Snapped inside safe horizontal zone (135px to 945px)
   brandY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
@@ -321,12 +349,12 @@ function renderPreviewGrid() {
         </svg>`;
         cell.appendChild(carouselIcon);
       } else {
-        cell.style.background = '#1e293b';
+        cell.style.background = '#15130F';
         cell.style.border = '1px solid rgba(255,255,255,0.05)';
         cell.style.display = 'flex';
         cell.style.alignItems = 'center';
         cell.style.justifyContent = 'center';
-        cell.innerHTML = '<span style="color:#64748b; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
+        cell.innerHTML = '<span style="color:#8b847a; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
       }
       row.appendChild(cell);
     }
@@ -455,12 +483,14 @@ function updateWordsFromText(text) {
       return { text: w, font: oldWord.font, color: oldWord.color };
     }
     
-    // Polish diacritics supported case checking
-    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
+    // Auto design logic: DESIGN, SPEC, CSS, DOM are highlighted in terracotta, others in cream
+    const uppercaseText = w.toUpperCase();
+    const isPrimaryTarget = uppercaseText.includes('DESIGN') || uppercaseText.includes('DNA') || uppercaseText.includes('SPEC') || uppercaseText.includes('CSS') || uppercaseText.includes('DOM') || uppercaseText.includes('HTML') || uppercaseText.includes('MEDIA');
+    
     return {
       text: w,
-      font: isUppercase ? 'bold' : 'italic',
-      color: isUppercase ? '#FFFFFF' : '#F15A24'
+      font: isPrimaryTarget ? 'italic' : 'bold',
+      color: isPrimaryTarget ? '#C7472A' : '#F2EADD'
     };
   });
   
@@ -494,17 +524,18 @@ function renderWordsUI() {
     const fontGroup = document.createElement('div');
     fontGroup.className = 'btn-group';
     fontGroup.innerHTML = `
-      <button class="font-btn ${w.font === 'bold' ? 'active' : ''}" style="width:28px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'bold',this)" title="Pogrubienie"><b>B</b></button>
-      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:28px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa"><i>K</i></button>
+      <button class="font-btn ${w.font === 'bold' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'bold',this)" title="Pogrubienie (Sans)"><b>B</b></button>
+      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa (Serif)"><i>K</i></button>
+      <button class="font-btn ${w.font === 'mono' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.7rem;font-family:'Geist Mono',monospace" onclick="setWordFont(${i},'mono',this)" title="Monospace (Code)">M</button>
     `;
     ctrls.appendChild(fontGroup);
     
     const colorGroup = document.createElement('div');
     colorGroup.className = 'btn-group';
     colorGroup.innerHTML = `
-      <button class="color-btn ${w.color === '#FFFFFF' ? 'active' : ''}" style="width:18px;height:18px;background:#FFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
-      <button class="color-btn ${w.color === '#F15A24' ? 'active' : ''}" style="width:18px;height:18px;background:#F15A24" onclick="setWordColor(${i},'#F15A24',this)"></button>
-      <button class="color-btn ${w.color === '#E83A7F' ? 'active' : ''}" style="width:18px;height:18px;background:#E83A7F" onclick="setWordColor(${i},'#E83A7F',this)"></button>
+      <button class="color-btn ${w.color === '#F2EADD' ? 'active' : ''}" style="width:18px;height:18px;background:#F2EADD" onclick="setWordColor(${i},'#F2EADD',this)"></button>
+      <button class="color-btn ${w.color === '#C7472A' ? 'active' : ''}" style="width:18px;height:18px;background:#C7472A" onclick="setWordColor(${i},'#C7472A',this)"></button>
+      <button class="color-btn ${w.color === '#8B847A' ? 'active' : ''}" style="width:18px;height:18px;background:#8B847A" onclick="setWordColor(${i},'#8B847A',this)"></button>
     `;
     ctrls.appendChild(colorGroup);
     
@@ -608,10 +639,11 @@ function adjustSlideNum(dir) {
 
 function getFontStr(font, size) {
   switch (font) {
-    case 'bold': return `900 ${size}px "Inter", sans-serif`;
-    case 'italic': return `italic 700 ${size}px "Playfair Display", serif`;
-    case 'bold-italic': return `italic 800 ${size}px "Playfair Display", serif`;
-    default: return `800 ${size}px "Inter", sans-serif`;
+    case 'bold': return `700 ${size}px "Inter Tight", sans-serif`;
+    case 'italic': return `italic 300 ${size}px "Fraunces", serif`;
+    case 'bold-italic': return `italic 700 ${size}px "Fraunces", serif`;
+    case 'mono': return `500 ${size}px "Geist Mono", monospace`;
+    default: return `600 ${size}px "Inter Tight", sans-serif`;
   }
 }
 
@@ -662,14 +694,36 @@ function draw() {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
   } else if (state.bgType === 'gradient' || state.gradient) {
-    const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    g.addColorStop(0, '#F15A24');
-    g.addColorStop(1, '#E83A7F');
-    ctx.fillStyle = g;
+    // Fill background with warm dark charcoal
+    ctx.fillStyle = '#0E0D0B';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw first radial gradient at top right
+    const g1 = ctx.createRadialGradient(canvas.width * 0.8, 0, 0, canvas.width * 0.8, 0, canvas.width * 0.7);
+    g1.addColorStop(0, 'rgba(199, 71, 42, 0.18)');
+    g1.addColorStop(1, 'rgba(199, 71, 42, 0)');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw second radial gradient at bottom left
+    const g2 = ctx.createRadialGradient(0, canvas.height, 0, 0, canvas.height, canvas.width * 0.8);
+    g2.addColorStop(0, 'rgba(199, 71, 42, 0.08)');
+    g2.addColorStop(1, 'rgba(199, 71, 42, 0)');
+    ctx.fillStyle = g2;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
     ctx.fillStyle = state.bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Draw Grain pattern if loaded
+  if (grainPattern) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.globalAlpha = 0.06;
+    ctx.fillStyle = grainPattern;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
   }
 
   ctx.textBaseline = 'top';
@@ -677,18 +731,24 @@ function draw() {
   // 2. Nadtytuł (Kicker)
   const kickerVal = document.getElementById('kickerText').value;
   if (kickerVal) {
-    ctx.font = '700 22px "Inter", sans-serif';
+    // Draw standard DesignMD kicker dot
+    ctx.fillStyle = '#C7472A';
+    ctx.beginPath();
+    ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '500 20px "Geist Mono", monospace';
     ctx.fillStyle = state.kickerColor;
     ctx.textAlign = 'left';
-    ctx.letterSpacing = '5px';
+    ctx.letterSpacing = '6px';
     const lines = kickerVal.toUpperCase().split('\n');
     let ky = state.kickerY;
     lines.forEach(l => {
-      ctx.fillText(l, state.kickerX, ky);
+      ctx.fillText(l, state.kickerX + 22, ky);
       ky += 30;
     });
     ctx.letterSpacing = '0px';
-    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: Math.max(...lines.map(l => (ctx.measureText(l).width))), h: lines.length * 30 };
+    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: Math.max(...lines.map(l => (ctx.measureText(l).width))) + 22, h: lines.length * 30 };
   } else {
     hitBoxes.kicker = null;
   }
@@ -715,7 +775,7 @@ function draw() {
     // Map tokens to our state.words objects
     const lineWords = [];
     lineWordTokens.forEach(token => {
-      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
+      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#F2EADD' };
       wordCounter++;
       
       // Check if this single word exceeds titleMaxW
@@ -795,8 +855,8 @@ function draw() {
   const paraVal = document.getElementById('paraText').value;
   if (paraVal) {
     const paraSize = 28;
-    ctx.font = `800 ${paraSize}px "Inter", sans-serif`;
-    ctx.fillStyle = state.paraColor || '#FFFFFF';
+    ctx.font = `600 ${paraSize}px "Inter Tight", sans-serif`;
+    ctx.fillStyle = state.paraColor || '#8B847A';
     
     const py = ty + 30;
     state.paraY = py;
@@ -825,18 +885,16 @@ function draw() {
     hitBoxes.para = null;
   }
 
-  // 5. Brand (Stopka / Dopisek skorwider.pl)
+  // 5. Brand (Stopka / Dopisek designmd.cc)
   const brandVal = document.getElementById('brandText').value;
   if (brandVal) {
-    ctx.font = '700 20px "Inter", sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.letterSpacing = '5px';
+    ctx.font = 'italic 500 22px "Fraunces", serif';
+    ctx.fillStyle = 'rgba(242, 234, 221, 0.4)';
     
     const align = state.brandAlign;
     ctx.textAlign = align === 'center' ? 'center' : ((align === 'right' || align === 'top-right') ? 'right' : 'left');
     
-    ctx.fillText(brandVal.toUpperCase(), state.brandX, state.brandY);
-    ctx.letterSpacing = '0px';
+    ctx.fillText(brandVal, state.brandX, state.brandY);
     
     const w = ctx.measureText(brandVal).width + 20;
     let bx = state.brandX;
@@ -850,8 +908,8 @@ function draw() {
   // 6. Slide (Numeracja)
   const slideVal = validateAndGetSlideText(false);
   if (slideVal && document.getElementById('showSlideNum').checked) {
-    ctx.font = '600 20px "Inter", sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '500 20px "Geist Mono", monospace';
+    ctx.fillStyle = 'rgba(242, 234, 221, 0.3)';
     
     ctx.textAlign = state.slideX > canvas.width / 2 ? 'right' : 'left';
     ctx.fillText(slideVal, state.slideX, state.slideY);
@@ -866,25 +924,25 @@ function draw() {
 
   // 7. Guides (Marginesy i siatka IG)
   if (document.getElementById('showGuides').checked) {
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
     ctx.fillRect(0, 0, canvas.width, M);
     ctx.fillRect(0, canvas.height - M, canvas.width, M);
     ctx.fillRect(0, M, M, canvas.height - M * 2);
     ctx.fillRect(canvas.width - M, M, M, canvas.height - M * 2);
-    ctx.strokeStyle = 'rgba(239,68,68,0.6)';
+    ctx.strokeStyle = 'rgba(199, 71, 42, 0.6)';
     ctx.lineWidth = 3;
     ctx.setLineDash([16, 10]);
     ctx.strokeRect(M, M, canvas.width - M * 2, canvas.height - M * 2);
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(239,68,68,0.7)';
-    ctx.font = 'bold 16px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(199, 71, 42, 0.85)';
+    ctx.font = 'bold 16px "Geist Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('MARGINES', canvas.width / 2, M - 6);
+    ctx.fillText('SAFE AREA (80PX)', canvas.width / 2, M - 6);
   }
 
   if (document.getElementById('showCrop').checked) {
     const cropY = (canvas.height - canvas.width) / 2;
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.strokeStyle = 'rgba(242, 234, 221, 0.25)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -896,15 +954,14 @@ function draw() {
     ctx.lineTo(canvas.width, canvas.height - cropY);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.font = '12px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(242, 234, 221, 0.25)';
+    ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'right';
     ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
   }
 
   if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
-    // 3:4 grid crop for 4:5 post: crop 33.75px (approx 34px) on left and right
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)'; // sky blue
+    ctx.strokeStyle = 'rgba(199, 71, 42, 0.4)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -914,8 +971,7 @@ function draw() {
     ctx.lineTo(1046, canvas.height);
     ctx.stroke();
     
-    // 3:4 grid crop for 1:1 post: crop 135px on left and right
-    ctx.strokeStyle = 'rgba(234, 179, 8, 0.5)'; // yellow
+    ctx.strokeStyle = 'rgba(139, 132, 122, 0.4)';
     ctx.beginPath();
     ctx.moveTo(135, 0);
     ctx.lineTo(135, canvas.height);
@@ -924,12 +980,12 @@ function draw() {
     ctx.stroke();
     ctx.setLineDash([]);
     
-    ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
-    ctx.font = '12px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(199, 71, 42, 0.6)';
+    ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'left';
     ctx.fillText('crop 3:4 dla 4:5 (34px)', 40, 40);
     
-    ctx.fillStyle = 'rgba(234, 179, 8, 0.7)';
+    ctx.fillStyle = 'rgba(139, 132, 122, 0.6)';
     ctx.fillText('crop 3:4 dla 1:1 (135px)', 141, 60);
   }
 
@@ -1178,7 +1234,7 @@ function showPreview() {
   
   const hdr = document.createElement('div');
   hdr.style.cssText = 'display:flex;align-items:center;padding:12px;gap:10px;border-bottom:1px solid #efefef';
-  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">F</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">flatpack</div><div style="font-size:11px;color:#8e8e8e">Warszawa, Polska</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
+  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#C7472A,#A8442D);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">designmd.cc</div><div style="font-size:11px;color:#8e8e8e">DESIGN.md Spec</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
   infoCol.appendChild(hdr);
   
   const capScroll = document.createElement('div');
@@ -1187,11 +1243,11 @@ function showPreview() {
   const kickerVal = document.getElementById('kickerText').value;
   const captionVal = document.getElementById('mainText').value;
   const paraVal = document.getElementById('paraText').value;
-  let formattedText = `<span style="font-weight:700">flatpack</span> `;
+  let formattedText = `<span style="font-weight:700">designmd.cc</span> `;
   if (kickerVal) formattedText += `<br><span style="color:#8e8e8e;font-size:11px;font-weight:700">${kickerVal}</span><br>`;
   formattedText += `<strong>${captionVal}</strong>`;
   if (paraVal) formattedText += `<br><br>${paraVal}`;
-  formattedText += `<br><br><span style="color:#00376b">#flatpack #design #branding #socialmedia #generator</span>`;
+  formattedText += `<br><br><span style="color:#00376b">#designmd #designsystem #uidesign #webdevelopment #figma #css</span>`;
   
   capScroll.innerHTML = formattedText;
   infoCol.appendChild(capScroll);
@@ -1223,6 +1279,7 @@ function executeDownload() {
 
 // Initial initialization
 document.getElementById('mainText').value = state.mainText;
+document.getElementById('paraText').value = state.paraText;
 updateWordsFromText(state.mainText);
 </script>
 </body>
