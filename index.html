@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DesignMD Generator</title>
+<title>Flatpack Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400;1,9..144,700;1,9..144,900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0E0D0B; 
-  --panel: #15130F; 
-  --accent: #C7472A; 
-  --border: #2A2620; 
-  --text: #F2EADD; 
-  --muted: #8B847A;
+  --bg: #0F172A; 
+  --panel: #1E293B; 
+  --accent: #097EFF; 
+  --border: #334155; 
+  --text: #F8FAFC; 
+  --muted: #64748B;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -22,7 +22,7 @@ body {
   color: var(--text); 
   height: 100vh; 
   overflow: hidden;
-  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 .grain {
@@ -35,16 +35,16 @@ body {
 .panel { width: 450px; min-width: 450px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .panel-scroll { flex: 1; overflow-y: auto; padding: 0 16px 16px; }
 .panel-scroll::-webkit-scrollbar { width: 6px; }
-.panel-scroll::-webkit-scrollbar-thumb { background: rgba(242, 234, 221, 0.1); border-radius: 3px; }
+.panel-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
 .panel-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.panel-header h1 { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 1.25rem; font-weight: 500; color: var(--accent); }
+.panel-header h1 { font-size: 1.25rem; font-weight: 800; color: var(--accent); }
 .panel-header span { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--muted); }
 
 .section { padding: 14px 0; border-bottom: 1px solid var(--border); }
 .section-title { font-family: 'Geist Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 10px; }
 
 label { font-size: 0.75rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
-input[type="text"], textarea, select { width: 100%; background: #0E0D0B; border: 1px solid var(--border); color: white; padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; }
+input[type="text"], textarea, select { width: 100%; background: #0F172A; border: 1px solid var(--border); color: white; padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; }
 input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
 textarea { resize: vertical; min-height: 60px; }
 
@@ -56,7 +56,7 @@ input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 .color-grid { display: flex; gap: 6px; flex-wrap: wrap; }
 .color-swatch { width: 36px; height: 36px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
 .color-swatch:hover { border-color: rgba(255,255,255,0.3); }
-.color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(199, 71, 42, 0.3); }
+.color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.3); }
 
 .small-btn { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
 .small-btn:hover { background: rgba(255,255,255,0.07); }
@@ -68,17 +68,17 @@ input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 .font-btn:hover:not(.active) { background: rgba(255,255,255,0.05); }
 
 .color-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; }
-.color-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(199, 71, 42, 0.3); }
+.color-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.3); }
 .color-btn:hover:not(.active) { border-color: rgba(255,255,255,0.3); }
 
-.btn-primary { width: 100%; padding: 14px; border: none; border-radius: 8px; background: var(--accent); color: white; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(199, 71, 42, 0.4); }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(199, 71, 42, 0.5); }
+.btn-primary { width: 100%; padding: 14px; border: none; border-radius: 8px; background: var(--accent); color: white; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(9, 126, 255, 0.4); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(9, 126, 255, 0.5); }
 
 .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
 .toggle-row label { margin-bottom: 0; font-size: 0.8rem; color: var(--text); }
 .toggle-row input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
 
-.canvas-area { flex: 1; display: flex; justify-content: center; align-items: center; background: #080706; overflow: hidden; position: relative; }
+.canvas-area { flex: 1; display: flex; justify-content: center; align-items: center; background: #080a11; overflow: hidden; position: relative; }
 canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 40px); cursor: grab; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border-radius: 4px; }
 canvas:active { cursor: grabbing; }
 .hint { font-size: 0.65rem; color: var(--muted); font-weight: 400; }
@@ -89,7 +89,7 @@ canvas:active { cursor: grabbing; }
 <div class="app">
 <aside class="panel">
 <div class="panel-header">
-<h1>DesignMD Generator</h1>
+<h1>Flatpack Generator</h1>
 <span>1080 x 1350 (4:5)</span>
 </div>
 <div class="panel-scroll">
@@ -97,14 +97,16 @@ canvas:active { cursor: grabbing; }
 <div class="section">
 <div class="section-title">Tło</div>
 <div class="color-grid" id="bgColors">
-<button class="color-swatch active" style="background:#0E0D0B" onclick="setBgColor('#0E0D0B')"></button>
-<button class="color-swatch" style="background:#15130F" onclick="setBgColor('#15130F')"></button>
-<button class="color-swatch" style="background:#C7472A" onclick="setBgColor('#C7472A')"></button>
-<button class="color-swatch" style="background:#F2EADD" onclick="setBgColor('#F2EADD')"></button>
-<button class="color-swatch" style="background:#8B847A" onclick="setBgColor('#8B847A')"></button>
+<button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A')"></button>
+<button class="color-swatch" style="background:#1E3A8A" onclick="setBgColor('#1E3A8A')"></button>
+<button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF')"></button>
+<button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A')"></button>
+<button class="color-swatch" style="background:#E7BA04" onclick="setBgColor('#E7BA04')"></button>
+<button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF')"></button>
+<button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9')"></button>
 </div>
 <div class="row" style="margin-top:10px">
-<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient DesignMD</button>
+<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient Flatpack</button>
 <label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Z dysku</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
@@ -118,13 +120,15 @@ canvas:active { cursor: grabbing; }
 
 <div class="section">
 <div class="section-title">Nadtytuł</div>
-<input type="text" id="kickerText" value="DESIGN SPECIFICATION" placeholder="np. DESIGN SPECIFICATION" oninput="draw()">
+<input type="text" id="kickerText" value="PROFESSIONAL ASSEMBLY" placeholder="np. PROFESSIONAL ASSEMBLY" oninput="draw()">
 <div class="row" style="margin-top:8px">
 <label>Kolor:</label>
 <div class="btn-group">
-<button class="color-btn active" style="background:#C7472A" onclick="setKickerColor('#C7472A',this)"></button>
-<button class="color-btn" style="background:#F2EADD" onclick="setKickerColor('#F2EADD',this)"></button>
-<button class="color-btn" style="background:#8B847A" onclick="setKickerColor('#8B847A',this)"></button>
+<button class="color-btn active" style="background:#097EFF" onclick="setKickerColor('#097EFF',this)"></button>
+<button class="color-btn" style="background:#00B67A" onclick="setKickerColor('#00B67A',this)"></button>
+<button class="color-btn" style="background:#E7BA04" onclick="setKickerColor('#E7BA04',this)"></button>
+<button class="color-btn" style="background:#0F172A" onclick="setKickerColor('#0F172A',this)"></button>
+<button class="color-btn" style="background:#FFFFFF" onclick="setKickerColor('#FFFFFF',this)"></button>
 </div>
 </div>
 </div>
@@ -134,8 +138,8 @@ canvas:active { cursor: grabbing; }
 <textarea id="mainText" style="min-height:180px;font-size:0.9rem;line-height:1.4" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło..."></textarea>
 <div class="row" style="margin-top:10px">
 <label>Rozmiar:</label>
-<input type="range" id="titleSize" min="24" max="220" value="100" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
-<span class="slider-val" id="titleSizeVal">100px</span>
+<input type="range" id="titleSize" min="24" max="220" value="90" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
+<span class="slider-val" id="titleSizeVal">90px</span>
 </div>
 <div class="row">
 <label>Interlinia:</label>
@@ -161,9 +165,10 @@ canvas:active { cursor: grabbing; }
 <div class="row" style="margin-top:8px">
 <label>Kolor:</label>
 <div class="btn-group">
-<button class="color-btn active" style="background:#8B847A" onclick="setParaColor('#8B847A',this)"></button>
-<button class="color-btn" style="background:#F2EADD" onclick="setParaColor('#F2EADD',this)"></button>
-<button class="color-btn" style="background:#C7472A" onclick="setParaColor('#C7472A',this)"></button>
+<button class="color-btn active" style="background:#FFFFFF" onclick="setParaColor('#FFFFFF',this)"></button>
+<button class="color-btn" style="background:#097EFF" onclick="setParaColor('#097EFF',this)"></button>
+<button class="color-btn" style="background:#00B67A" onclick="setParaColor('#00B67A',this)"></button>
+<button class="color-btn" style="background:#E7BA04" onclick="setParaColor('#E7BA04',this)"></button>
 </div>
 </div>
 <div class="row" style="margin-top:8px">
@@ -176,8 +181,39 @@ canvas:active { cursor: grabbing; }
 </div>
 
 <div class="section">
+<div class="section-title">Apla (Tło pod tekstem)</div>
+<div class="toggle-row">
+  <label>Pokaż aplę (kartę pod tekstem)</label>
+  <input type="checkbox" id="showApla" onchange="state.showApla=this.checked;draw()">
+</div>
+<div class="row">
+  <label>Styl apli:</label>
+  <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()">
+    <option value="light-glass">Jasne szkło (Glassmorphism)</option>
+    <option value="dark-glass">Ciemne szkło</option>
+    <option value="blue">Niebieska</option>
+    <option value="green">Zielona (Trustpilot)</option>
+    <option value="navy">Granatowa</option>
+  </select>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Logo (Czerwona torba)</div>
+<div class="toggle-row">
+  <label>Pokaż logo flatpack.help</label>
+  <input type="checkbox" id="showLogo" checked onchange="state.showLogo=this.checked;draw()">
+</div>
+<div class="row">
+  <label>Rozmiar logo:</label>
+  <input type="range" id="logoScale" min="0.3" max="3.0" step="0.05" value="1.0" oninput="state.logoScale=+this.value;document.getElementById('logoScaleVal').textContent=this.value+'x';draw()">
+  <span class="slider-val" id="logoScaleVal">1.0x</span>
+</div>
+</div>
+
+<div class="section">
 <div class="section-title">Stopka & Numeracja</div>
-<input type="text" id="brandText" value="DESIGNMD.CC" oninput="draw()" style="margin-bottom:8px">
+<input type="text" id="brandText" value="FLATPACK.HELP" oninput="draw()" style="margin-bottom:8px">
 <div class="row">
 <label>Pozycja:</label>
 <select id="brandAlign" onchange="onBrandAlignChange(this.value)" style="width:auto;flex:1">
@@ -217,10 +253,10 @@ canvas:active { cursor: grabbing; }
 </main>
 </div>
 
-<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(14,13,11,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
-  <div style="background:#15130F; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
+<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
+  <div style="background:#1E293B; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom:12px">
-      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text);font-family:'Fraunces',serif;font-style:italic">Podgląd publikacji na Instagramie</h2>
+      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text)">Podgląd publikacji na Instagramie</h2>
       <button class="small-btn" onclick="closePreview()" style="font-size:1.2rem; line-height:1; padding: 4px 10px">&times;</button>
     </div>
     
@@ -239,7 +275,7 @@ canvas:active { cursor: grabbing; }
           <button id="toggleGrid45" class="small-btn active" onclick="setGridUploadFormat('45')">Format uploadu: 4:5</button>
           <button id="toggleGrid11" class="small-btn" onclick="setGridUploadFormat('11')">Format uploadu: 1:1</button>
         </div>
-        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#15130F; padding:4px; border-radius:8px; border:1px solid var(--border)">
+        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#1E293B; padding:4px; border-radius:8px; border:1px solid var(--border)">
         </div>
       </div>
     </div>
@@ -266,28 +302,37 @@ grainImg.onload = function() {
 
 const state = {
   bgType: 'color',
-  bgColor: '#0E0D0B',
+  bgColor: '#0F172A',
   bgPhoto: null,
   bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
   gradient: false,
 
-  kickerText: 'DESIGN SPECIFICATION',
-  kickerColor: '#C7472A',
+  kickerText: 'PROFESSIONAL ASSEMBLY',
+  kickerColor: '#097EFF',
   kickerX: 150, kickerY: 150,
 
-  mainText: 'Pour any website\'s DESIGN DNA into a spec.',
+  mainText: 'SAVE TIME, MONEY AND STRESS!',
   words: [],
-  titleX: 150, titleY: 300,
-  titleSize: 100,
+  titleX: 150, titleY: 280,
+  titleSize: 90,
   titleLH: 0.95,
   wordSpacing: 20,
 
-  paraText: 'REAL CSS VARIABLES, REAL MEDIA BREAKPOINTS, REAL INTERACTION STATES EXTRACTED FROM THE LIVE DOM.',
+  paraText: 'NORTHERN IRELAND\'S LEADING FLAT PACK SPECIALISTS SINCE 2012',
   paraX: 150, paraY: 850,
   paraAlign: 'left',
-  paraColor: '#8B847A',
+  paraColor: '#FFFFFF',
 
-  brandText: 'DESIGNMD.CC',
+  showApla: true,
+  aplaStyle: 'light-glass',
+
+  showLogo: true,
+  logoX: 840,
+  logoY: 130,
+  logoScale: 1.0,
+  logoImg: null,
+
+  brandText: 'FLATPACK.HELP',
   brandAlign: 'left',
   brandX: 150, // Snapped inside safe horizontal zone (135px to 945px)
   brandY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
@@ -300,6 +345,14 @@ const state = {
   showCrop: true,
   showSlideNum: true,
   showGrid34: true,
+};
+
+// Load red bag logo
+const logoImg = new Image();
+logoImg.src = 'assets/logo.png';
+logoImg.onload = function() {
+  state.logoImg = logoImg;
+  draw();
 };
 
 let gridUploadFormat = '45';
@@ -349,12 +402,12 @@ function renderPreviewGrid() {
         </svg>`;
         cell.appendChild(carouselIcon);
       } else {
-        cell.style.background = '#15130F';
+        cell.style.background = '#1E293B';
         cell.style.border = '1px solid rgba(255,255,255,0.05)';
         cell.style.display = 'flex';
         cell.style.alignItems = 'center';
         cell.style.justifyContent = 'center';
-        cell.innerHTML = '<span style="color:#8b847a; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
+        cell.innerHTML = '<span style="color:#64748b; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
       }
       row.appendChild(cell);
     }
@@ -483,14 +536,13 @@ function updateWordsFromText(text) {
       return { text: w, font: oldWord.font, color: oldWord.color };
     }
     
-    // Auto design logic: DESIGN, SPEC, CSS, DOM are highlighted in terracotta, others in cream
     const uppercaseText = w.toUpperCase();
-    const isPrimaryTarget = uppercaseText.includes('DESIGN') || uppercaseText.includes('DNA') || uppercaseText.includes('SPEC') || uppercaseText.includes('CSS') || uppercaseText.includes('DOM') || uppercaseText.includes('HTML') || uppercaseText.includes('MEDIA');
+    const isSpecial = uppercaseText.includes('IKEA') || uppercaseText.includes('PAX') || uppercaseText.includes('STRESS') || uppercaseText.includes('MONEY') || uppercaseText.includes('TIME');
     
     return {
       text: w,
-      font: isPrimaryTarget ? 'italic' : 'bold',
-      color: isPrimaryTarget ? '#C7472A' : '#F2EADD'
+      font: isSpecial ? 'italic' : 'bold',
+      color: isSpecial ? '#00B67A' : '#FFFFFF'
     };
   });
   
@@ -525,7 +577,7 @@ function renderWordsUI() {
     fontGroup.className = 'btn-group';
     fontGroup.innerHTML = `
       <button class="font-btn ${w.font === 'bold' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'bold',this)" title="Pogrubienie (Sans)"><b>B</b></button>
-      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa (Serif)"><i>K</i></button>
+      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa (Italic)"><i>K</i></button>
       <button class="font-btn ${w.font === 'mono' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.7rem;font-family:'Geist Mono',monospace" onclick="setWordFont(${i},'mono',this)" title="Monospace (Code)">M</button>
     `;
     ctrls.appendChild(fontGroup);
@@ -533,9 +585,10 @@ function renderWordsUI() {
     const colorGroup = document.createElement('div');
     colorGroup.className = 'btn-group';
     colorGroup.innerHTML = `
-      <button class="color-btn ${w.color === '#F2EADD' ? 'active' : ''}" style="width:18px;height:18px;background:#F2EADD" onclick="setWordColor(${i},'#F2EADD',this)"></button>
-      <button class="color-btn ${w.color === '#C7472A' ? 'active' : ''}" style="width:18px;height:18px;background:#C7472A" onclick="setWordColor(${i},'#C7472A',this)"></button>
-      <button class="color-btn ${w.color === '#8B847A' ? 'active' : ''}" style="width:18px;height:18px;background:#8B847A" onclick="setWordColor(${i},'#8B847A',this)"></button>
+      <button class="color-btn ${w.color === '#FFFFFF' ? 'active' : ''}" style="width:18px;height:18px;background:#FFFFFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
+      <button class="color-btn ${w.color === '#097EFF' ? 'active' : ''}" style="width:18px;height:18px;background:#097EFF" onclick="setWordColor(${i},'#097EFF',this)"></button>
+      <button class="color-btn ${w.color === '#00B67A' ? 'active' : ''}" style="width:18px;height:18px;background:#00B67A" onclick="setWordColor(${i},'#00B67A',this)"></button>
+      <button class="color-btn ${w.color === '#E7BA04' ? 'active' : ''}" style="width:18px;height:18px;background:#E7BA04" onclick="setWordColor(${i},'#E7BA04',this)"></button>
     `;
     ctrls.appendChild(colorGroup);
     
@@ -639,11 +692,11 @@ function adjustSlideNum(dir) {
 
 function getFontStr(font, size) {
   switch (font) {
-    case 'bold': return `700 ${size}px "Inter Tight", sans-serif`;
-    case 'italic': return `italic 300 ${size}px "Fraunces", serif`;
-    case 'bold-italic': return `italic 700 ${size}px "Fraunces", serif`;
+    case 'bold': return `800 ${size}px "Inter", sans-serif`;
+    case 'italic': return `italic 400 ${size}px "Inter", sans-serif`;
+    case 'bold-italic': return `italic 800 ${size}px "Inter", sans-serif`;
     case 'mono': return `500 ${size}px "Geist Mono", monospace`;
-    default: return `600 ${size}px "Inter Tight", sans-serif`;
+    default: return `600 ${size}px "Inter", sans-serif`;
   }
 }
 
@@ -659,7 +712,6 @@ function wrapText(text, maxWidth) {
       const wordWidth = ctx.measureText(word).width;
       
       if (wordWidth > maxWidth) {
-        // If the word itself is too wide to fit on a single line, we must split it by characters
         for (let j = 0; j < word.length; j++) {
           const char = word[j];
           const testLine = curLine + char;
@@ -685,6 +737,18 @@ function wrapText(text, maxWidth) {
   return lines;
 }
 
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  if (w < 2 * r) r = w / 2;
+  if (h < 2 * r) r = h / 2;
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const maxBottomY = canvas.height - M - 50; // 1220px limit before footer
@@ -694,22 +758,10 @@ function draw() {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
   } else if (state.bgType === 'gradient' || state.gradient) {
-    // Fill background with warm dark charcoal
-    ctx.fillStyle = '#0E0D0B';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw first radial gradient at top right
-    const g1 = ctx.createRadialGradient(canvas.width * 0.8, 0, 0, canvas.width * 0.8, 0, canvas.width * 0.7);
-    g1.addColorStop(0, 'rgba(199, 71, 42, 0.18)');
-    g1.addColorStop(1, 'rgba(199, 71, 42, 0)');
-    ctx.fillStyle = g1;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw second radial gradient at bottom left
-    const g2 = ctx.createRadialGradient(0, canvas.height, 0, 0, canvas.height, canvas.width * 0.8);
-    g2.addColorStop(0, 'rgba(199, 71, 42, 0.08)');
-    g2.addColorStop(1, 'rgba(199, 71, 42, 0)');
-    ctx.fillStyle = g2;
+    const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    g.addColorStop(0, '#097EFF'); // Bright blue
+    g.addColorStop(1, '#1E3A8A'); // Deep navy
+    ctx.fillStyle = g;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
     ctx.fillStyle = state.bgColor;
@@ -720,7 +772,7 @@ function draw() {
   if (grainPattern) {
     ctx.save();
     ctx.globalCompositeOperation = 'overlay';
-    ctx.globalAlpha = 0.06;
+    ctx.globalAlpha = 0.05;
     ctx.fillStyle = grainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
@@ -728,61 +780,44 @@ function draw() {
 
   ctx.textBaseline = 'top';
 
-  // 2. Nadtytuł (Kicker)
+  // 2. Pre-calculate kicker width & height for Apla
   const kickerVal = document.getElementById('kickerText').value;
   if (kickerVal) {
-    // Draw standard DesignMD kicker dot
-    ctx.fillStyle = '#C7472A';
-    ctx.beginPath();
-    ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.font = '500 20px "Geist Mono", monospace';
-    ctx.fillStyle = state.kickerColor;
-    ctx.textAlign = 'left';
     ctx.letterSpacing = '6px';
     const lines = kickerVal.toUpperCase().split('\n');
-    let ky = state.kickerY;
+    let maxW = 0;
     lines.forEach(l => {
-      ctx.fillText(l, state.kickerX + 22, ky);
-      ky += 30;
+      const w = ctx.measureText(l).width;
+      if (w > maxW) maxW = w;
     });
     ctx.letterSpacing = '0px';
-    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: Math.max(...lines.map(l => (ctx.measureText(l).width))) + 22, h: lines.length * 30 };
+    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: maxW + 22, h: lines.length * 30 };
   } else {
     hitBoxes.kicker = null;
   }
 
-  // 3. Tekst Główny (Title) with word-by-word formatting and user newlines
+  // 3. Pre-calculate Title size for Apla
   const titleMaxW = canvas.width - state.titleX - M;
   let ty = state.titleY;
   const titleStartY = ty;
   let maxLineWidth = 0;
-  
-  // Split the textarea by newlines to respect user's manual line breaks
   const rawLines = state.mainText.split('\n');
   let wordCounter = 0;
   
   rawLines.forEach(lineText => {
-    // Split the current line text into words
     const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
     if (lineWordTokens.length === 0) {
-      // Empty line: just advance vertical position
       ty += state.titleSize * state.titleLH;
       return;
     }
-    
-    // Map tokens to our state.words objects
     const lineWords = [];
     lineWordTokens.forEach(token => {
-      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#F2EADD' };
+      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
-      
-      // Check if this single word exceeds titleMaxW
       ctx.font = getFontStr(wObj.font, state.titleSize);
       const wWidth = ctx.measureText(wObj.text).width;
       if (wWidth > titleMaxW) {
-        // Split this word character by character into sub-tokens
         let curChunk = '';
         for (let j = 0; j < wObj.text.length; j++) {
           let char = wObj.text[j];
@@ -801,7 +836,6 @@ function draw() {
       }
     });
     
-    // Auto-wrap words in this specific line if they exceed titleMaxW
     const subLines = [];
     let currentSubLine = [];
     let currentSubLineWidth = 0;
@@ -824,14 +858,191 @@ function draw() {
       subLines.push(currentSubLine);
     }
     
-    // Render the subLines
     subLines.forEach(subLine => {
-      if (ty + state.titleSize * state.titleLH > maxBottomY) {
-        return; // truncate rendering
-      }
       let tx = state.titleX;
       subLine.forEach(word => {
         ctx.font = getFontStr(word.font, state.titleSize);
+        const wordWidth = ctx.measureText(word.text).width;
+        const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
+        tx += wordWidth + spaceWidth;
+      });
+      const lineWidth = tx - state.titleX;
+      if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+      ty += state.titleSize * state.titleLH;
+    });
+  });
+  const titleH = ty - titleStartY;
+  hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
+
+  // 4. Pre-calculate paragraph height for Apla
+  const paraVal = document.getElementById('paraText').value;
+  if (paraVal) {
+    const paraSize = 28;
+    ctx.font = `600 ${paraSize}px "Inter", sans-serif`;
+    const py = ty + 30;
+    state.paraY = py;
+    const isCenter = state.paraAlign === 'center';
+    const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
+    const uppercaseText = paraVal.toUpperCase();
+    const wrapped = wrapText(uppercaseText, maxWidth);
+    let currentPy = py;
+    wrapped.forEach(wl => {
+      currentPy += paraSize * 1.5;
+    });
+    const paragraphHeight = currentPy - py;
+    const hitBoxX = isCenter ? (canvas.width / 2 - maxWidth / 2) : state.paraX;
+    hitBoxes.para = { x: hitBoxX, y: py, w: maxWidth, h: paragraphHeight || 10 };
+  } else {
+    hitBoxes.para = null;
+  }
+
+  // DRAW APLA (Background Shape under text)
+  if (state.showApla && state.aplaStyle !== 'none') {
+    let pad = 36;
+    let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+    let hasAny = false;
+    
+    if (kickerVal && hitBoxes.kicker) {
+      minX = Math.min(minX, state.kickerX);
+      minY = Math.min(minY, state.kickerY);
+      maxX = Math.max(maxX, state.kickerX + hitBoxes.kicker.w);
+      maxY = Math.max(maxY, state.kickerY + hitBoxes.kicker.h);
+      hasAny = true;
+    }
+    if (state.mainText && hitBoxes.title) {
+      minX = Math.min(minX, state.titleX);
+      minY = Math.min(minY, state.titleY);
+      maxX = Math.max(maxX, state.titleX + hitBoxes.title.w);
+      maxY = Math.max(maxY, state.titleY + hitBoxes.title.h);
+      hasAny = true;
+    }
+    if (paraVal && hitBoxes.para) {
+      minX = Math.min(minX, hitBoxes.para.x);
+      minY = Math.min(minY, hitBoxes.para.y);
+      maxX = Math.max(maxX, hitBoxes.para.x + hitBoxes.para.w);
+      maxY = Math.max(maxY, hitBoxes.para.y + hitBoxes.para.h);
+      hasAny = true;
+    }
+    
+    if (hasAny) {
+      ctx.save();
+      if (state.aplaStyle === 'light-glass') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 40;
+      } else if (state.aplaStyle === 'dark-glass') {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+        ctx.shadowBlur = 40;
+      } else if (state.aplaStyle === 'blue') {
+        ctx.fillStyle = 'rgba(9, 126, 255, 0.9)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      } else if (state.aplaStyle === 'green') {
+        ctx.fillStyle = 'rgba(0, 182, 122, 0.9)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      } else if (state.aplaStyle === 'navy') {
+        ctx.fillStyle = 'rgba(30, 58, 138, 0.9)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      }
+      
+      const ax = minX - pad;
+      const ay = minY - pad;
+      const aw = (maxX - minX) + pad * 2;
+      const ah = (maxY - minY) + pad * 2;
+      
+      drawRoundedRect(ctx, ax, ay, aw, ah, 24);
+      ctx.fill();
+      if (ctx.strokeStyle) {
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  // Draw actual Kicker Text
+  if (kickerVal) {
+    ctx.fillStyle = '#097EFF';
+    ctx.beginPath();
+    ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '500 20px "Geist Mono", monospace';
+    ctx.fillStyle = state.kickerColor;
+    ctx.textAlign = 'left';
+    ctx.letterSpacing = '6px';
+    const lines = kickerVal.toUpperCase().split('\n');
+    let ky = state.kickerY;
+    lines.forEach(l => {
+      ctx.fillText(l, state.kickerX + 22, ky);
+      ky += 30;
+    });
+    ctx.letterSpacing = '0px';
+  }
+
+  // Draw actual Title Text
+  ty = state.titleY;
+  wordCounter = 0;
+  rawLines.forEach(lineText => {
+    const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
+    if (lineWordTokens.length === 0) {
+      ty += state.titleSize * state.titleLH;
+      return;
+    }
+    const lineWords = [];
+    lineWordTokens.forEach(token => {
+      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
+      wordCounter++;
+      ctx.font = getFontStr(wObj.font, state.titleSize);
+      const wWidth = ctx.measureText(wObj.text).width;
+      if (wWidth > titleMaxW) {
+        let curChunk = '';
+        for (let j = 0; j < wObj.text.length; j++) {
+          let char = wObj.text[j];
+          if (ctx.measureText(curChunk + char).width > titleMaxW) {
+            lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
+            curChunk = char;
+          } else {
+            curChunk += char;
+          }
+        }
+        if (curChunk) {
+          lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
+        }
+      } else {
+        lineWords.push(wObj);
+      }
+    });
+    
+    const subLines = [];
+    let currentSubLine = [];
+    let currentSubLineWidth = 0;
+    
+    lineWords.forEach(word => {
+      ctx.font = getFontStr(word.font, state.titleSize);
+      const wordWidth = ctx.measureText(word.text).width;
+      const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
+      
+      if (currentSubLineWidth + wordWidth > titleMaxW && currentSubLine.length > 0) {
+        subLines.push(currentSubLine);
+        currentSubLine = [word];
+        currentSubLineWidth = wordWidth;
+      } else {
+        currentSubLine.push(word);
+        currentSubLineWidth += wordWidth + spaceWidth;
+      }
+    });
+    if (currentSubLine.length > 0) {
+      subLines.push(currentSubLine);
+    }
+    
+    subLines.forEach(subLine => {
+      if (ty + state.titleSize * state.titleLH > maxBottomY) return;
+      let tx = state.titleX;
+      subLine.forEach(word => {
+        ctx.font = getFontStr(word.font, word.font === 'mono' ? state.titleSize * 0.9 : state.titleSize);
         ctx.fillStyle = word.color;
         ctx.textAlign = 'left';
         ctx.fillText(word.text, tx, ty);
@@ -840,26 +1051,16 @@ function draw() {
         const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
         tx += wordWidth + spaceWidth;
       });
-      
-      const lineWidth = tx - state.titleX;
-      if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
-      
       ty += state.titleSize * state.titleLH;
     });
   });
-  
-  const titleH = ty - titleStartY;
-  hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
 
-  // 4. Dopisek pod hasłem (Paragraph / Akapit)
-  const paraVal = document.getElementById('paraText').value;
+  // Draw actual Paragraph Text
   if (paraVal) {
     const paraSize = 28;
-    ctx.font = `600 ${paraSize}px "Inter Tight", sans-serif`;
-    ctx.fillStyle = state.paraColor || '#8B847A';
-    
+    ctx.font = `600 ${paraSize}px "Inter", sans-serif`;
+    ctx.fillStyle = state.paraColor || '#FFFFFF';
     const py = ty + 30;
-    state.paraY = py;
     
     const isCenter = state.paraAlign === 'center';
     const alignX = isCenter ? canvas.width / 2 : state.paraX;
@@ -870,26 +1071,18 @@ function draw() {
     const uppercaseText = paraVal.toUpperCase();
     const wrapped = wrapText(uppercaseText, maxWidth);
     let currentPy = py;
-    wrapped.forEach((wl, i) => {
-      if (currentPy + paraSize * 1.5 > maxBottomY) {
-        return; // truncate rendering at bottom limit
-      }
+    wrapped.forEach(wl => {
+      if (currentPy + paraSize * 1.5 > maxBottomY) return;
       ctx.fillText(wl, alignX, currentPy);
       currentPy += paraSize * 1.5;
     });
-    
-    const paragraphHeight = currentPy - py;
-    const hitBoxX = isCenter ? (canvas.width / 2 - maxWidth / 2) : state.paraX;
-    hitBoxes.para = { x: hitBoxX, y: py, w: maxWidth, h: paragraphHeight || 10 };
-  } else {
-    hitBoxes.para = null;
   }
 
-  // 5. Brand (Stopka / Dopisek designmd.cc)
+  // 5. Brand (Stopka / Dopisek flatpack.help)
   const brandVal = document.getElementById('brandText').value;
   if (brandVal) {
-    ctx.font = 'italic 500 22px "Fraunces", serif';
-    ctx.fillStyle = 'rgba(242, 234, 221, 0.4)';
+    ctx.font = '800 22px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
     
     const align = state.brandAlign;
     ctx.textAlign = align === 'center' ? 'center' : ((align === 'right' || align === 'top-right') ? 'right' : 'left');
@@ -908,8 +1101,8 @@ function draw() {
   // 6. Slide (Numeracja)
   const slideVal = validateAndGetSlideText(false);
   if (slideVal && document.getElementById('showSlideNum').checked) {
-    ctx.font = '500 20px "Geist Mono", monospace';
-    ctx.fillStyle = 'rgba(242, 234, 221, 0.3)';
+    ctx.font = '600 20px "Geist Mono", monospace';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
     
     ctx.textAlign = state.slideX > canvas.width / 2 ? 'right' : 'left';
     ctx.fillText(slideVal, state.slideX, state.slideY);
@@ -924,17 +1117,17 @@ function draw() {
 
   // 7. Guides (Marginesy i siatka IG)
   if (document.getElementById('showGuides').checked) {
-    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
     ctx.fillRect(0, 0, canvas.width, M);
     ctx.fillRect(0, canvas.height - M, canvas.width, M);
     ctx.fillRect(0, M, M, canvas.height - M * 2);
     ctx.fillRect(canvas.width - M, M, M, canvas.height - M * 2);
-    ctx.strokeStyle = 'rgba(199, 71, 42, 0.6)';
+    ctx.strokeStyle = 'rgba(9, 126, 255, 0.5)';
     ctx.lineWidth = 3;
     ctx.setLineDash([16, 10]);
     ctx.strokeRect(M, M, canvas.width - M * 2, canvas.height - M * 2);
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(199, 71, 42, 0.85)';
+    ctx.fillStyle = 'rgba(9, 126, 255, 0.8)';
     ctx.font = 'bold 16px "Geist Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('SAFE AREA (80PX)', canvas.width / 2, M - 6);
@@ -942,7 +1135,7 @@ function draw() {
 
   if (document.getElementById('showCrop').checked) {
     const cropY = (canvas.height - canvas.width) / 2;
-    ctx.strokeStyle = 'rgba(242, 234, 221, 0.25)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -954,14 +1147,14 @@ function draw() {
     ctx.lineTo(canvas.width, canvas.height - cropY);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(242, 234, 221, 0.25)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'right';
     ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
   }
 
   if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
-    ctx.strokeStyle = 'rgba(199, 71, 42, 0.4)';
+    ctx.strokeStyle = 'rgba(0, 182, 122, 0.4)'; // Trustpilot green
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -971,7 +1164,7 @@ function draw() {
     ctx.lineTo(1046, canvas.height);
     ctx.stroke();
     
-    ctx.strokeStyle = 'rgba(139, 132, 122, 0.4)';
+    ctx.strokeStyle = 'rgba(9, 126, 255, 0.4)'; // blue
     ctx.beginPath();
     ctx.moveTo(135, 0);
     ctx.lineTo(135, canvas.height);
@@ -980,13 +1173,24 @@ function draw() {
     ctx.stroke();
     ctx.setLineDash([]);
     
-    ctx.fillStyle = 'rgba(199, 71, 42, 0.6)';
+    ctx.fillStyle = 'rgba(0, 182, 122, 0.6)';
     ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'left';
     ctx.fillText('crop 3:4 dla 4:5 (34px)', 40, 40);
     
-    ctx.fillStyle = 'rgba(139, 132, 122, 0.6)';
+    ctx.fillStyle = 'rgba(9, 126, 255, 0.6)';
     ctx.fillText('crop 3:4 dla 1:1 (135px)', 141, 60);
+  }
+
+  // Draw Logo (Red Bag)
+  if (state.showLogo && state.logoImg) {
+    const h = 90 * (state.logoScale || 1);
+    const w = (state.logoImg.width / state.logoImg.height) * h;
+    ctx.drawImage(state.logoImg, state.logoX, state.logoY, w, h);
+    
+    hitBoxes.logo = { x: state.logoX, y: state.logoY, w: w, h: h };
+  } else {
+    hitBoxes.logo = null;
   }
 
   // Photo drag handle
@@ -998,7 +1202,7 @@ function draw() {
 }
 
 function hitTest(mx, my) {
-  const order = ['kicker', 'title', 'para', 'brand', 'slide'];
+  const order = ['logo', 'kicker', 'title', 'para', 'brand', 'slide'];
   for (const id of order) {
     const b = hitBoxes[id];
     if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
@@ -1057,6 +1261,7 @@ canvas.addEventListener('mousemove', (e) => {
     const cx = Math.max(M, Math.min(canvas.width - M, nx));
     const cy = Math.max(M, Math.min(canvas.height - M, ny));
     switch (dragging.id) {
+      case 'logo': state.logoX = cx; state.logoY = cy; break;
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
       case 'para': state.paraX = cx; state.paraY = cy; break;
@@ -1152,6 +1357,7 @@ canvas.addEventListener('touchmove', (e) => {
     const cx = Math.max(M, Math.min(canvas.width - M, nx));
     const cy = Math.max(M, Math.min(canvas.height - M, ny));
     switch (dragging.id) {
+      case 'logo': state.logoX = cx; state.logoY = cy; break;
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
       case 'para': state.paraX = cx; state.paraY = cy; break;
@@ -1234,7 +1440,7 @@ function showPreview() {
   
   const hdr = document.createElement('div');
   hdr.style.cssText = 'display:flex;align-items:center;padding:12px;gap:10px;border-bottom:1px solid #efefef';
-  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#C7472A,#A8442D);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">D</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">designmd.cc</div><div style="font-size:11px;color:#8e8e8e">DESIGN.md Spec</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
+  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:#097EFF;display:flex;align-items:center;justify-content:center;font-size:14px;color:white">🧰</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">flatpackhelp</div><div style="font-size:11px;color:#8e8e8e">Belfast & Northern Ireland</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
   infoCol.appendChild(hdr);
   
   const capScroll = document.createElement('div');
@@ -1243,11 +1449,11 @@ function showPreview() {
   const kickerVal = document.getElementById('kickerText').value;
   const captionVal = document.getElementById('mainText').value;
   const paraVal = document.getElementById('paraText').value;
-  let formattedText = `<span style="font-weight:700">designmd.cc</span> `;
+  let formattedText = `<span style="font-weight:700">flatpackhelp</span> `;
   if (kickerVal) formattedText += `<br><span style="color:#8e8e8e;font-size:11px;font-weight:700">${kickerVal}</span><br>`;
   formattedText += `<strong>${captionVal}</strong>`;
   if (paraVal) formattedText += `<br><br>${paraVal}`;
-  formattedText += `<br><br><span style="color:#00376b">#designmd #designsystem #uidesign #webdevelopment #figma #css</span>`;
+  formattedText += `<br><br><span style="color:#00376b">#flatpackhelp #ikeapax #handyman #furnitureassembly #belfast #handymanhelp</span>`;
   
   capScroll.innerHTML = formattedText;
   infoCol.appendChild(capScroll);
@@ -1280,6 +1486,8 @@ function executeDownload() {
 // Initial initialization
 document.getElementById('mainText').value = state.mainText;
 document.getElementById('paraText').value = state.paraText;
+document.getElementById('showApla').checked = state.showApla;
+document.getElementById('aplaStyle').value = state.aplaStyle;
 updateWordsFromText(state.mainText);
 </script>
 </body>
