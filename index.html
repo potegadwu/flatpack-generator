@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flatpack Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--panel:#1e293b;--accent:#F15A24;--border:rgba(255,255,255,0.1);--text:#f8fafc;--muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}
+
+.panel{width:450px;min-width:450px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-scroll{flex:1;overflow-y:auto;padding:0 16px 16px}
+.panel-scroll::-webkit-scrollbar{width:6px}
+.panel-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+.panel-header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-header h1{font-size:1rem;font-weight:800;color:var(--accent)}
+.panel-header span{font-size:0.75rem;color:var(--muted)}
+
+.section{padding:14px 0;border-bottom:1px solid var(--border)}
+.section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:10px}
+
+label{font-size:0.75rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px}
+input[type="text"],textarea,select{width:100%;background:rgba(15,23,42,0.6);border:1px solid var(--border);color:white;padding:8px 10px;border-radius:6px;font-size:0.85rem;outline:none}
+input[type="text"]:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:60px;font-family:'Inter',sans-serif}
+
+.row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.row label{margin-bottom:0;white-space:nowrap}
+input[type="range"]{flex:1;accent-color:var(--accent);cursor:pointer}
+.slider-val{font-size:0.75rem;color:var(--text);min-width:36px;text-align:right}
+
+.color-grid{display:flex;gap:6px;flex-wrap:wrap}
+.color-swatch{width:36px;height:36px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:border-color 0.15s}
+.color-swatch:hover{border-color:rgba(255,255,255,0.3)}
+.color-swatch.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(241,90,36,0.3)}
+
+.small-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.05);color:var(--text);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+.small-btn:hover{background:rgba(255,255,255,0.1)}
+.small-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+
+.btn-group{display:flex;gap:4px}
+.font-btn{width:34px;height:30px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.8rem;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.font-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+.font-btn:hover:not(.active){background:rgba(255,255,255,0.1)}
+
+.color-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.15s}
+.color-btn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(241,90,36,0.3)}
+.color-btn:hover:not(.active){border-color:rgba(255,255,255,0.3)}
+
+.btn-primary{width:100%;padding:14px;border:none;border-radius:8px;background:var(--accent);color:white;font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.15s;box-shadow:0 4px 14px rgba(241,90,36,0.4)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(241,90,36,0.5)}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.toggle-row label{margin-bottom:0;font-size:0.8rem;color:var(--text)}
+.toggle-row input[type="checkbox"]{accent-color:var(--accent);width:18px;height:18px;cursor:pointer}
+
+.canvas-area{flex:1;display:flex;justify-content:center;align-items:center;background:#020617;overflow:hidden;position:relative}
+canvas{display:block;max-height:calc(100vh - 40px);max-width:calc(100% - 40px);cursor:grab;box-shadow:0 20px 60px rgba(0,0,0,0.5);border-radius:4px}
+canvas:active{cursor:grabbing}
+.hint{font-size:0.65rem;color:var(--muted);font-weight:400}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="panel">
+<div class="panel-header">
+<h1>Flatpack Generator</h1>
+<span>1080 x 1350 (4:5)</span>
+</div>
+<div class="panel-scroll">
+
+<div class="section">
+<div class="section-title">Tło</div>
+<div class="color-grid" id="bgColors">
+<button class="color-swatch active" style="background:#073024" onclick="setBgColor('#073024')"></button>
+<button class="color-swatch" style="background:#0D0D0D" onclick="setBgColor('#0D0D0D')"></button>
+<button class="color-swatch" style="background:#F15A24" onclick="setBgColor('#F15A24')"></button>
+<button class="color-swatch" style="background:#E83A7F" onclick="setBgColor('#E83A7F')"></button>
+<button class="color-swatch" style="background:#FFFFFF;border:1px solid #555" onclick="setBgColor('#FFFFFF')"></button>
+</div>
+<div class="row" style="margin-top:10px">
+<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient P→R</button>
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Z dysku</label>
+<input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
+<button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
+</div>
+<div class="row" style="margin-top:10px; display:none" id="photoScaleContainer">
+<label>Skala:</label>
+<input type="range" id="photoScale" min="0.1" max="4.0" step="0.05" value="1.0" oninput="setPhotoScale(this.value)">
+<span class="slider-val" id="photoScaleVal">1.0x</span>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Nadtytuł</div>
+<input type="text" id="kickerText" placeholder="np. SERIA · DESIGN I BRANDING" oninput="draw()">
+<div class="row" style="margin-top:8px">
+<label>Kolor:</label>
+<div class="btn-group">
+<button class="color-btn active" style="background:#F15A24" onclick="setKickerColor('#F15A24',this)"></button>
+<button class="color-btn" style="background:#E83A7F" onclick="setKickerColor('#E83A7F',this)"></button>
+<button class="color-btn" style="background:#FFF" onclick="setKickerColor('#FFFFFF',this)"></button>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Tekst Główny</div>
+<textarea id="mainText" style="min-height:180px;font-size:0.9rem;line-height:1.4" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło..."></textarea>
+<div class="row" style="margin-top:10px">
+<label>Rozmiar:</label>
+<input type="range" id="titleSize" min="24" max="220" value="100" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
+<span class="slider-val" id="titleSizeVal">100px</span>
+</div>
+<div class="row">
+<label>Interlinia:</label>
+<input type="range" id="titleLH" min="0.6" max="2.0" step="0.05" value="0.95" oninput="state.titleLH=+this.value;document.getElementById('titleLHVal').textContent=this.value;draw()">
+<span class="slider-val" id="titleLHVal">0.95</span>
+</div>
+<div class="row">
+<label>Odstęp słów:</label>
+<input type="range" id="wordSpacing" min="5" max="80" value="20" oninput="state.wordSpacing=+this.value;document.getElementById('wordSpacingVal').textContent=this.value+'px';draw()">
+<span class="slider-val" id="wordSpacingVal">20px</span>
+</div>
+
+<label style="margin-top:12px; margin-bottom:2px">Edycja pojedynczych słów:</label>
+<div style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 4px;" id="wordsEditorContainer">
+  <!-- Dynamic word editors list -->
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Dopisek pod hasłem</div>
+<textarea id="paraText" placeholder="Dodatkowy tekst pod tytułem..." oninput="onParaInput(this)" maxlength="200" style="min-height:75px"></textarea>
+<div style="font-size:0.7rem;color:var(--muted);text-align:right;margin-top:2px" id="paraCharCount">0/200</div>
+<div class="row" style="margin-top:8px">
+<label>Kolor:</label>
+<div class="btn-group">
+<button class="color-btn active" style="background:#FFF" onclick="setParaColor('#FFFFFF',this)"></button>
+<button class="color-btn" style="background:#F15A24" onclick="setParaColor('#F15A24',this)"></button>
+<button class="color-btn" style="background:#E83A7F" onclick="setParaColor('#E83A7F',this)"></button>
+</div>
+</div>
+<div class="row" style="margin-top:8px">
+<label>Wyrównanie:</label>
+<select id="paraAlign" onchange="state.paraAlign=this.value;draw()" style="width:auto;flex:1">
+<option value="left">Do lewej</option>
+<option value="center">Do środka</option>
+</select>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Stopka & Numeracja</div>
+<input type="text" id="brandText" value="FLATPACK" oninput="draw()" style="margin-bottom:8px">
+<div class="row">
+<label>Pozycja:</label>
+<select id="brandAlign" onchange="onBrandAlignChange(this.value)" style="width:auto;flex:1">
+<option value="left">Dół - Lewa</option>
+<option value="center">Dół - Środek</option>
+<option value="right">Dół - Prawa</option>
+<option value="top-right">Góra - Prawa</option>
+</select>
+</div>
+<div class="row" style="margin-top:8px">
+<label>Numer:</label>
+<div style="display:flex;align-items:center;gap:4px;flex:1">
+<button class="font-btn" style="width:30px;height:30px" onclick="adjustSlideNum(-1)">-</button>
+<input type="text" id="slideText" value="01/03" style="text-align:center;flex:1" oninput="draw()" onblur="validateAndGetSlideText(true); draw()">
+<button class="font-btn" style="width:30px;height:30px" onclick="adjustSlideNum(1)">+</button>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Narzędzia</div>
+<div class="toggle-row"><label>Pokaż marginesy 80px</label><input type="checkbox" id="showGuides" checked onchange="draw()"></div>
+<div class="toggle-row"><label>Pokaż crop 1:1 (siatka IG)</label><input type="checkbox" id="showCrop" checked onchange="draw()"></div>
+<div class="toggle-row"><label>Pokaż crop 3:4 (siatka profilu)</label><input type="checkbox" id="showGrid34" checked onchange="draw()"></div>
+<div class="toggle-row"><label>Pokaż numerację</label><input type="checkbox" id="showSlideNum" checked onchange="draw()"></div>
+</div>
+
+<div class="section" style="border:none;padding-bottom:30px">
+<button class="btn-primary" onclick="showPreview()">Podgląd i zapis PNG</button>
+</div>
+
+</div>
+</aside>
+
+<main class="canvas-area">
+<canvas id="canvas" width="1080" height="1350"></canvas>
+</main>
+</div>
+
+<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
+  <div style="background:#0f172a; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom:12px">
+      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text);font-family:'Inter',sans-serif">Podgląd publikacji na Instagramie</h2>
+      <button class="small-btn" onclick="closePreview()" style="font-size:1.2rem; line-height:1; padding: 4px 10px">&times;</button>
+    </div>
+    
+    <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center">
+      <!-- Left side: Single Post Mockup -->
+      <div style="flex: 1.2; min-width:320px; max-width:550px">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:8px; font-weight:700">Podgląd posta (4:5)</div>
+        <div id="previewPost" style="background:#fff; border-radius:8px; overflow:hidden; border:1px solid #dbdbdb; display:flex; flex-direction:column">
+        </div>
+      </div>
+      
+      <!-- Right side: Feed Grid -->
+      <div style="flex: 1; min-width:320px; max-width:400px">
+        <div id="gridHeader" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:8px; font-weight:700">Siatka profilu (3:4)</div>
+        <div style="display:flex; gap:6px; margin-bottom:10px">
+          <button id="toggleGrid45" class="small-btn active" onclick="setGridUploadFormat('45')">Format uploadu: 4:5</button>
+          <button id="toggleGrid11" class="small-btn" onclick="setGridUploadFormat('11')">Format uploadu: 1:1</button>
+        </div>
+        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#1e293b; padding:4px; border-radius:8px; border:1px solid var(--border)">
+        </div>
+      </div>
+    </div>
+    
+    <div style="display:flex; gap:12px; width:100%; justify-content:flex-end; border-top: 1px solid var(--border); padding-top:16px; margin-top:8px">
+      <button class="small-btn" onclick="closePreview()" style="padding:10px 24px;font-size:0.85rem">Wróć do edycji</button>
+      <button class="btn-primary" onclick="executeDownload()" style="width:auto;padding:10px 28px;font-size:0.9rem">Zapisz PNG</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const M = 80;
+
+const state = {
+  bgType: 'color',
+  bgColor: '#073024',
+  bgPhoto: null,
+  bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
+  gradient: false,
+
+  kickerText: '',
+  kickerColor: '#F15A24',
+  kickerX: 150, kickerY: 150,
+
+  mainText: 'SPÓŹNIANIE SIĘ LIDERÓW obniża morale I DAJE PRZYZWOLENIE NA niską efektywność',
+  words: [],
+  titleX: 150, titleY: 300,
+  titleSize: 100,
+  titleLH: 0.95,
+  wordSpacing: 20,
+
+  paraText: '',
+  paraX: 150, paraY: 850,
+  paraAlign: 'left',
+  paraColor: '#FFFFFF',
+
+  brandText: 'FLATPACK',
+  brandAlign: 'left',
+  brandX: 150, // Snapped inside safe horizontal zone (135px to 945px)
+  brandY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
+
+  slideText: '01/03',
+  slideX: 930, // Snapped inside safe horizontal zone (135px to 945px)
+  slideY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
+
+  showGuides: true,
+  showCrop: true,
+  showSlideNum: true,
+  showGrid34: true,
+};
+
+let gridUploadFormat = '45';
+let previewFullUrl = '';
+let previewCropUrl = '';
+
+function setGridUploadFormat(format) {
+  gridUploadFormat = format;
+  document.getElementById('toggleGrid45').classList.toggle('active', format === '45');
+  document.getElementById('toggleGrid11').classList.toggle('active', format === '11');
+  renderPreviewGrid();
+}
+
+function renderPreviewGrid() {
+  const gc = document.getElementById('previewGrid');
+  gc.innerHTML = '';
+  const useFullUrl = gridUploadFormat === '45';
+  const displayUrl = useFullUrl ? previewFullUrl : previewCropUrl;
+  
+  for (let r = 0; r < 3; r++) {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '3px';
+    row.style.width = '100%';
+    for (let c = 0; c < 3; c++) {
+      const cell = document.createElement('div');
+      cell.style.width = '100%';
+      cell.style.aspectRatio = '3/4'; // 3:4 profile grid aspect ratio
+      cell.style.overflow = 'hidden';
+      cell.style.borderRadius = '2px';
+      cell.style.position = 'relative';
+      cell.style.flex = '1';
+      if (r === 0 && c === 0) { // Top-left is our new preview post in the grid
+        const img = document.createElement('img');
+        img.src = displayUrl;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        cell.appendChild(img);
+        
+        // Add carousel icon in the top right corner
+        const carouselIcon = document.createElement('div');
+        carouselIcon.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);border-radius:3px;padding:3px';
+        carouselIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="13" height="13" rx="1.5"></rect>
+          <path d="M21 8v11a2 2 0 0 1-2 2H8"></path>
+        </svg>`;
+        cell.appendChild(carouselIcon);
+      } else {
+        cell.style.background = '#1e293b';
+        cell.style.border = '1px solid rgba(255,255,255,0.05)';
+        cell.style.display = 'flex';
+        cell.style.alignItems = 'center';
+        cell.style.justifyContent = 'center';
+        cell.innerHTML = '<span style="color:#64748b; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
+      }
+      row.appendChild(cell);
+    }
+    gc.appendChild(row);
+  }
+}
+
+const hitBoxes = {};
+let dragging = null;
+
+function setBgColor(hex) {
+  state.bgType = 'color';
+  state.bgColor = hex;
+  state.gradient = false;
+  document.getElementById('gradientBtn').classList.remove('active');
+  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  clearPhoto();
+  draw();
+}
+
+function toggleGradient() {
+  state.gradient = !state.gradient;
+  state.bgType = state.gradient ? 'gradient' : 'color';
+  document.getElementById('gradientBtn').classList.toggle('active');
+  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+  draw();
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const img = new Image();
+    img.onload = function() {
+      state.bgPhoto = img;
+      state.bgType = 'photo';
+      const ca = canvas.width / canvas.height;
+      const ia = img.width / img.height;
+      if (ia > ca) {
+        state.bgPhotoScale = canvas.height / img.height;
+        state.bgPhotoX = (canvas.width - img.width * state.bgPhotoScale) / 2;
+        state.bgPhotoY = 0;
+      } else {
+        state.bgPhotoScale = canvas.width / img.width;
+        state.bgPhotoX = 0;
+        state.bgPhotoY = (canvas.height - img.height * state.bgPhotoScale) / 2;
+      }
+      document.getElementById('clearPhotoBtn').style.display = '';
+      const scaleSlider = document.getElementById('photoScale');
+      scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
+      scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
+      scaleSlider.value = state.bgPhotoScale.toFixed(2);
+      document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
+      document.getElementById('photoScaleContainer').style.display = 'flex';
+      
+      document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+      document.getElementById('gradientBtn').classList.remove('active');
+      draw();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto() {
+  state.bgPhoto = null;
+  state.bgType = state.gradient ? 'gradient' : 'color';
+  document.getElementById('clearPhotoBtn').style.display = 'none';
+  document.getElementById('photoScaleContainer').style.display = 'none';
+  document.getElementById('photoUpload').value = '';
+  draw();
+}
+
+function setPhotoScale(val) {
+  if (!state.bgPhoto) return;
+  const oldScale = state.bgPhotoScale;
+  const newScale = parseFloat(val);
+  
+  const canvasCenterX = canvas.width / 2;
+  const canvasCenterY = canvas.height / 2;
+  
+  const imgCenterX = (canvasCenterX - state.bgPhotoX) / oldScale;
+  const imgCenterY = (canvasCenterY - state.bgPhotoY) / oldScale;
+  
+  state.bgPhotoX = canvasCenterX - imgCenterX * newScale;
+  state.bgPhotoY = canvasCenterY - imgCenterY * newScale;
+  state.bgPhotoScale = newScale;
+  
+  document.getElementById('photoScaleVal').textContent = newScale.toFixed(2) + 'x';
+  draw();
+}
+
+function setKickerColor(c, btn) {
+  state.kickerColor = c;
+  btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  draw();
+}
+
+function onParaInput(el) {
+  const countEl = document.getElementById('paraCharCount');
+  if (countEl) {
+    countEl.textContent = el.value.length + '/200';
+  }
+  draw();
+}
+
+function setParaColor(c, btn) {
+  state.paraColor = c;
+  btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  draw();
+}
+
+function updateWordsFromText(text) {
+  state.mainText = text;
+  const rawWords = text.trim().split(/\s+/).filter(Boolean);
+  
+  const newWords = rawWords.map((w, index) => {
+    const oldWord = state.words.find((ow, oi) => ow.text === w && oi === index) 
+                 || state.words.find(ow => ow.text === w);
+                 
+    if (oldWord) {
+      return { text: w, font: oldWord.font, color: oldWord.color };
+    }
+    
+    // Polish diacritics supported case checking
+    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
+    return {
+      text: w,
+      font: isUppercase ? 'bold' : 'italic',
+      color: isUppercase ? '#FFFFFF' : '#F15A24'
+    };
+  });
+  
+  state.words = newWords;
+  renderWordsUI();
+  draw();
+}
+
+function renderWordsUI() {
+  const container = document.getElementById('wordsEditorContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  if (state.words.length === 0) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:0.75rem;padding:8px;text-align:center">Wpisz tekst, aby edytować słowa</div>';
+    return;
+  }
+  
+  state.words.forEach((w, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px';
+    
+    const label = document.createElement('span');
+    label.style.cssText = 'font-size:0.8rem;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
+    label.textContent = w.text;
+    row.appendChild(label);
+    
+    const ctrls = document.createElement('div');
+    ctrls.style.cssText = 'display:flex;align-items:center;gap:6px';
+    
+    const fontGroup = document.createElement('div');
+    fontGroup.className = 'btn-group';
+    fontGroup.innerHTML = `
+      <button class="font-btn ${w.font === 'bold' ? 'active' : ''}" style="width:28px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'bold',this)" title="Pogrubienie"><b>B</b></button>
+      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:28px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa"><i>K</i></button>
+    `;
+    ctrls.appendChild(fontGroup);
+    
+    const colorGroup = document.createElement('div');
+    colorGroup.className = 'btn-group';
+    colorGroup.innerHTML = `
+      <button class="color-btn ${w.color === '#FFFFFF' ? 'active' : ''}" style="width:18px;height:18px;background:#FFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
+      <button class="color-btn ${w.color === '#F15A24' ? 'active' : ''}" style="width:18px;height:18px;background:#F15A24" onclick="setWordColor(${i},'#F15A24',this)"></button>
+      <button class="color-btn ${w.color === '#E83A7F' ? 'active' : ''}" style="width:18px;height:18px;background:#E83A7F" onclick="setWordColor(${i},'#E83A7F',this)"></button>
+    `;
+    ctrls.appendChild(colorGroup);
+    
+    row.appendChild(ctrls);
+    container.appendChild(row);
+  });
+}
+
+function setWordFont(i, font, btn) {
+  state.words[i].font = font;
+  btn.closest('.btn-group').querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  draw();
+}
+
+function setWordColor(i, color, btn) {
+  state.words[i].color = color;
+  btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  draw();
+}
+
+function onBrandAlignChange(val) {
+  state.brandAlign = val;
+  if (val === 'left') {
+    state.brandX = 150; // Snapped inside safe horizontal zone (135px to 945px)
+    state.brandY = 1180; // inside 1:1 crop (135px to 1215px)
+    state.slideX = 930; // Snapped inside safe horizontal zone (135px to 945px)
+    state.slideY = 1180;
+  } else if (val === 'center') {
+    state.brandX = canvas.width / 2; // 540
+    state.brandY = 1180;
+    state.slideX = 930; // Snapped inside safe horizontal zone (135px to 945px)
+    state.slideY = 1180;
+  } else if (val === 'right') {
+    state.brandX = 930; // Snapped inside safe horizontal zone (135px to 945px)
+    state.brandY = 1180;
+    state.slideX = 150; // Snapped inside safe horizontal zone (135px to 945px)
+    state.slideY = 1180;
+  } else if (val === 'top-right') {
+    state.brandX = 930; // Snapped inside safe horizontal zone (135px to 945px)
+    state.brandY = 170; // inside 1:1 crop (135px to 1215px)
+    state.slideX = 150; // Snapped inside safe horizontal zone (135px to 945px)
+    state.slideY = 1180;
+  }
+  draw();
+}
+
+function validateAndGetSlideText(updateInput = false) {
+  const el = document.getElementById('slideText');
+  let val = el.value.trim();
+  const m = val.match(/^(\d+)\/(\d+)$/);
+  if (m) {
+    let current = parseInt(m[1], 10);
+    let total = parseInt(m[2], 10);
+    
+    if (isNaN(current) || current < 1) current = 1;
+    if (isNaN(total) || total < 1) total = 1;
+    
+    // Cap current page at total pages
+    if (current > total) {
+      current = total;
+    }
+    
+    const formatted = String(current).padStart(2, '0') + '/' + String(total).padStart(2, '0');
+    if (updateInput && el.value !== formatted) {
+      el.value = formatted;
+    }
+    return formatted;
+  }
+  return val;
+}
+
+function adjustSlideNum(dir) {
+  const el = document.getElementById('slideText');
+  const val = el.value.trim();
+  const m = val.match(/^(\d+)\/(\d+)$/);
+  if (m) {
+    let current = parseInt(m[1], 10);
+    const total = parseInt(m[2], 10);
+    
+    if (dir > 0) {
+      if (current < total) {
+        current++;
+      }
+    } else {
+      if (current > 1) {
+        current--;
+      }
+    }
+    
+    el.value = String(current).padStart(2, '0') + '/' + String(total).padStart(2, '0');
+  } else {
+    const num = parseInt(val, 10);
+    if (!isNaN(num)) {
+      el.value = String(Math.max(1, num + dir));
+    }
+  }
+  draw();
+}
+
+function getFontStr(font, size) {
+  switch (font) {
+    case 'bold': return `900 ${size}px "Inter", sans-serif`;
+    case 'italic': return `italic 700 ${size}px "Playfair Display", serif`;
+    case 'bold-italic': return `italic 800 ${size}px "Playfair Display", serif`;
+    default: return `800 ${size}px "Inter", sans-serif`;
+  }
+}
+
+function wrapText(text, maxWidth) {
+  const lines = [];
+  text.split('\n').forEach(para => {
+    if (!para) { lines.push(''); return; }
+    const words = para.split(' ');
+    let curLine = '';
+    
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      const wordWidth = ctx.measureText(word).width;
+      
+      if (wordWidth > maxWidth) {
+        // If the word itself is too wide to fit on a single line, we must split it by characters
+        for (let j = 0; j < word.length; j++) {
+          const char = word[j];
+          const testLine = curLine + char;
+          if (ctx.measureText(testLine).width > maxWidth) {
+            if (curLine) lines.push(curLine);
+            curLine = char;
+          } else {
+            curLine = testLine;
+          }
+        }
+      } else {
+        const testLine = curLine ? curLine + ' ' + word : word;
+        if (ctx.measureText(testLine).width > maxWidth) {
+          if (curLine) lines.push(curLine);
+          curLine = word;
+        } else {
+          curLine = testLine;
+        }
+      }
+    }
+    if (curLine) lines.push(curLine);
+  });
+  return lines;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const maxBottomY = canvas.height - M - 50; // 1220px limit before footer
+
+  // 1. Background
+  if (state.bgType === 'photo' && state.bgPhoto) {
+    ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
+      state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
+  } else if (state.bgType === 'gradient' || state.gradient) {
+    const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    g.addColorStop(0, '#F15A24');
+    g.addColorStop(1, '#E83A7F');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    ctx.fillStyle = state.bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  ctx.textBaseline = 'top';
+
+  // 2. Nadtytuł (Kicker)
+  const kickerVal = document.getElementById('kickerText').value;
+  if (kickerVal) {
+    ctx.font = '700 22px "Inter", sans-serif';
+    ctx.fillStyle = state.kickerColor;
+    ctx.textAlign = 'left';
+    ctx.letterSpacing = '5px';
+    const lines = kickerVal.toUpperCase().split('\n');
+    let ky = state.kickerY;
+    lines.forEach(l => {
+      ctx.fillText(l, state.kickerX, ky);
+      ky += 30;
+    });
+    ctx.letterSpacing = '0px';
+    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: Math.max(...lines.map(l => (ctx.measureText(l).width))), h: lines.length * 30 };
+  } else {
+    hitBoxes.kicker = null;
+  }
+
+  // 3. Tekst Główny (Title) with word-by-word formatting and user newlines
+  const titleMaxW = canvas.width - state.titleX - M;
+  let ty = state.titleY;
+  const titleStartY = ty;
+  let maxLineWidth = 0;
+  
+  // Split the textarea by newlines to respect user's manual line breaks
+  const rawLines = state.mainText.split('\n');
+  let wordCounter = 0;
+  
+  rawLines.forEach(lineText => {
+    // Split the current line text into words
+    const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
+    if (lineWordTokens.length === 0) {
+      // Empty line: just advance vertical position
+      ty += state.titleSize * state.titleLH;
+      return;
+    }
+    
+    // Map tokens to our state.words objects
+    const lineWords = [];
+    lineWordTokens.forEach(token => {
+      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
+      wordCounter++;
+      
+      // Check if this single word exceeds titleMaxW
+      ctx.font = getFontStr(wObj.font, state.titleSize);
+      const wWidth = ctx.measureText(wObj.text).width;
+      if (wWidth > titleMaxW) {
+        // Split this word character by character into sub-tokens
+        let curChunk = '';
+        for (let j = 0; j < wObj.text.length; j++) {
+          let char = wObj.text[j];
+          if (ctx.measureText(curChunk + char).width > titleMaxW) {
+            lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
+            curChunk = char;
+          } else {
+            curChunk += char;
+          }
+        }
+        if (curChunk) {
+          lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
+        }
+      } else {
+        lineWords.push(wObj);
+      }
+    });
+    
+    // Auto-wrap words in this specific line if they exceed titleMaxW
+    const subLines = [];
+    let currentSubLine = [];
+    let currentSubLineWidth = 0;
+    
+    lineWords.forEach(word => {
+      ctx.font = getFontStr(word.font, state.titleSize);
+      const wordWidth = ctx.measureText(word.text).width;
+      const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
+      
+      if (currentSubLineWidth + wordWidth > titleMaxW && currentSubLine.length > 0) {
+        subLines.push(currentSubLine);
+        currentSubLine = [word];
+        currentSubLineWidth = wordWidth;
+      } else {
+        currentSubLine.push(word);
+        currentSubLineWidth += wordWidth + spaceWidth;
+      }
+    });
+    if (currentSubLine.length > 0) {
+      subLines.push(currentSubLine);
+    }
+    
+    // Render the subLines
+    subLines.forEach(subLine => {
+      if (ty + state.titleSize * state.titleLH > maxBottomY) {
+        return; // truncate rendering
+      }
+      let tx = state.titleX;
+      subLine.forEach(word => {
+        ctx.font = getFontStr(word.font, state.titleSize);
+        ctx.fillStyle = word.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(word.text, tx, ty);
+        
+        const wordWidth = ctx.measureText(word.text).width;
+        const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
+        tx += wordWidth + spaceWidth;
+      });
+      
+      const lineWidth = tx - state.titleX;
+      if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+      
+      ty += state.titleSize * state.titleLH;
+    });
+  });
+  
+  const titleH = ty - titleStartY;
+  hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
+
+  // 4. Dopisek pod hasłem (Paragraph / Akapit)
+  const paraVal = document.getElementById('paraText').value;
+  if (paraVal) {
+    const paraSize = 28;
+    ctx.font = `800 ${paraSize}px "Inter", sans-serif`;
+    ctx.fillStyle = state.paraColor || '#FFFFFF';
+    
+    const py = ty + 30;
+    state.paraY = py;
+    
+    const isCenter = state.paraAlign === 'center';
+    const alignX = isCenter ? canvas.width / 2 : state.paraX;
+    const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
+    
+    ctx.textAlign = isCenter ? 'center' : 'left';
+    
+    const uppercaseText = paraVal.toUpperCase();
+    const wrapped = wrapText(uppercaseText, maxWidth);
+    let currentPy = py;
+    wrapped.forEach((wl, i) => {
+      if (currentPy + paraSize * 1.5 > maxBottomY) {
+        return; // truncate rendering at bottom limit
+      }
+      ctx.fillText(wl, alignX, currentPy);
+      currentPy += paraSize * 1.5;
+    });
+    
+    const paragraphHeight = currentPy - py;
+    const hitBoxX = isCenter ? (canvas.width / 2 - maxWidth / 2) : state.paraX;
+    hitBoxes.para = { x: hitBoxX, y: py, w: maxWidth, h: paragraphHeight || 10 };
+  } else {
+    hitBoxes.para = null;
+  }
+
+  // 5. Brand (Stopka / Dopisek skorwider.pl)
+  const brandVal = document.getElementById('brandText').value;
+  if (brandVal) {
+    ctx.font = '700 20px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.letterSpacing = '5px';
+    
+    const align = state.brandAlign;
+    ctx.textAlign = align === 'center' ? 'center' : ((align === 'right' || align === 'top-right') ? 'right' : 'left');
+    
+    ctx.fillText(brandVal.toUpperCase(), state.brandX, state.brandY);
+    ctx.letterSpacing = '0px';
+    
+    const w = ctx.measureText(brandVal).width + 20;
+    let bx = state.brandX;
+    if (ctx.textAlign === 'center') bx -= w / 2;
+    else if (ctx.textAlign === 'right') bx -= w;
+    hitBoxes.brand = { x: bx, y: state.brandY, w: w, h: 24 };
+  } else {
+    hitBoxes.brand = null;
+  }
+
+  // 6. Slide (Numeracja)
+  const slideVal = validateAndGetSlideText(false);
+  if (slideVal && document.getElementById('showSlideNum').checked) {
+    ctx.font = '600 20px "Inter", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    
+    ctx.textAlign = state.slideX > canvas.width / 2 ? 'right' : 'left';
+    ctx.fillText(slideVal, state.slideX, state.slideY);
+    
+    const w = ctx.measureText(slideVal).width + 20;
+    let sx = state.slideX;
+    if (ctx.textAlign === 'right') sx -= w;
+    hitBoxes.slide = { x: sx, y: state.slideY, w: w, h: 24 };
+  } else {
+    hitBoxes.slide = null;
+  }
+
+  // 7. Guides (Marginesy i siatka IG)
+  if (document.getElementById('showGuides').checked) {
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(0, 0, canvas.width, M);
+    ctx.fillRect(0, canvas.height - M, canvas.width, M);
+    ctx.fillRect(0, M, M, canvas.height - M * 2);
+    ctx.fillRect(canvas.width - M, M, M, canvas.height - M * 2);
+    ctx.strokeStyle = 'rgba(239,68,68,0.6)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([16, 10]);
+    ctx.strokeRect(M, M, canvas.width - M * 2, canvas.height - M * 2);
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(239,68,68,0.7)';
+    ctx.font = 'bold 16px "Inter", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('MARGINES', canvas.width / 2, M - 6);
+  }
+
+  if (document.getElementById('showCrop').checked) {
+    const cropY = (canvas.height - canvas.width) / 2;
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(0, cropY);
+    ctx.lineTo(canvas.width, cropY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height - cropY);
+    ctx.lineTo(canvas.width, canvas.height - cropY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '12px "Inter", sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
+  }
+
+  if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
+    // 3:4 grid crop for 4:5 post: crop 33.75px (approx 34px) on left and right
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)'; // sky blue
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(34, 0);
+    ctx.lineTo(34, canvas.height);
+    ctx.moveTo(1046, 0);
+    ctx.lineTo(1046, canvas.height);
+    ctx.stroke();
+    
+    // 3:4 grid crop for 1:1 post: crop 135px on left and right
+    ctx.strokeStyle = 'rgba(234, 179, 8, 0.5)'; // yellow
+    ctx.beginPath();
+    ctx.moveTo(135, 0);
+    ctx.lineTo(135, canvas.height);
+    ctx.moveTo(945, 0);
+    ctx.lineTo(945, canvas.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+    ctx.font = '12px "Inter", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('crop 3:4 dla 4:5 (34px)', 40, 40);
+    
+    ctx.fillStyle = 'rgba(234, 179, 8, 0.7)';
+    ctx.fillText('crop 3:4 dla 1:1 (135px)', 141, 60);
+  }
+
+  // Photo drag handle
+  if (state.bgType === 'photo' && state.bgPhoto) {
+    hitBoxes.photo = { x: 0, y: 0, w: canvas.width, h: canvas.height };
+  } else {
+    hitBoxes.photo = null;
+  }
+}
+
+function hitTest(mx, my) {
+  const order = ['kicker', 'title', 'para', 'brand', 'slide'];
+  for (const id of order) {
+    const b = hitBoxes[id];
+    if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+      return id;
+    }
+  }
+  return null;
+}
+
+function canvasCoords(e) {
+  const r = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (canvas.width / r.width),
+    y: (e.clientY - r.top) * (canvas.height / r.height)
+  };
+}
+
+canvas.addEventListener('mousedown', (e) => {
+  const { x, y } = canvasCoords(e);
+  const hit = hitTest(x, y);
+  if (hit && hit !== 'photo') {
+    const b = hitBoxes[hit];
+    dragging = { id: hit, offsetX: x - b.x, offsetY: y - b.y };
+  } else if (hit === 'photo' && state.bgPhoto) {
+    dragging = { id: 'photo', offsetX: x - state.bgPhotoX, offsetY: y - state.bgPhotoY };
+  }
+});
+
+window.addEventListener('mouseup', () => { dragging = null; });
+
+canvas.addEventListener('mousemove', (e) => {
+  const { x, y } = canvasCoords(e);
+  
+  if (!dragging) {
+    const hovered = hitTest(x, y);
+    state.hoveredBlock = hovered;
+    
+    if (hovered && hovered !== 'photo') {
+      canvas.style.cursor = 'pointer';
+    } else if (hovered === 'photo') {
+      canvas.style.cursor = 'grab';
+    } else {
+      canvas.style.cursor = 'default';
+    }
+    return;
+  }
+  
+  const nx = x - dragging.offsetX;
+  const ny = y - dragging.offsetY;
+
+  if (dragging.id === 'photo') {
+    state.bgPhotoX = nx;
+    state.bgPhotoY = ny;
+    canvas.style.cursor = 'grabbing';
+  } else {
+    const cx = Math.max(M, Math.min(canvas.width - M, nx));
+    const cy = Math.max(M, Math.min(canvas.height - M, ny));
+    switch (dragging.id) {
+      case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
+      case 'title': state.titleX = cx; state.titleY = cy; break;
+      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'brand': state.brandX = cx; state.brandY = cy; break;
+      case 'slide': state.slideX = cx; state.slideY = cy; break;
+    }
+  }
+  draw();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  state.hoveredBlock = null;
+  canvas.style.cursor = 'default';
+});
+
+canvas.addEventListener('wheel', (e) => {
+  if (!state.bgPhoto) return;
+  e.preventDefault();
+  
+  const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
+  const newScale = Math.max(state.bgPhotoScale * 0.05, Math.min(state.bgPhotoScale * 10, state.bgPhotoScale * zoomFactor));
+  
+  const { x, y } = canvasCoords(e);
+  
+  const imgMouseX = (x - state.bgPhotoX) / state.bgPhotoScale;
+  const imgMouseY = (y - state.bgPhotoY) / state.bgPhotoScale;
+  
+  state.bgPhotoX = x - imgMouseX * newScale;
+  state.bgPhotoY = y - imgMouseY * newScale;
+  state.bgPhotoScale = newScale;
+  
+  const scaleSlider = document.getElementById('photoScale');
+  if (scaleSlider) {
+    scaleSlider.value = newScale.toFixed(2);
+    document.getElementById('photoScaleVal').textContent = newScale.toFixed(2) + 'x';
+  }
+  
+  draw();
+}, { passive: false });
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    const activeEl = document.activeElement;
+    const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+    
+    if (!isTyping && state.hoveredBlock && state.hoveredBlock !== 'photo') {
+      e.preventDefault();
+      const blockId = state.hoveredBlock;
+      
+      let inputEl = null;
+      if (blockId === 'title') inputEl = document.getElementById('mainText');
+      else if (blockId === 'kicker') inputEl = document.getElementById('kickerText');
+      else if (blockId === 'para') inputEl = document.getElementById('paraText');
+      else if (blockId === 'brand') inputEl = document.getElementById('brandText');
+      else if (blockId === 'slide') inputEl = document.getElementById('slideText');
+      
+      if (inputEl) {
+        inputEl.value = '';
+        inputEl.focus();
+        if (blockId === 'title') {
+          updateWordsFromText('');
+        } else {
+          draw();
+        }
+      }
+    }
+  }
+});
+
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  e.preventDefault();
+  const { x, y } = canvasCoords(e.touches[0]);
+  const hit = hitTest(x, y);
+  if (hit && hit !== 'photo') {
+    const b = hitBoxes[hit];
+    dragging = { id: hit, offsetX: x - b.x, offsetY: y - b.y };
+  } else if (hit === 'photo' && state.bgPhoto) {
+    dragging = { id: 'photo', offsetX: x - state.bgPhotoX, offsetY: y - state.bgPhotoY };
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+  if (!dragging || e.touches.length !== 1) return;
+  e.preventDefault();
+  const { x, y } = canvasCoords(e.touches[0]);
+  const nx = x - dragging.offsetX;
+  const ny = y - dragging.offsetY;
+  if (dragging.id === 'photo') {
+    state.bgPhotoX = nx;
+    state.bgPhotoY = ny;
+  } else {
+    const cx = Math.max(M, Math.min(canvas.width - M, nx));
+    const cy = Math.max(M, Math.min(canvas.height - M, ny));
+    switch (dragging.id) {
+      case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
+      case 'title': state.titleX = cx; state.titleY = cy; break;
+      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'brand': state.brandX = cx; state.brandY = cy; break;
+      case 'slide': state.slideX = cx; state.slideY = cy; break;
+    }
+  }
+  draw();
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { dragging = null; });
+
+function downloadImage() {
+  const gOn = document.getElementById('showGuides').checked;
+  const cOn = document.getElementById('showCrop').checked;
+  const g34On = document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : false;
+  if (gOn) document.getElementById('showGuides').checked = false;
+  if (cOn) document.getElementById('showCrop').checked = false;
+  if (g34On) document.getElementById('showGrid34').checked = false;
+  draw();
+  try {
+    const url = canvas.toDataURL('image/png', 1.0);
+    const link = document.createElement('a');
+    link.download = 'post_ig_' + Date.now() + '.png';
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    alert('Błąd eksportu. Spróbuj najpierw wgrać zdjęcie przyciskiem "Z dysku".');
+  }
+  if (gOn) document.getElementById('showGuides').checked = true;
+  if (cOn) document.getElementById('showCrop').checked = true;
+  if (g34On) document.getElementById('showGrid34').checked = true;
+  draw();
+}
+
+function showPreview() {
+  const gOn = document.getElementById('showGuides').checked;
+  const cOn = document.getElementById('showCrop').checked;
+  const g34On = document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : false;
+  if (gOn) document.getElementById('showGuides').checked = false;
+  if (cOn) document.getElementById('showCrop').checked = false;
+  if (g34On) document.getElementById('showGrid34').checked = false;
+  draw();
+  const fullUrl = canvas.toDataURL('image/png', 1.0);
+  const cropCanvas = document.createElement('canvas');
+  cropCanvas.width = 1080; cropCanvas.height = 1080;
+  const cCtx = cropCanvas.getContext('2d');
+  cCtx.drawImage(canvas, 0, 135, 1080, 1080, 0, 0, 1080, 1080);
+  const cropUrl = cropCanvas.toDataURL('image/png', 1.0);
+  if (gOn) document.getElementById('showGuides').checked = true;
+  if (cOn) document.getElementById('showCrop').checked = true;
+  if (g34On) document.getElementById('showGrid34').checked = true;
+  draw();
+
+  previewFullUrl = fullUrl;
+  previewCropUrl = cropUrl;
+  renderPreviewGrid();
+
+  // --- POST MOCKUP (IG chrome desktop viewport layout) ---
+  const pc = document.getElementById('previewPost');
+  pc.innerHTML = '';
+  
+  const splitContainer = document.createElement('div');
+  splitContainer.style.cssText = 'display:flex; width:100%; background:#fff; min-height:400px';
+  
+  // Left side: Post image (4:5)
+  const imgCol = document.createElement('div');
+  imgCol.style.cssText = 'flex: 1.2; background:#000; display:flex; align-items:center; justify-content:center; border-right: 1px solid #efefef';
+  const imgEl = document.createElement('img');
+  imgEl.src = fullUrl;
+  imgEl.style.cssText = 'width:100%; display:block; object-fit:contain';
+  imgCol.appendChild(imgEl);
+  splitContainer.appendChild(imgCol);
+  
+  // Right side: Profile & Caption
+  const infoCol = document.createElement('div');
+  infoCol.style.cssText = 'flex: 1; display:flex; flex-direction:column; background:#fff';
+  
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;padding:12px;gap:10px;border-bottom:1px solid #efefef';
+  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">F</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">flatpack</div><div style="font-size:11px;color:#8e8e8e">Warszawa, Polska</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
+  infoCol.appendChild(hdr);
+  
+  const capScroll = document.createElement('div');
+  capScroll.style.cssText = 'flex:1; padding:12px; font-size:13px; color:#262626; overflow-y:auto; line-height:1.5; border-bottom:1px solid #efefef';
+  
+  const kickerVal = document.getElementById('kickerText').value;
+  const captionVal = document.getElementById('mainText').value;
+  const paraVal = document.getElementById('paraText').value;
+  let formattedText = `<span style="font-weight:700">flatpack</span> `;
+  if (kickerVal) formattedText += `<br><span style="color:#8e8e8e;font-size:11px;font-weight:700">${kickerVal}</span><br>`;
+  formattedText += `<strong>${captionVal}</strong>`;
+  if (paraVal) formattedText += `<br><br>${paraVal}`;
+  formattedText += `<br><br><span style="color:#00376b">#flatpack #design #branding #socialmedia #generator</span>`;
+  
+  capScroll.innerHTML = formattedText;
+  infoCol.appendChild(capScroll);
+  
+  const act = document.createElement('div');
+  act.style.cssText = 'display:flex;align-items:center;padding:10px 12px;gap:14px';
+  act.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8" style="margin-left:auto"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+  infoCol.appendChild(act);
+  
+  const lk = document.createElement('div');
+  lk.style.cssText = 'padding:0 12px 10px;font-size:13px;font-weight:700;color:#262626';
+  lk.textContent = '1 284 polubień';
+  infoCol.appendChild(lk);
+  
+  splitContainer.appendChild(infoCol);
+  pc.appendChild(splitContainer);
+
+  document.getElementById('previewModal').style.display = 'flex';
+}
+
+function closePreview() {
+  document.getElementById('previewModal').style.display = 'none';
+}
+
+function executeDownload() {
+  closePreview();
+  downloadImage();
+}
+
+// Initial initialization
+document.getElementById('mainText').value = state.mainText;
+updateWordsFromText(state.mainText);
+</script>
+</body>
+</html>
