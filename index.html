@@ -118,8 +118,8 @@ canvas:active { cursor: grabbing; }
 </div>
 <div class="row" id="bgOverlayContainer" style="margin-top:10px; display:none">
 <label>Przyciemnienie:</label>
-<input type="range" id="bgOverlay" min="0" max="1" step="0.05" value="0" oninput="state.bgOverlay=+this.value;document.getElementById('bgOverlayVal').textContent=Math.round(this.value*100)+'%';draw()">
-<span class="slider-val" id="bgOverlayVal">0%</span>
+<input type="range" id="bgOverlay" min="0" max="0.30" step="0.01" value="0.08" oninput="state.bgOverlay=+this.value;document.getElementById('bgOverlayVal').textContent=Math.round(this.value*100)+'%';draw()">
+<span class="slider-val" id="bgOverlayVal">8%</span>
 </div>
 </div>
 
@@ -319,7 +319,7 @@ const state = {
   bgPhoto: null,
   bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
   gradient: false,
-  bgOverlay: 0.0,
+  bgOverlay: 0.08,
 
   kickerText: 'PROFESSIONAL ASSEMBLY',
   kickerColor: '#097EFF',
@@ -506,12 +506,12 @@ function clearPhoto() {
   
   const overlayContainer = document.getElementById('bgOverlayContainer');
   if (overlayContainer) overlayContainer.style.display = 'none';
-  state.bgOverlay = 0.0;
+  state.bgOverlay = 0.08;
   const bgOverlayEl = document.getElementById('bgOverlay');
   if (bgOverlayEl) {
-    bgOverlayEl.value = 0;
+    bgOverlayEl.value = 0.08;
     const valEl = document.getElementById('bgOverlayVal');
-    if (valEl) valEl.textContent = '0%';
+    if (valEl) valEl.textContent = '8%';
   }
   
   document.getElementById('photoUpload').value = '';
@@ -849,11 +849,11 @@ function draw() {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
       
-    // Apply dark gradient overlay to make text readable on bright photos
+    // Apply sunglasses-like warm dark gradient overlay (very delicate, max 30% opacity)
     if (state.bgOverlay > 0) {
       const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      g.addColorStop(0, `rgba(0, 0, 0, ${state.bgOverlay * 0.7})`);
-      g.addColorStop(1, `rgba(0, 0, 0, ${state.bgOverlay})`);
+      g.addColorStop(0, `rgba(15, 15, 20, ${state.bgOverlay * 0.7})`);
+      g.addColorStop(1, `rgba(25, 20, 15, ${state.bgOverlay})`);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
