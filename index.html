@@ -105,9 +105,10 @@ canvas:active { cursor: grabbing; }
 <button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF')"></button>
 <button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9')"></button>
 </div>
-<div class="row" style="margin-top:10px">
-<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient Flatpack</button>
-<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Z dysku</label>
+<div class="row" style="margin-top:10px; flex-wrap: wrap; gap: 6px;">
+<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient</button>
+<button class="small-btn" id="transparentBgBtn" onclick="setBgTransparent()">Przezroczyste</button>
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Foto z dysku</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
 </div>
@@ -181,24 +182,6 @@ canvas:active { cursor: grabbing; }
 </div>
 
 <div class="section">
-<div class="section-title">Apla (Tło pod tekstem)</div>
-<div class="toggle-row">
-  <label>Pokaż aplę (kartę pod tekstem)</label>
-  <input type="checkbox" id="showApla" onchange="state.showApla=this.checked;draw()">
-</div>
-<div class="row">
-  <label>Styl apli:</label>
-  <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()">
-    <option value="light-glass">Jasne szkło (Glassmorphism)</option>
-    <option value="dark-glass">Ciemne szkło</option>
-    <option value="blue">Niebieska</option>
-    <option value="green">Zielona (Trustpilot)</option>
-    <option value="navy">Granatowa</option>
-  </select>
-</div>
-</div>
-
-<div class="section">
 <div class="section-title">Logo (Czerwona torba)</div>
 <div class="toggle-row">
   <label>Pokaż logo flatpack.help</label>
@@ -239,6 +222,35 @@ canvas:active { cursor: grabbing; }
 <div class="toggle-row"><label>Pokaż crop 1:1 (siatka IG)</label><input type="checkbox" id="showCrop" checked onchange="draw()"></div>
 <div class="toggle-row"><label>Pokaż crop 3:4 (siatka profilu)</label><input type="checkbox" id="showGrid34" checked onchange="draw()"></div>
 <div class="toggle-row"><label>Pokaż numerację</label><input type="checkbox" id="showSlideNum" checked onchange="draw()"></div>
+<div class="toggle-row" style="border-top:1px dashed var(--border); margin-top:8px; padding-top:8px">
+  <label style="font-weight:700; color:var(--text)">Dodaj aplę (kartę pod tekstem)</label>
+  <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
+</div>
+<div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
+  <div class="row">
+    <label>Styl apli:</label>
+    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()">
+      <option value="light-glass">Jasne szkło (Glassmorphism)</option>
+      <option value="dark-glass">Ciemne szkło</option>
+      <option value="blue">Niebieska</option>
+      <option value="green">Zielona (Trustpilot)</option>
+      <option value="navy">Granatowa</option>
+    </select>
+  </div>
+  <div class="row">
+    <label>Szerokość:</label>
+    <input type="range" id="aplaW" min="100" max="1080" value="880" oninput="state.aplaW=+this.value;document.getElementById('aplaWVal').textContent=this.value+'px';draw()">
+    <span class="slider-val" id="aplaWVal">880px</span>
+  </div>
+  <div class="row">
+    <label>Wysokość:</label>
+    <input type="range" id="aplaH" min="100" max="1350" value="680" oninput="state.aplaH=+this.value;document.getElementById('aplaHVal').textContent=this.value+'px';draw()">
+    <span class="slider-val" id="aplaHVal">680px</span>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <button class="small-btn" style="width:100%" onclick="resetAplaPosition()">Wyśrodkuj aplę</button>
+  </div>
+</div>
 </div>
 
 <div class="section" style="border:none;padding-bottom:30px">
@@ -291,6 +303,7 @@ canvas:active { cursor: grabbing; }
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const M = 80;
+let isExporting = false;
 
 let grainPattern = null;
 const grainImg = new Image();
@@ -323,8 +336,12 @@ const state = {
   paraAlign: 'left',
   paraColor: '#FFFFFF',
 
-  showApla: true,
+  showApla: false,
   aplaStyle: 'light-glass',
+  aplaX: 100,
+  aplaY: 240,
+  aplaW: 880,
+  aplaH: 680,
 
   showLogo: true,
   logoX: 840,
@@ -423,8 +440,12 @@ function setBgColor(hex) {
   state.bgColor = hex;
   state.gradient = false;
   document.getElementById('gradientBtn').classList.remove('active');
+  const transparentBtn = document.getElementById('transparentBgBtn');
+  if (transparentBtn) transparentBtn.classList.remove('active');
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-  event.target.classList.add('active');
+  if (window.event && window.event.target && window.event.target.classList) {
+    window.event.target.classList.add('active');
+  }
   clearPhoto();
   draw();
 }
@@ -433,8 +454,33 @@ function toggleGradient() {
   state.gradient = !state.gradient;
   state.bgType = state.gradient ? 'gradient' : 'color';
   document.getElementById('gradientBtn').classList.toggle('active');
+  const transparentBtn = document.getElementById('transparentBgBtn');
+  if (transparentBtn) transparentBtn.classList.remove('active');
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
   draw();
+}
+
+function setBgTransparent() {
+  state.bgType = 'transparent';
+  state.gradient = false;
+  document.getElementById('gradientBtn').classList.remove('active');
+  const transparentBtn = document.getElementById('transparentBgBtn');
+  if (transparentBtn) transparentBtn.classList.add('active');
+  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+  clearPhoto();
+  draw();
+}
+
+function drawCheckerboard(ctx, w, h) {
+  const size = 15;
+  ctx.save();
+  for (let y = 0; y < h; y += size) {
+    for (let x = 0; x < w; x += size) {
+      ctx.fillStyle = ((x / size + y / size) % 2 === 0) ? '#1A2333' : '#0F172A';
+      ctx.fillRect(x, y, size, size);
+    }
+  }
+  ctx.restore();
 }
 
 function handlePhoto(e) {
@@ -763,6 +809,10 @@ function draw() {
     g.addColorStop(1, '#1E3A8A'); // Deep navy
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else if (state.bgType === 'transparent') {
+    if (!isExporting) {
+      drawCheckerboard(ctx, canvas.width, canvas.height);
+    }
   } else {
     ctx.fillStyle = state.bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -898,68 +948,39 @@ function draw() {
 
   // DRAW APLA (Background Shape under text)
   if (state.showApla && state.aplaStyle !== 'none') {
-    let pad = 36;
-    let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
-    let hasAny = false;
-    
-    if (kickerVal && hitBoxes.kicker) {
-      minX = Math.min(minX, state.kickerX);
-      minY = Math.min(minY, state.kickerY);
-      maxX = Math.max(maxX, state.kickerX + hitBoxes.kicker.w);
-      maxY = Math.max(maxY, state.kickerY + hitBoxes.kicker.h);
-      hasAny = true;
-    }
-    if (state.mainText && hitBoxes.title) {
-      minX = Math.min(minX, state.titleX);
-      minY = Math.min(minY, state.titleY);
-      maxX = Math.max(maxX, state.titleX + hitBoxes.title.w);
-      maxY = Math.max(maxY, state.titleY + hitBoxes.title.h);
-      hasAny = true;
-    }
-    if (paraVal && hitBoxes.para) {
-      minX = Math.min(minX, hitBoxes.para.x);
-      minY = Math.min(minY, hitBoxes.para.y);
-      maxX = Math.max(maxX, hitBoxes.para.x + hitBoxes.para.w);
-      maxY = Math.max(maxY, hitBoxes.para.y + hitBoxes.para.h);
-      hasAny = true;
+    ctx.save();
+    if (state.aplaStyle === 'light-glass') {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+      ctx.shadowBlur = 40;
+    } else if (state.aplaStyle === 'dark-glass') {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+      ctx.shadowBlur = 40;
+    } else if (state.aplaStyle === 'blue') {
+      ctx.fillStyle = 'rgba(9, 126, 255, 0.9)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    } else if (state.aplaStyle === 'green') {
+      ctx.fillStyle = 'rgba(0, 182, 122, 0.9)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    } else if (state.aplaStyle === 'navy') {
+      ctx.fillStyle = 'rgba(30, 58, 138, 0.9)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     }
     
-    if (hasAny) {
-      ctx.save();
-      if (state.aplaStyle === 'light-glass') {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-        ctx.shadowBlur = 40;
-      } else if (state.aplaStyle === 'dark-glass') {
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-        ctx.shadowBlur = 40;
-      } else if (state.aplaStyle === 'blue') {
-        ctx.fillStyle = 'rgba(9, 126, 255, 0.9)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      } else if (state.aplaStyle === 'green') {
-        ctx.fillStyle = 'rgba(0, 182, 122, 0.9)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      } else if (state.aplaStyle === 'navy') {
-        ctx.fillStyle = 'rgba(30, 58, 138, 0.9)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      }
-      
-      const ax = minX - pad;
-      const ay = minY - pad;
-      const aw = (maxX - minX) + pad * 2;
-      const ah = (maxY - minY) + pad * 2;
-      
-      drawRoundedRect(ctx, ax, ay, aw, ah, 24);
-      ctx.fill();
-      if (ctx.strokeStyle) {
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-      ctx.restore();
+    drawRoundedRect(ctx, state.aplaX, state.aplaY, state.aplaW, state.aplaH, 24);
+    ctx.fill();
+    if (ctx.strokeStyle) {
+      ctx.lineWidth = 2;
+      ctx.stroke();
     }
+    ctx.restore();
+    
+    hitBoxes.apla = { x: state.aplaX, y: state.aplaY, w: state.aplaW, h: state.aplaH };
+  } else {
+    hitBoxes.apla = null;
   }
 
   // Draw actual Kicker Text
@@ -1116,7 +1137,7 @@ function draw() {
   }
 
   // 7. Guides (Marginesy i siatka IG)
-  if (document.getElementById('showGuides').checked) {
+  if (!isExporting && document.getElementById('showGuides').checked) {
     ctx.fillStyle = 'rgba(0,0,0,0.4)';
     ctx.fillRect(0, 0, canvas.width, M);
     ctx.fillRect(0, canvas.height - M, canvas.width, M);
@@ -1133,7 +1154,7 @@ function draw() {
     ctx.fillText('SAFE AREA (80PX)', canvas.width / 2, M - 6);
   }
 
-  if (document.getElementById('showCrop').checked) {
+  if (!isExporting && document.getElementById('showCrop').checked) {
     const cropY = (canvas.height - canvas.width) / 2;
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.lineWidth = 2;
@@ -1153,7 +1174,7 @@ function draw() {
     ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
   }
 
-  if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
+  if (!isExporting && document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
     ctx.strokeStyle = 'rgba(0, 182, 122, 0.4)'; // Trustpilot green
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
@@ -1202,7 +1223,7 @@ function draw() {
 }
 
 function hitTest(mx, my) {
-  const order = ['logo', 'kicker', 'title', 'para', 'brand', 'slide'];
+  const order = ['logo', 'kicker', 'title', 'para', 'brand', 'slide', 'apla'];
   for (const id of order) {
     const b = hitBoxes[id];
     if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
@@ -1267,6 +1288,7 @@ canvas.addEventListener('mousemove', (e) => {
       case 'para': state.paraX = cx; state.paraY = cy; break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
+      case 'apla': state.aplaX = nx; state.aplaY = ny; break;
     }
   }
   draw();
@@ -1363,6 +1385,7 @@ canvas.addEventListener('touchmove', (e) => {
       case 'para': state.paraX = cx; state.paraY = cy; break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
+      case 'apla': state.aplaX = nx; state.aplaY = ny; break;
     }
   }
   draw();
@@ -1371,12 +1394,7 @@ canvas.addEventListener('touchmove', (e) => {
 canvas.addEventListener('touchend', () => { dragging = null; });
 
 function downloadImage() {
-  const gOn = document.getElementById('showGuides').checked;
-  const cOn = document.getElementById('showCrop').checked;
-  const g34On = document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : false;
-  if (gOn) document.getElementById('showGuides').checked = false;
-  if (cOn) document.getElementById('showCrop').checked = false;
-  if (g34On) document.getElementById('showGrid34').checked = false;
+  isExporting = true;
   draw();
   try {
     const url = canvas.toDataURL('image/png', 1.0);
@@ -1389,19 +1407,12 @@ function downloadImage() {
   } catch (err) {
     alert('Błąd eksportu. Spróbuj najpierw wgrać zdjęcie przyciskiem "Z dysku".');
   }
-  if (gOn) document.getElementById('showGuides').checked = true;
-  if (cOn) document.getElementById('showCrop').checked = true;
-  if (g34On) document.getElementById('showGrid34').checked = true;
+  isExporting = false;
   draw();
 }
 
 function showPreview() {
-  const gOn = document.getElementById('showGuides').checked;
-  const cOn = document.getElementById('showCrop').checked;
-  const g34On = document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : false;
-  if (gOn) document.getElementById('showGuides').checked = false;
-  if (cOn) document.getElementById('showCrop').checked = false;
-  if (g34On) document.getElementById('showGrid34').checked = false;
+  isExporting = true;
   draw();
   const fullUrl = canvas.toDataURL('image/png', 1.0);
   const cropCanvas = document.createElement('canvas');
@@ -1409,9 +1420,7 @@ function showPreview() {
   const cCtx = cropCanvas.getContext('2d');
   cCtx.drawImage(canvas, 0, 135, 1080, 1080, 0, 0, 1080, 1080);
   const cropUrl = cropCanvas.toDataURL('image/png', 1.0);
-  if (gOn) document.getElementById('showGuides').checked = true;
-  if (cOn) document.getElementById('showCrop').checked = true;
-  if (g34On) document.getElementById('showGrid34').checked = true;
+  isExporting = false;
   draw();
 
   previewFullUrl = fullUrl;
@@ -1483,11 +1492,31 @@ function executeDownload() {
   downloadImage();
 }
 
+function toggleAplaControls(show) {
+  const ctrl = document.getElementById('aplaControls');
+  if (ctrl) {
+    ctrl.style.display = show ? 'block' : 'none';
+  }
+}
+
+function resetAplaPosition() {
+  state.aplaX = (canvas.width - state.aplaW) / 2;
+  state.aplaY = (canvas.height - state.aplaH) / 2;
+  draw();
+}
+
 // Initial initialization
 document.getElementById('mainText').value = state.mainText;
 document.getElementById('paraText').value = state.paraText;
 document.getElementById('showApla').checked = state.showApla;
+toggleAplaControls(state.showApla);
 document.getElementById('aplaStyle').value = state.aplaStyle;
+document.getElementById('aplaW').value = state.aplaW;
+document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
+document.getElementById('aplaH').value = state.aplaH;
+document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
+document.getElementById('logoScale').value = state.logoScale;
+document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
 updateWordsFromText(state.mainText);
 </script>
 </body>
