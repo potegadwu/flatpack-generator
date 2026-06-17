@@ -1019,7 +1019,7 @@ function draw() {
 
   // Draw actual Kicker Text
   if (kickerVal) {
-    ctx.fillStyle = '#097EFF';
+    ctx.fillStyle = state.kickerColor;
     ctx.beginPath();
     ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
     ctx.fill();
