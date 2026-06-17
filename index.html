@@ -979,6 +979,40 @@ function draw() {
     ctx.restore();
     
     hitBoxes.apla = { x: state.aplaX, y: state.aplaY, w: state.aplaW, h: state.aplaH };
+
+    // Draw active select border & circular handles when editing
+    if (!isExporting) {
+      ctx.save();
+      ctx.strokeStyle = '#097EFF';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      drawRoundedRect(ctx, state.aplaX, state.aplaY, state.aplaW, state.aplaH, 24);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.strokeStyle = '#097EFF';
+      ctx.lineWidth = 2.5;
+      
+      const handles = [
+        { x: state.aplaX, y: state.aplaY }, // tl
+        { x: state.aplaX + state.aplaW / 2, y: state.aplaY }, // tm
+        { x: state.aplaX + state.aplaW, y: state.aplaY }, // tr
+        { x: state.aplaX + state.aplaW, y: state.aplaY + state.aplaH / 2 }, // rm
+        { x: state.aplaX + state.aplaW, y: state.aplaY + state.aplaH }, // br
+        { x: state.aplaX + state.aplaW / 2, y: state.aplaY + state.aplaH }, // bm
+        { x: state.aplaX, y: state.aplaY + state.aplaH }, // bl
+        { x: state.aplaX, y: state.aplaY + state.aplaH / 2 } // lm
+      ];
+      
+      handles.forEach(h => {
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
   } else {
     hitBoxes.apla = null;
   }
@@ -1222,6 +1256,75 @@ function draw() {
   }
 }
 
+function hitTestAplaHandle(mx, my) {
+  if (!state.showApla) return null;
+  const tolerance = 15; // px hit tolerance
+  
+  // 1. corners
+  // Top-Left (tl)
+  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tl';
+  // Top-Right (tr)
+  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tr';
+  // Bottom-Left (bl)
+  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'bl';
+  // Bottom-Right (br)
+  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'br';
+  
+  // 2. edges
+  // Top-Middle (tm)
+  if (Math.abs(mx - (state.aplaX + state.aplaW / 2)) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tm';
+  // Bottom-Middle (bm)
+  if (Math.abs(mx - (state.aplaX + state.aplaW / 2)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'bm';
+  // Left-Middle (lm)
+  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH / 2)) <= tolerance) return 'lm';
+  // Right-Middle (rm)
+  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH / 2)) <= tolerance) return 'rm';
+  
+  return null;
+}
+
+function resizeApla(dx, dy, handle, startW, startH, startX, startY) {
+  if (handle === 'br') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
+  } else if (handle === 'bl') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
+    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
+  } else if (handle === 'tl') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
+    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
+    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
+  } else if (handle === 'tr') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
+    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
+  } else if (handle === 'rm') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
+  } else if (handle === 'lm') {
+    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
+    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
+  } else if (handle === 'bm') {
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
+  } else if (handle === 'tm') {
+    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
+    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
+  }
+  
+  // Sync to DOM inputs
+  const aplaWEl = document.getElementById('aplaW');
+  if (aplaWEl) {
+    aplaWEl.value = state.aplaW;
+    document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
+  }
+  const aplaHEl = document.getElementById('aplaH');
+  if (aplaHEl) {
+    aplaHEl.value = state.aplaH;
+    document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
+  }
+}
+
 function hitTest(mx, my) {
   const order = ['logo', 'kicker', 'title', 'para', 'brand', 'slide', 'apla'];
   for (const id of order) {
@@ -1243,6 +1346,22 @@ function canvasCoords(e) {
 
 canvas.addEventListener('mousedown', (e) => {
   const { x, y } = canvasCoords(e);
+  
+  const handle = hitTestAplaHandle(x, y);
+  if (handle) {
+    dragging = {
+      id: 'apla-resize',
+      handle: handle,
+      startW: state.aplaW,
+      startH: state.aplaH,
+      startX: state.aplaX,
+      startY: state.aplaY,
+      mouseStartX: x,
+      mouseStartY: y
+    };
+    return;
+  }
+  
   const hit = hitTest(x, y);
   if (hit && hit !== 'photo') {
     const b = hitBoxes[hit];
@@ -1258,6 +1377,15 @@ canvas.addEventListener('mousemove', (e) => {
   const { x, y } = canvasCoords(e);
   
   if (!dragging) {
+    const handle = hitTestAplaHandle(x, y);
+    if (handle) {
+      if (handle === 'tl' || handle === 'br') canvas.style.cursor = 'nwse-resize';
+      else if (handle === 'tr' || handle === 'bl') canvas.style.cursor = 'nesw-resize';
+      else if (handle === 'rm' || handle === 'lm') canvas.style.cursor = 'ew-resize';
+      else if (handle === 'tm' || handle === 'bm') canvas.style.cursor = 'ns-resize';
+      return;
+    }
+    
     const hovered = hitTest(x, y);
     state.hoveredBlock = hovered;
     
@@ -1268,6 +1396,14 @@ canvas.addEventListener('mousemove', (e) => {
     } else {
       canvas.style.cursor = 'default';
     }
+    return;
+  }
+  
+  if (dragging.id === 'apla-resize') {
+    const dx = x - dragging.mouseStartX;
+    const dy = y - dragging.mouseStartY;
+    resizeApla(dx, dy, dragging.handle, dragging.startW, dragging.startH, dragging.startX, dragging.startY);
+    draw();
     return;
   }
   
@@ -1357,6 +1493,22 @@ canvas.addEventListener('touchstart', (e) => {
   if (e.touches.length !== 1) return;
   e.preventDefault();
   const { x, y } = canvasCoords(e.touches[0]);
+  
+  const handle = hitTestAplaHandle(x, y);
+  if (handle) {
+    dragging = {
+      id: 'apla-resize',
+      handle: handle,
+      startW: state.aplaW,
+      startH: state.aplaH,
+      startX: state.aplaX,
+      startY: state.aplaY,
+      mouseStartX: x,
+      mouseStartY: y
+    };
+    return;
+  }
+  
   const hit = hitTest(x, y);
   if (hit && hit !== 'photo') {
     const b = hitBoxes[hit];
@@ -1370,6 +1522,15 @@ canvas.addEventListener('touchmove', (e) => {
   if (!dragging || e.touches.length !== 1) return;
   e.preventDefault();
   const { x, y } = canvasCoords(e.touches[0]);
+  
+  if (dragging.id === 'apla-resize') {
+    const dx = x - dragging.mouseStartX;
+    const dy = y - dragging.mouseStartY;
+    resizeApla(dx, dy, dragging.handle, dragging.startW, dragging.startH, dragging.startX, dragging.startY);
+    draw();
+    return;
+  }
+  
   const nx = x - dragging.offsetX;
   const ny = y - dragging.offsetY;
   if (dragging.id === 'photo') {
