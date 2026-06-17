@@ -107,7 +107,6 @@ canvas:active { cursor: grabbing; }
 </div>
 <div class="row" style="margin-top:10px; flex-wrap: wrap; gap: 6px;">
 <button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient</button>
-<button class="small-btn" id="transparentBgBtn" onclick="setBgTransparent()">Przezroczyste</button>
 <label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Foto z dysku</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
@@ -116,6 +115,11 @@ canvas:active { cursor: grabbing; }
 <label>Skala:</label>
 <input type="range" id="photoScale" min="0.1" max="4.0" step="0.05" value="1.0" oninput="setPhotoScale(this.value)">
 <span class="slider-val" id="photoScaleVal">1.0x</span>
+</div>
+<div class="row" id="bgOverlayContainer" style="margin-top:10px; display:none">
+<label>Przyciemnienie:</label>
+<input type="range" id="bgOverlay" min="0" max="1" step="0.05" value="0" oninput="state.bgOverlay=+this.value;document.getElementById('bgOverlayVal').textContent=Math.round(this.value*100)+'%';draw()">
+<span class="slider-val" id="bgOverlayVal">0%</span>
 </div>
 </div>
 
@@ -315,6 +319,7 @@ const state = {
   bgPhoto: null,
   bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
   gradient: false,
+  bgOverlay: 0.0,
 
   kickerText: 'PROFESSIONAL ASSEMBLY',
   kickerColor: '#097EFF',
@@ -437,8 +442,6 @@ function setBgColor(hex) {
   state.bgColor = hex;
   state.gradient = false;
   document.getElementById('gradientBtn').classList.remove('active');
-  const transparentBtn = document.getElementById('transparentBgBtn');
-  if (transparentBtn) transparentBtn.classList.remove('active');
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
   if (window.event && window.event.target && window.event.target.classList) {
     window.event.target.classList.add('active');
@@ -451,33 +454,8 @@ function toggleGradient() {
   state.gradient = !state.gradient;
   state.bgType = state.gradient ? 'gradient' : 'color';
   document.getElementById('gradientBtn').classList.toggle('active');
-  const transparentBtn = document.getElementById('transparentBgBtn');
-  if (transparentBtn) transparentBtn.classList.remove('active');
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
   draw();
-}
-
-function setBgTransparent() {
-  state.bgType = 'transparent';
-  state.gradient = false;
-  document.getElementById('gradientBtn').classList.remove('active');
-  const transparentBtn = document.getElementById('transparentBgBtn');
-  if (transparentBtn) transparentBtn.classList.add('active');
-  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-  clearPhoto();
-  draw();
-}
-
-function drawCheckerboard(ctx, w, h) {
-  const size = 15;
-  ctx.save();
-  for (let y = 0; y < h; y += size) {
-    for (let x = 0; x < w; x += size) {
-      ctx.fillStyle = ((x / size + y / size) % 2 === 0) ? '#1A2333' : '#0F172A';
-      ctx.fillRect(x, y, size, size);
-    }
-  }
-  ctx.restore();
 }
 
 function handlePhoto(e) {
@@ -508,6 +486,9 @@ function handlePhoto(e) {
       document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
       document.getElementById('photoScaleContainer').style.display = 'flex';
       
+      const overlayContainer = document.getElementById('bgOverlayContainer');
+      if (overlayContainer) overlayContainer.style.display = 'flex';
+      
       document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
       document.getElementById('gradientBtn').classList.remove('active');
       draw();
@@ -522,6 +503,17 @@ function clearPhoto() {
   state.bgType = state.gradient ? 'gradient' : 'color';
   document.getElementById('clearPhotoBtn').style.display = 'none';
   document.getElementById('photoScaleContainer').style.display = 'none';
+  
+  const overlayContainer = document.getElementById('bgOverlayContainer');
+  if (overlayContainer) overlayContainer.style.display = 'none';
+  state.bgOverlay = 0.0;
+  const bgOverlayEl = document.getElementById('bgOverlay');
+  if (bgOverlayEl) {
+    bgOverlayEl.value = 0;
+    const valEl = document.getElementById('bgOverlayVal');
+    if (valEl) valEl.textContent = '0%';
+  }
+  
   document.getElementById('photoUpload').value = '';
   draw();
 }
@@ -856,16 +848,21 @@ function draw() {
   if (state.bgType === 'photo' && state.bgPhoto) {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
+      
+    // Apply dark gradient overlay to make text readable on bright photos
+    if (state.bgOverlay > 0) {
+      const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      g.addColorStop(0, `rgba(0, 0, 0, ${state.bgOverlay * 0.7})`);
+      g.addColorStop(1, `rgba(0, 0, 0, ${state.bgOverlay})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
   } else if (state.bgType === 'gradient' || state.gradient) {
     const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
     g.addColorStop(0, '#097EFF'); // Bright blue
     g.addColorStop(1, '#1E3A8A'); // Deep navy
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  } else if (state.bgType === 'transparent') {
-    if (!isExporting) {
-      drawCheckerboard(ctx, canvas.width, canvas.height);
-    }
   } else {
     ctx.fillStyle = state.bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1520,9 +1517,14 @@ window.addEventListener('keydown', (e) => {
     const activeEl = document.activeElement;
     const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
     
-    if (!isTyping && state.hoveredBlock && state.hoveredBlock !== 'photo') {
+    if (!isTyping && state.hoveredBlock) {
       e.preventDefault();
       const blockId = state.hoveredBlock;
+      
+      if (blockId === 'photo') {
+        clearPhoto();
+        return;
+      }
       
       let inputEl = null;
       if (blockId === 'title') inputEl = document.getElementById('mainText');
