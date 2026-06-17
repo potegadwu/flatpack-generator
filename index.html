@@ -137,11 +137,7 @@ canvas:active { cursor: grabbing; }
 <div class="section">
 <div class="section-title">Tekst Główny</div>
 <textarea id="mainText" style="min-height:180px;font-size:0.9rem;line-height:1.4" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło..."></textarea>
-<div class="row" style="margin-top:10px">
-<label>Rozmiar:</label>
-<input type="range" id="titleSize" min="24" max="220" value="90" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
-<span class="slider-val" id="titleSizeVal">90px</span>
-</div>
+<div id="lineSizesContainer"></div>
 <div class="row">
 <label>Interlinia:</label>
 <input type="range" id="titleLH" min="0.6" max="2.0" step="0.05" value="0.95" oninput="state.titleLH=+this.value;document.getElementById('titleLHVal').textContent=this.value;draw()">
@@ -328,6 +324,7 @@ const state = {
   words: [],
   titleX: 150, titleY: 280,
   titleSize: 90,
+  lineSizes: [90],
   titleLH: 0.95,
   wordSpacing: 20,
 
@@ -593,7 +590,63 @@ function updateWordsFromText(text) {
   });
   
   state.words = newWords;
+  
+  // Dynamic lineSizes sync
+  const rawLines = text.split('\n');
+  const N = rawLines.length;
+  if (!state.lineSizes) {
+    state.lineSizes = [];
+  }
+  while (state.lineSizes.length < N) {
+    state.lineSizes.push(state.titleSize || 90);
+  }
+  if (state.lineSizes.length > N) {
+    state.lineSizes = state.lineSizes.slice(0, N);
+  }
+  
+  renderLineSizesUI();
   renderWordsUI();
+  draw();
+}
+
+function renderLineSizesUI() {
+  const container = document.getElementById('lineSizesContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const rawLines = state.mainText.split('\n');
+  
+  rawLines.forEach((lineText, index) => {
+    const labelText = rawLines.length === 1 ? 'Rozmiar:' : `Rozmiar linii ${index + 1}:`;
+    const size = state.lineSizes[index] || state.titleSize || 90;
+    
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style.marginTop = '6px';
+    
+    row.innerHTML = `
+      <label style="min-width: 110px">${labelText}</label>
+      <input type="range" min="24" max="220" value="${size}" oninput="setLineSize(${index}, +this.value)">
+      <span class="slider-val" style="min-width: 45px; text-align: right">${size}px</span>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function setLineSize(index, val) {
+  state.lineSizes[index] = val;
+  if (state.lineSizes.length === 1) {
+    state.titleSize = val;
+  }
+  
+  const container = document.getElementById('lineSizesContainer');
+  if (container) {
+    const row = container.children[index];
+    if (row) {
+      const span = row.querySelector('.slider-val');
+      if (span) span.textContent = val + 'px';
+    }
+  }
   draw();
 }
 
@@ -855,17 +908,18 @@ function draw() {
   const rawLines = state.mainText.split('\n');
   let wordCounter = 0;
   
-  rawLines.forEach(lineText => {
+  rawLines.forEach((lineText, lineIndex) => {
+    const curLineSize = state.lineSizes[lineIndex] || state.titleSize || 90;
     const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
     if (lineWordTokens.length === 0) {
-      ty += state.titleSize * state.titleLH;
+      ty += curLineSize * state.titleLH;
       return;
     }
     const lineWords = [];
     lineWordTokens.forEach(token => {
       const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
-      ctx.font = getFontStr(wObj.font, state.titleSize);
+      ctx.font = getFontStr(wObj.font, curLineSize);
       const wWidth = ctx.measureText(wObj.text).width;
       if (wWidth > titleMaxW) {
         let curChunk = '';
@@ -891,7 +945,7 @@ function draw() {
     let currentSubLineWidth = 0;
     
     lineWords.forEach(word => {
-      ctx.font = getFontStr(word.font, state.titleSize);
+      ctx.font = getFontStr(word.font, curLineSize);
       const wordWidth = ctx.measureText(word.text).width;
       const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
       
@@ -911,14 +965,14 @@ function draw() {
     subLines.forEach(subLine => {
       let tx = state.titleX;
       subLine.forEach(word => {
-        ctx.font = getFontStr(word.font, state.titleSize);
+        ctx.font = getFontStr(word.font, curLineSize);
         const wordWidth = ctx.measureText(word.text).width;
         const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
         tx += wordWidth + spaceWidth;
       });
       const lineWidth = tx - state.titleX;
       if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
-      ty += state.titleSize * state.titleLH;
+      ty += curLineSize * state.titleLH;
     });
   });
   const titleH = ty - titleStartY;
@@ -1040,17 +1094,18 @@ function draw() {
   // Draw actual Title Text
   ty = state.titleY;
   wordCounter = 0;
-  rawLines.forEach(lineText => {
+  rawLines.forEach((lineText, lineIndex) => {
+    const curLineSize = state.lineSizes[lineIndex] || state.titleSize || 90;
     const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
     if (lineWordTokens.length === 0) {
-      ty += state.titleSize * state.titleLH;
+      ty += curLineSize * state.titleLH;
       return;
     }
     const lineWords = [];
     lineWordTokens.forEach(token => {
       const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
-      ctx.font = getFontStr(wObj.font, state.titleSize);
+      ctx.font = getFontStr(wObj.font, curLineSize);
       const wWidth = ctx.measureText(wObj.text).width;
       if (wWidth > titleMaxW) {
         let curChunk = '';
@@ -1076,7 +1131,7 @@ function draw() {
     let currentSubLineWidth = 0;
     
     lineWords.forEach(word => {
-      ctx.font = getFontStr(word.font, state.titleSize);
+      ctx.font = getFontStr(word.font, curLineSize);
       const wordWidth = ctx.measureText(word.text).width;
       const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
       
@@ -1094,10 +1149,10 @@ function draw() {
     }
     
     subLines.forEach(subLine => {
-      if (ty + state.titleSize * state.titleLH > maxBottomY) return;
+      if (ty + curLineSize * state.titleLH > maxBottomY) return;
       let tx = state.titleX;
       subLine.forEach(word => {
-        ctx.font = getFontStr(word.font, word.font === 'mono' ? state.titleSize * 0.9 : state.titleSize);
+        ctx.font = getFontStr(word.font, word.font === 'mono' ? curLineSize * 0.9 : curLineSize);
         ctx.fillStyle = word.color;
         ctx.textAlign = 'left';
         ctx.fillText(word.text, tx, ty);
@@ -1106,7 +1161,7 @@ function draw() {
         const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
         tx += wordWidth + spaceWidth;
       });
-      ty += state.titleSize * state.titleLH;
+      ty += curLineSize * state.titleLH;
     });
   });
 
