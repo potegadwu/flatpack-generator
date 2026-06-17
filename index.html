@@ -118,7 +118,7 @@ canvas:active { cursor: grabbing; }
 </div>
 <div class="row" id="bgOverlayContainer" style="margin-top:10px; display:none">
 <label>Przyciemnienie:</label>
-<input type="range" id="bgOverlay" min="0" max="1.0" step="0.01" value="0.40" oninput="state.bgOverlay=+this.value;document.getElementById('bgOverlayVal').textContent=Math.round(this.value*100)+'%';draw()">
+<input type="range" id="bgOverlay" min="0" max="0.70" step="0.01" value="0.40" oninput="state.bgOverlay=+this.value;document.getElementById('bgOverlayVal').textContent=Math.round(this.value*100)+'%';draw()">
 <span class="slider-val" id="bgOverlayVal">40%</span>
 </div>
 </div>
@@ -849,12 +849,9 @@ function draw() {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
       
-    // Apply linear gradient shadow: fully transparent (0 opacity) at the top, fading to dark shadow (state.bgOverlay opacity) at the bottom
+    // Apply uniform darkening overlay over the photo (like sunglasses effect)
     if (state.bgOverlay > 0) {
-      const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      g.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      g.addColorStop(1, `rgba(0, 0, 0, ${state.bgOverlay})`);
-      ctx.fillStyle = g;
+      ctx.fillStyle = `rgba(0, 0, 0, ${state.bgOverlay})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   } else if (state.bgType === 'gradient' || state.gradient) {
