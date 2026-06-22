@@ -464,7 +464,76 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 
 <main class="canvas-area" id="canvasArea">
 <canvas id="canvas" width="1080" height="1350"></canvas>
+
+<!-- Floating legend info button -->
+<div id="guideInfoBtn" style="
+  position:absolute; bottom:20px; right:20px; z-index:50;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(9,126,255,0.85); border:2px solid rgba(255,255,255,0.3);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:0 4px 14px rgba(9,126,255,0.4);
+  font-weight:900; font-size:1.1rem; color:white; font-family:'Inter',sans-serif;
+  transition: all 0.2s; user-select:none;
+" onmouseenter="showGuidePopup()" onmouseleave="hideGuidePopup()" onclick="toggleGuidePinned()">?</div>
+
+<!-- Legend popup panel -->
+<div id="guidePopup" style="
+  display:none; position:absolute; bottom:64px; right:20px; z-index:60;
+  width:320px; background:#1E293B; border:1px solid #334155;
+  border-radius:12px; padding:16px; box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  font-family:'Inter',sans-serif; font-size:0.8rem; color:#F8FAFC;
+">
+  <div style="font-weight:800; font-size:0.9rem; margin-bottom:12px; color:#097EFF; letter-spacing:0.05em">
+    📐 Legenda linii obszaru roboczego
+  </div>
+
+  <!-- Green: 4:5 -->
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+    <div style="min-width:18px;height:18px;border:3px solid #22C55E;border-radius:3px;margin-top:1px"></div>
+    <div>
+      <div style="font-weight:700;color:#22C55E;margin-bottom:2px">Zielona ramka — granica 4:5</div>
+      <div style="color:#94a3b8;line-height:1.4">Zdjęcie musi <strong style="color:#fff">sięgać do krawędzi canvas</strong> we wszystkich 4 stronach. Jeśli nie sięga → IG doda czarne pasy w poście 4:5.</div>
+      <div style="margin-top:4px;padding:4px 8px;background:rgba(34,197,94,0.1);border-radius:4px;font-size:0.72rem;color:#22C55E">Min. rozmiar: <strong>1080 × 1350 px</strong></div>
+    </div>
+  </div>
+
+  <!-- Yellow: 1:1 crop -->
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+    <div style="min-width:18px;height:18px;border:3px dashed #FBbf24;border-radius:3px;margin-top:1px;background:rgba(251,191,36,0.15)"></div>
+    <div>
+      <div style="font-weight:700;color:#FBbf24;margin-bottom:2px">Żółta strefa — kafelek 1:1</div>
+      <div style="color:#94a3b8;line-height:1.4">Obszar poza żółtymi liniami (górne i dolne 135px) jest <strong style="color:#fff">odcinany</strong> gdy IG pokazuje kafelki profilu. Zdjęcie musi pokrywać przynajmniej do tych linii.</div>
+      <div style="margin-top:4px;padding:4px 8px;background:rgba(251,191,36,0.1);border-radius:4px;font-size:0.72rem;color:#FBbf24">Min. dla 1:1 siatki: <strong>1080 × 1080 px</strong></div>
+    </div>
+  </div>
+
+  <!-- Red: safe zone -->
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px">
+    <div style="min-width:18px;height:18px;border:3px dashed #EF4444;border-radius:3px;margin-top:1px"></div>
+    <div>
+      <div style="font-weight:700;color:#EF4444;margin-bottom:2px">Czerwona przerywana — Safe Zone</div>
+      <div style="color:#94a3b8;line-height:1.4">Margines 80px od krawędzi. <strong style="color:#fff">Teksty i logotypy</strong> trzymaj wewnątrz tej strefy, by wyglądały dobrze i nie były ucięte na różnych urządzeniach.</div>
+    </div>
+  </div>
+
+  <!-- Blue lines -->
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
+    <div style="min-width:18px;height:18px;border:2px dashed #097EFF;border-radius:3px;margin-top:1px"></div>
+    <div>
+      <div style="font-weight:700;color:#097EFF;margin-bottom:2px">Niebieskie linie — kafelek 3:4 IG</div>
+      <div style="color:#94a3b8;line-height:1.4">Nowy układ siatki IG (pionowy 3:4). Sprawdź, czy ważne elementy nie wychodzą poza te linie gdy post jest wyświetlany w trybie 3:4.</div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid #334155;padding-top:10px;font-size:0.72rem;color:#64748B;line-height:1.5">
+    💡 Linie <strong style="color:#94a3b8">nie zapisują się</strong> na eksportowanym PNG. Widoczne tylko w edytorze.
+  </div>
+
+  <div style="margin-top:8px;font-size:0.68rem;color:#475569;text-align:right" id="guidePinHint">Kliknij ?, aby przypiąć legendę</div>
+</div>
+
 </main>
+
 </div>
 
 <!-- PREVIEW MODAL -->
@@ -1776,6 +1845,55 @@ if (!loadState()) {
   updateWordsFromText(state.mainText);
 }
 pushToUndoStack();
-</script>
+
+// ── GUIDE INFO POPUP ──────────────────────────────────────
+let guidePinned = false;
+let guideHideTimer = null;
+
+function showGuidePopup() {
+  clearTimeout(guideHideTimer);
+  document.getElementById('guidePopup').style.display = 'block';
+  const btn = document.getElementById('guideInfoBtn');
+  btn.style.background = 'rgba(9,126,255,1)';
+  btn.style.transform = 'scale(1.1)';
+}
+
+function hideGuidePopup() {
+  if (guidePinned) return;
+  guideHideTimer = setTimeout(() => {
+    document.getElementById('guidePopup').style.display = 'none';
+    const btn = document.getElementById('guideInfoBtn');
+    btn.style.background = 'rgba(9,126,255,0.85)';
+    btn.style.transform = 'scale(1)';
+  }, 200);
+}
+
+function toggleGuidePinned() {
+  guidePinned = !guidePinned;
+  const btn = document.getElementById('guideInfoBtn');
+  const hint = document.getElementById('guidePinHint');
+  if (guidePinned) {
+    btn.textContent = '📌';
+    btn.style.background = 'rgba(251,191,36,0.9)';
+    btn.style.borderColor = 'rgba(251,191,36,0.5)';
+    if (hint) hint.textContent = 'Kliknij 📌 aby odpiąć';
+    document.getElementById('guidePopup').style.display = 'block';
+  } else {
+    btn.textContent = '?';
+    btn.style.background = 'rgba(9,126,255,0.85)';
+    btn.style.borderColor = 'rgba(255,255,255,0.3)';
+    if (hint) hint.textContent = 'Kliknij ?, aby przypiąć legendę';
+    document.getElementById('guidePopup').style.display = 'none';
+  }
+}
+
+// Keep popup open when hovering over it
+document.getElementById('guidePopup').addEventListener('mouseenter', () => {
+  clearTimeout(guideHideTimer);
+});
+document.getElementById('guidePopup').addEventListener('mouseleave', () => {
+  hideGuidePopup();
+});
+
 </body>
 </html>
