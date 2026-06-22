@@ -524,7 +524,7 @@ function updateWordsFromText(text) {
     }
     
     // Polish diacritics supported case checking
-    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
+    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w) && w.length > 1;
     return {
       text: w,
       font: isUppercase ? 'bold' : 'italic',

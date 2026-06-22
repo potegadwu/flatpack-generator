@@ -82,6 +82,22 @@ input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 40px); cursor: grab; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border-radius: 4px; }
 canvas:active { cursor: grabbing; }
 .hint { font-size: 0.65rem; color: var(--muted); font-weight: 400; }
+.overlay-thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 2px;
+  transition: all 0.2s ease;
+}
+.overlay-thumb:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 10px rgba(9, 126, 255, 0.2);
+}
 </style>
 </head>
 <body>
@@ -209,11 +225,56 @@ canvas:active { cursor: grabbing; }
 </div>
 </div>
 
+<<!-- Karta pod tekstem (Apla) -->
 <div class="section">
-<div class="section-title">Logo (Czerwona torba)</div>
+<div class="section-title">Karta pod tekstem (Apla)</div>
 <div class="toggle-row">
-  <label>Pokaż logo flatpack.help</label>
+  <label style="font-weight:700; color:var(--text)">Dodaj aplę (kartę pod tekstem)</label>
+  <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
+</div>
+<div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
+  <div class="row">
+    <label>Styl apli:</label>
+    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()" style="background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
+      <option value="light-glass">Jasne szkło (Glassmorphism)</option>
+      <option value="dark-glass">Ciemne szkło</option>
+      <option value="blue">Niebieska</option>
+      <option value="green">Zielona (Trustpilot)</option>
+      <option value="navy">Granatowa</option>
+    </select>
+  </div>
+  <div class="row">
+    <label>Szerokość:</label>
+    <input type="range" id="aplaW" min="100" max="1080" value="880" oninput="state.aplaW=+this.value;document.getElementById('aplaWVal').textContent=this.value+'px';draw()">
+    <span class="slider-val" id="aplaWVal">880px</span>
+  </div>
+  <div class="row">
+    <label>Wysokość:</label>
+    <input type="range" id="aplaH" min="100" max="1350" value="680" oninput="state.aplaH=+this.value;document.getElementById('aplaHVal').textContent=this.value+'px';draw()">
+    <span class="slider-val" id="aplaHVal">680px</span>
+  </div>
+  <div class="row" style="margin-top:8px; gap:8px;">
+    <button class="small-btn" style="flex:1" onclick="resetAplaPosition()">Wyśrodkuj aplę</button>
+    <button class="small-btn" style="flex:1; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;" onclick="deleteApla()">Usuń aplę</button>
+  </div>
+</div>
+</div>
+
+<!-- Logotypy / Brand Logo -->
+<div class="section">
+<div class="section-title">Logotypy / Brand Logo</div>
+<div class="toggle-row">
+  <label>Pokaż logo na grafice</label>
   <input type="checkbox" id="showLogo" checked onchange="state.showLogo=this.checked;draw()">
+</div>
+<div class="row">
+  <label>Wybierz logo:</label>
+  <select id="logoSelect" onchange="changeLogo(this.value)" style="flex:1; background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
+    <option value="assets/logos/logo_flatpack_help.png">Logo Flatpack.help</option>
+    <option value="assets/logos/logo_czerw_nieb.png">Logo czerwono-niebieskie</option>
+    <option value="assets/logos/logo_nieb_biale.png">Logo niebiesko-białe</option>
+    <option value="assets/logo.png">Czerwona torba (Oryginał)</option>
+  </select>
 </div>
 <div class="row">
   <label>Rozmiar logo:</label>
@@ -268,35 +329,52 @@ canvas:active { cursor: grabbing; }
 <div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG. Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
+<<!-- Nakładki Gallery (Postaci i Elementy PNG) -->
 <div class="section">
-<div class="section-title">Karta pod tekstem (Apla)</div>
-<div class="toggle-row">
-  <label style="font-weight:700; color:var(--text)">Dodaj aplę (kartę pod tekstem)</label>
-  <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
+<div class="section-title">Dodaj Postaci & Elementy PNG</div>
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:10px;">Kliknij na postać lub element, aby dodać na grafikę. Przeciągaj myszką, powiększaj/zmniejszaj rolką myszy lub suwakiem po zaznaczeniu.</div>
+
+<div class="btn-group" style="margin-bottom:10px; width:100%">
+  <button class="small-btn active" id="tabChars" onclick="switchOverlayTab('chars')" style="flex:1;text-align:center">Postaci</button>
+  <button class="small-btn" id="tabElements" onclick="switchOverlayTab('elems')" style="flex:1;text-align:center">Elementy PNG</button>
 </div>
-<div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
-  <div class="row">
-    <label>Styl apli:</label>
-    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()" style="background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
-      <option value="light-glass">Jasne szkło (Glassmorphism)</option>
-      <option value="dark-glass">Ciemne szkło</option>
-      <option value="blue">Niebieska</option>
-      <option value="green">Zielona (Trustpilot)</option>
-      <option value="navy">Granatowa</option>
-    </select>
+
+<!-- Characters list -->
+<div id="overlayCharsContainer" class="overlay-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; overflow-y: auto;">
+  <img src="assets/characters/michal_1.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_1.png', 0.5)" title="Michał 1">
+  <img src="assets/characters/michal_2_z_peleryna.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_2_z_peleryna.png', 0.5)" title="Michał z peleryną">
+  <img src="assets/characters/michal_3_z_poziomica_i_ftm.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_3_z_poziomica_i_ftm.png', 0.5)" title="Michał z poziomicą">
+  <img src="assets/characters/michal_4_bysio_z_poziomia.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_4_bysio_z_poziomia.png', 0.5)" title="Michał bysio">
+  <img src="assets/characters/michal_5.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_5.png', 0.5)" title="Michał 5">
+  <img src="assets/characters/michal_6_z_czerw_logo.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_6_z_czerw_logo.png', 0.5)" title="Michał z czerwonym logo">
+  <img src="assets/characters/michal_ala_jeff_style.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_ala_jeff_style.png', 0.5)" title="Michał Jeff">
+</div>
+
+<!-- Elements list -->
+<div id="overlayElemsContainer" class="overlay-grid" style="display:none; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; overflow-y: auto;">
+  <img src="assets/elements/element_1.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_1.png', 0.3)" title="Element 1">
+  <img src="assets/elements/element_2.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_2.png', 0.3)" title="Element 2">
+  <img src="assets/elements/element_3.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_3.png', 0.3)" title="Element 3">
+  <img src="assets/elements/element_4.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_4.png', 0.3)" title="Element 4">
+  <img src="assets/elements/element_5.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_5.png', 0.3)" title="Element 5">
+  <img src="assets/elements/element_6.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_6.png', 0.3)" title="Element 6">
+</div>
+
+<!-- Selected element editing controls -->
+<div id="selectedOverlayControls" style="display:none; margin-top:12px; padding:10px; background:rgba(9,126,255,0.08); border:1px solid rgba(9,126,255,0.2); border-radius:6px;">
+  <div style="font-size:0.75rem; font-weight:700; color:white; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+    <span>Edycja elementu</span>
+    <button class="small-btn" onclick="deselectOverlay()" style="padding:2px 6px; font-size:0.65rem;">Odznacz</button>
   </div>
   <div class="row">
-    <label>Szerokość:</label>
-    <input type="range" id="aplaW" min="100" max="1080" value="880" oninput="state.aplaW=+this.value;document.getElementById('aplaWVal').textContent=this.value+'px';draw()">
-    <span class="slider-val" id="aplaWVal">880px</span>
+    <label>Skala:</label>
+    <input type="range" id="selectedOverlayScale" min="0.05" max="3.0" step="0.02" value="1.0" oninput="setSelectedOverlayScale(this.value)">
+    <span class="slider-val" id="selectedOverlayScaleVal">1.0x</span>
   </div>
-  <div class="row">
-    <label>Wysokość:</label>
-    <input type="range" id="aplaH" min="100" max="1350" value="680" oninput="state.aplaH=+this.value;document.getElementById('aplaHVal').textContent=this.value+'px';draw()">
-    <span class="slider-val" id="aplaHVal">680px</span>
-  </div>
-  <div class="row" style="margin-top:8px">
-    <button class="small-btn" style="width:100%" onclick="resetAplaPosition()">Wyśrodkuj aplę</button>
+  <div class="row" style="margin-top:8px; gap:6px;">
+    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('front')">Na wierzch</button>
+    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('back')">Na spód</button>
+    <button class="small-btn" style="flex:1; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;" onclick="deleteSelectedOverlay()">Usuń</button>
   </div>
 </div>
 </div>
@@ -417,9 +495,9 @@ const state = {
   showGrid34: true,
 };
 
-// Load red bag logo
+// Load logo
 const logoImg = new Image();
-logoImg.src = 'assets/logo.png';
+logoImg.src = 'assets/logos/logo_flatpack_help.png';
 logoImg.onload = function() {
   state.logoImg = logoImg;
   draw();
@@ -632,7 +710,7 @@ function updateWordsFromText(text) {
     }
     
     // Polish diacritics supported case checking
-    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
+    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w) && w.length > 1;
     
     return {
       text: w,
@@ -898,6 +976,16 @@ function draw() {
   if (state.pastedImages) {
     state.pastedImages.forEach(pi => {
       ctx.drawImage(pi.img, pi.x, pi.y, pi.baseW * pi.scale, pi.baseH * pi.scale);
+      
+      // Draw selection box around active element (only if not exporting)
+      if (!isExporting && state.selectedPastedImageId === pi.id) {
+        ctx.save();
+        ctx.strokeStyle = '#097EFF';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([6, 4]);
+        ctx.strokeRect(pi.x, pi.y, pi.baseW * pi.scale, pi.baseH * pi.scale);
+        ctx.restore();
+      }
     });
   }
 
@@ -1461,8 +1549,24 @@ canvas.addEventListener('mousedown', (e) => {
   if (hit && hit !== 'photo') {
     const b = hitBoxes[hit];
     dragging = { id: hit, offsetX: x - b.x, offsetY: y - b.y };
+    if (hit.startsWith('pasted_')) {
+      state.selectedPastedImageId = hit;
+      updateSelectedImageUI();
+      draw();
+    } else {
+      state.selectedPastedImageId = null;
+      updateSelectedImageUI();
+      draw();
+    }
   } else if (hit === 'photo' && state.bgPhoto) {
     dragging = { id: 'photo', offsetX: x - state.bgPhotoX, offsetY: y - state.bgPhotoY };
+    state.selectedPastedImageId = null;
+    updateSelectedImageUI();
+    draw();
+  } else {
+    state.selectedPastedImageId = null;
+    updateSelectedImageUI();
+    draw();
   }
 });
 
@@ -1552,6 +1656,9 @@ canvas.addEventListener('wheel', (e) => {
       pi.x = x - imgMouseX * newScale;
       pi.y = y - imgMouseY * newScale;
       pi.scale = newScale;
+      if (state.selectedPastedImageId === pi.id) {
+        updateSelectedImageUI();
+      }
       draw();
       return;
     }
@@ -1583,20 +1690,43 @@ window.addEventListener('keydown', (e) => {
     const activeEl = document.activeElement;
     const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
     
-    if (!isTyping && state.hoveredBlock) {
-      e.preventDefault();
-      const blockId = state.hoveredBlock;
+    if (!isTyping) {
+      if (state.hoveredBlock) {
+        e.preventDefault();
+        const blockId = state.hoveredBlock;
+        
+        if (blockId === 'photo') {
+          clearPhoto();
+          return;
+        } else if (blockId.startsWith('pasted_')) {
+          state.pastedImages = state.pastedImages.filter(p => p.id !== blockId);
+          if (state.selectedPastedImageId === blockId) {
+            state.selectedPastedImageId = null;
+            updateSelectedImageUI();
+          }
+          state.hoveredBlock = null;
+          canvas.style.cursor = 'default';
+          draw();
+          return;
+        } else if (blockId === 'apla') {
+          deleteApla();
+          state.hoveredBlock = null;
+          canvas.style.cursor = 'default';
+          return;
+        }
+      }
       
-      if (blockId === 'photo') {
-        clearPhoto();
-        return;
-      } else if (blockId.startsWith('pasted_')) {
-        state.pastedImages = state.pastedImages.filter(p => p.id !== blockId);
-        state.hoveredBlock = null;
-        canvas.style.cursor = 'default';
+      if (state.selectedPastedImageId) {
+        e.preventDefault();
+        state.pastedImages = state.pastedImages.filter(p => p.id !== state.selectedPastedImageId);
+        state.selectedPastedImageId = null;
+        updateSelectedImageUI();
         draw();
         return;
       }
+    }
+  }
+});
       
       let inputEl = null;
       if (blockId === 'title') inputEl = document.getElementById('mainText');
@@ -1863,6 +1993,111 @@ function resetAplaPosition() {
   draw();
 }
 
+function deleteApla() {
+  state.showApla = false;
+  const showAplaEl = document.getElementById('showApla');
+  if (showAplaEl) showAplaEl.checked = false;
+  toggleAplaControls(false);
+  draw();
+}
+
+function changeLogo(src) {
+  const img = new Image();
+  img.onload = function() {
+    state.logoImg = img;
+    draw();
+  };
+  img.src = src;
+}
+
+function switchOverlayTab(tab) {
+  document.getElementById('tabChars').classList.toggle('active', tab === 'chars');
+  document.getElementById('tabElements').classList.toggle('active', tab === 'elems');
+  document.getElementById('overlayCharsContainer').style.display = tab === 'chars' ? 'grid' : 'none';
+  document.getElementById('overlayElemsContainer').style.display = tab === 'elems' ? 'grid' : 'none';
+}
+
+function addOverlay(src, defaultScale) {
+  const img = new Image();
+  img.onload = function() {
+    if (!state.pastedImages) state.pastedImages = [];
+    
+    // Auto-fit to sensible size on canvas
+    let targetH = canvas.height * defaultScale;
+    let scale = targetH / img.height;
+    
+    const id = 'pasted_' + Date.now();
+    state.pastedImages.push({
+      id: id,
+      img: img,
+      x: (canvas.width - img.width * scale) / 2,
+      y: (canvas.height - img.height * scale) / 2,
+      scale: scale,
+      baseW: img.width,
+      baseH: img.height
+    });
+    state.selectedPastedImageId = id;
+    updateSelectedImageUI();
+    draw();
+  };
+  img.src = src;
+}
+
+function updateSelectedImageUI() {
+  const container = document.getElementById('selectedOverlayControls');
+  if (!container) return;
+  
+  if (state.selectedPastedImageId) {
+    const pi = state.pastedImages.find(p => p.id === state.selectedPastedImageId);
+    if (pi) {
+      container.style.display = 'block';
+      const scaleInput = document.getElementById('selectedOverlayScale');
+      scaleInput.value = pi.scale.toFixed(2);
+      document.getElementById('selectedOverlayScaleVal').textContent = pi.scale.toFixed(2) + 'x';
+      return;
+    }
+  }
+  container.style.display = 'none';
+}
+
+function deselectOverlay() {
+  state.selectedPastedImageId = null;
+  updateSelectedImageUI();
+  draw();
+}
+
+function setSelectedOverlayScale(val) {
+  if (!state.selectedPastedImageId) return;
+  const pi = state.pastedImages.find(p => p.id === state.selectedPastedImageId);
+  if (pi) {
+    pi.scale = parseFloat(val);
+    document.getElementById('selectedOverlayScaleVal').textContent = pi.scale.toFixed(2) + 'x';
+    draw();
+  }
+}
+
+function moveSelectedOverlay(dir) {
+  if (!state.selectedPastedImageId) return;
+  const index = state.pastedImages.findIndex(p => p.id === state.selectedPastedImageId);
+  if (index !== -1) {
+    const pi = state.pastedImages.splice(index, 1)[0];
+    if (dir === 'front') {
+      state.pastedImages.push(pi);
+    } else {
+      state.pastedImages.unshift(pi);
+    }
+    draw();
+  }
+}
+
+function deleteSelectedOverlay() {
+  if (!state.selectedPastedImageId) return;
+  state.pastedImages = state.pastedImages.filter(p => p.id !== state.selectedPastedImageId);
+  state.selectedPastedImageId = null;
+  updateSelectedImageUI();
+  draw();
+}
+
 // Initial initialization
 document.getElementById('mainText').value = state.mainText;
 document.getElementById('paraText').value = state.paraText;
@@ -1877,6 +2112,9 @@ document.getElementById('aplaH').value = state.aplaH;
 document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
 document.getElementById('logoScale').value = state.logoScale;
 document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
+if (document.getElementById('logoSelect')) {
+  document.getElementById('logoSelect').value = 'assets/logos/logo_flatpack_help.png';
+}
 updateWordsFromText(state.mainText);
 </script>
 </body>
