@@ -2176,42 +2176,269 @@ function deleteSelectedOverlay() {
   draw();
 }
 
-// Initial initialization
-document.getElementById('mainText').value = state.mainText;
-document.getElementById('paraText').value = state.paraText;
-document.getElementById('titleSize').value = state.titleSize || 90;
-document.getElementById('titleSizeVal').textContent = (state.titleSize || 90) + 'px';
-document.getElementById('showApla').checked = state.showApla;
-toggleAplaControls(state.showApla);
-// Set active Apla color button from state
-const activeAplaStyle = state.aplaStyle || '#FFFFFF';
-document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
-  if (btn.getAttribute('data-color') === activeAplaStyle) {
-    btn.classList.add('active');
-  } else {
-    btn.classList.remove('active');
-  }
-});
-document.getElementById('aplaW').value = state.aplaW;
-document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
-document.getElementById('aplaH').value = state.aplaH;
-document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
-document.getElementById('logoScale').value = state.logoScale;
-document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
+// Caching / auto-save state logic
+function saveState() {
+  try {
+    const serialized = {
+      bgType: state.bgType,
+      bgColor: state.bgColor,
+      gradient: state.gradient,
+      overlayDir: state.overlayDir,
+      overlayOpacity: state.overlayOpacity,
+      kickerText: state.kickerText,
+      kickerColor: state.kickerColor,
+      kickerX: state.kickerX,
+      kickerY: state.kickerY,
+      mainText: state.mainText,
+      words: state.words ? state.words.map(w => ({ text: w.text, font: w.font, color: w.color })) : [],
+      titleX: state.titleX,
+      titleY: state.titleY,
+      titleSize: state.titleSize,
+      titleLH: state.titleLH,
+      wordSpacing: state.wordSpacing,
+      paraText: state.paraText,
+      paraX: state.paraX,
+      paraY: state.paraY,
+      paraAlign: state.paraAlign,
+      paraColor: state.paraColor,
+      paraBold: state.paraBold,
+      showApla: state.showApla,
+      aplaStyle: state.aplaStyle,
+      aplaX: state.aplaX,
+      aplaY: state.aplaY,
+      aplaW: state.aplaW,
+      aplaH: state.aplaH,
+      showLogo: state.showLogo,
+      logoX: state.logoX,
+      logoY: state.logoY,
+      logoScale: state.logoScale,
+      logoImgSrc: state.logoImg ? state.logoImg.src : null,
+      brandText: state.brandText,
+      brandAlign: state.brandAlign,
+      brandX: state.brandX,
+      brandY: state.brandY,
+      slideText: state.slideText,
+      slideX: state.slideX,
+      slideY: state.slideY,
+      showGuides: document.getElementById('showGuides') ? document.getElementById('showGuides').checked : state.showGuides,
+      showCrop: document.getElementById('showCrop') ? document.getElementById('showCrop').checked : state.showCrop,
+      showSlideNum: document.getElementById('showSlideNum') ? document.getElementById('showSlideNum').checked : state.showSlideNum,
+      showGrid34: document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : state.showGrid34,
+      pastedImages: state.pastedImages ? state.pastedImages.map(pi => ({
+        id: pi.id,
+        src: pi.img.src,
+        x: pi.x,
+        y: pi.y,
+        scale: pi.scale,
+        baseW: pi.baseW,
+        baseH: pi.baseH
+      })) : []
+    };
 
-// Update active logo thumbnail class on load
-const activeLogoSrc = 'assets/logos/logo_flatpack_help.png';
-document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
-  const img = w.querySelector('img');
-  if (img && img.getAttribute('src') === activeLogoSrc) {
-    w.classList.add('active');
-  } else {
-    w.classList.remove('active');
-  }
-});
-document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
+    if (state.bgType === 'photo' && state.bgPhoto && state.bgPhoto.src) {
+      if (state.bgPhoto.src.length < 1500000) { // Limit background image data URI size to 1.5MB
+        serialized.bgPhotoSrc = state.bgPhoto.src;
+        serialized.bgPhotoX = state.bgPhotoX;
+        serialized.bgPhotoY = state.bgPhotoY;
+        serialized.bgPhotoScale = state.bgPhotoScale;
+      }
+    }
 
-updateWordsFromText(state.mainText);
+    localStorage.setItem('flatpack_generator_state', JSON.stringify(serialized));
+  } catch (e) {
+    console.warn("Could not save state:", e);
+  }
+}
+
+let saveStateTimeout = null;
+function saveStateDebounced() {
+  if (saveStateTimeout) clearTimeout(saveStateTimeout);
+  saveStateTimeout = setTimeout(saveState, 500);
+}
+
+function loadState() {
+  try {
+    const data = localStorage.getItem('flatpack_generator_state');
+    if (!data) return false;
+    const saved = JSON.parse(data);
+    
+    Object.assign(state, saved);
+    
+    if (saved.showGuides !== undefined && document.getElementById('showGuides')) {
+      document.getElementById('showGuides').checked = saved.showGuides;
+    }
+    if (saved.showCrop !== undefined && document.getElementById('showCrop')) {
+      document.getElementById('showCrop').checked = saved.showCrop;
+    }
+    if (saved.showSlideNum !== undefined && document.getElementById('showSlideNum')) {
+      document.getElementById('showSlideNum').checked = saved.showSlideNum;
+    }
+    if (saved.showGrid34 !== undefined && document.getElementById('showGrid34')) {
+      document.getElementById('showGrid34').checked = saved.showGrid34;
+    }
+
+    if (document.getElementById('mainText')) document.getElementById('mainText').value = state.mainText;
+    if (document.getElementById('kickerText')) document.getElementById('kickerText').value = state.kickerText;
+    if (document.getElementById('paraText')) document.getElementById('paraText').value = state.paraText;
+    if (document.getElementById('brandText')) document.getElementById('brandText').value = state.brandText;
+    if (document.getElementById('slideText')) document.getElementById('slideText').value = state.slideText;
+    if (document.getElementById('titleSize')) {
+      document.getElementById('titleSize').value = state.titleSize;
+      document.getElementById('titleSizeVal').textContent = state.titleSize + 'px';
+    }
+    if (document.getElementById('titleLH')) document.getElementById('titleLH').value = state.titleLH;
+    if (document.getElementById('wordSpacing')) document.getElementById('wordSpacing').value = state.wordSpacing;
+    if (document.getElementById('aplaW')) {
+      document.getElementById('aplaW').value = state.aplaW;
+      document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
+    }
+    if (document.getElementById('aplaH')) {
+      document.getElementById('aplaH').value = state.aplaH;
+      document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
+    }
+    if (document.getElementById('logoScale')) {
+      document.getElementById('logoScale').value = state.logoScale;
+      document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
+    }
+    if (document.getElementById('showApla')) {
+      document.getElementById('showApla').checked = state.showApla;
+      toggleAplaControls(state.showApla);
+    }
+
+    const activeAplaStyle = state.aplaStyle || '#FFFFFF';
+    document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-color') === activeAplaStyle);
+    });
+
+    document.querySelectorAll('#bgColors .color-swatch').forEach(btn => {
+      const isSwatchActive = state.bgType === 'color' && !state.gradient && btn.style.background.toLowerCase().includes(state.bgColor.toLowerCase());
+      btn.classList.toggle('active', isSwatchActive);
+    });
+    if (document.getElementById('gradientSwatch')) {
+      document.getElementById('gradientSwatch').classList.toggle('active', state.gradient || state.bgType === 'gradient');
+    }
+
+    if (saved.logoImgSrc) {
+      const img = new Image();
+      img.onload = function() {
+        state.logoImg = img;
+        draw();
+      };
+      img.src = saved.logoImgSrc;
+      
+      document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
+        const thumbImg = w.querySelector('img');
+        if (thumbImg && (saved.logoImgSrc.endsWith(thumbImg.getAttribute('src')) || thumbImg.getAttribute('src').endsWith(saved.logoImgSrc))) {
+          w.classList.add('active');
+        } else {
+          w.classList.remove('active');
+        }
+      });
+      document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
+    } else {
+      state.logoImg = null;
+      state.showLogo = false;
+      document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
+      document.getElementById('logoScaleRow').style.display = 'none';
+    }
+
+    if (saved.bgPhotoSrc) {
+      const img = new Image();
+      img.onload = function() {
+        state.bgPhoto = img;
+        state.bgType = 'photo';
+        state.bgPhotoX = saved.bgPhotoX;
+        state.bgPhotoY = saved.bgPhotoY;
+        state.bgPhotoScale = saved.bgPhotoScale;
+        
+        const scaleSlider = document.getElementById('photoScale');
+        if (scaleSlider) {
+          scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
+          scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
+          scaleSlider.value = state.bgPhotoScale.toFixed(2);
+          document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
+          document.getElementById('photoScaleContainer').style.display = 'flex';
+        }
+        draw();
+      };
+      img.src = saved.bgPhotoSrc;
+    } else {
+      state.bgPhoto = null;
+      if (document.getElementById('photoScaleContainer')) {
+        document.getElementById('photoScaleContainer').style.display = 'none';
+      }
+    }
+
+    state.pastedImages = [];
+    if (saved.pastedImages && saved.pastedImages.length > 0) {
+      let loadedCount = 0;
+      saved.pastedImages.forEach(piData => {
+        const img = new Image();
+        img.onload = function() {
+          state.pastedImages.push({
+            id: piData.id,
+            img: img,
+            x: piData.x,
+            y: piData.y,
+            scale: piData.scale,
+            baseW: piData.baseW,
+            baseH: piData.baseH
+          });
+          loadedCount++;
+          if (loadedCount === saved.pastedImages.length) {
+            draw();
+          }
+        };
+        img.src = piData.src;
+      });
+    }
+
+    renderWordsUI();
+    draw();
+    return true;
+  } catch (e) {
+    console.warn("Could not load state:", e);
+    return false;
+  }
+}
+
+// Load saved state or use defaults
+if (!loadState()) {
+  document.getElementById('mainText').value = state.mainText;
+  document.getElementById('paraText').value = state.paraText;
+  document.getElementById('titleSize').value = state.titleSize || 90;
+  document.getElementById('titleSizeVal').textContent = (state.titleSize || 90) + 'px';
+  document.getElementById('showApla').checked = state.showApla;
+  toggleAplaControls(state.showApla);
+  
+  const activeAplaStyle = state.aplaStyle || '#FFFFFF';
+  document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
+    if (btn.getAttribute('data-color') === activeAplaStyle) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  document.getElementById('aplaW').value = state.aplaW;
+  document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
+  document.getElementById('aplaH').value = state.aplaH;
+  document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
+  document.getElementById('logoScale').value = state.logoScale;
+  document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
+
+  const activeLogoSrc = 'assets/logos/logo_flatpack_help.png';
+  document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
+    const img = w.querySelector('img');
+    if (img && img.getAttribute('src') === activeLogoSrc) {
+      w.classList.add('active');
+    } else {
+      w.classList.remove('active');
+    }
+  });
+  document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
+
+  updateWordsFromText(state.mainText);
+}
 </script>
 </body>
 </html>

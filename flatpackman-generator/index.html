@@ -1018,6 +1018,9 @@ function draw() {
       hitBoxes[pi.id] = { x: pi.x, y: pi.y, w: pi.baseW * pi.scale, h: pi.baseH * pi.scale };
     });
   }
+  if (typeof saveStateDebounced === 'function' && !isExporting) {
+    saveStateDebounced();
+  }
 }
 
 function hitTest(mx, my) {
@@ -1393,9 +1396,177 @@ function executeDownload() {
   downloadImage();
 }
 
-// Initial initialization
-document.getElementById('mainText').value = state.mainText;
-updateWordsFromText(state.mainText);
+// Caching / auto-save state logic
+function saveState() {
+  try {
+    const serialized = {
+      bgType: state.bgType,
+      bgColor: state.bgColor,
+      overlayDir: state.overlayDir,
+      overlayOpacity: state.overlayOpacity,
+      kickerText: state.kickerText,
+      kickerColor: state.kickerColor,
+      kickerX: state.kickerX,
+      kickerY: state.kickerY,
+      mainText: state.mainText,
+      words: state.words ? state.words.map(w => ({ text: w.text, font: w.font, color: w.color })) : [],
+      titleX: state.titleX,
+      titleY: state.titleY,
+      titleSize: state.titleSize,
+      titleLH: state.titleLH,
+      wordSpacing: state.wordSpacing,
+      paraText: state.paraText,
+      paraX: state.paraX,
+      paraY: state.paraY,
+      paraAlign: state.paraAlign,
+      paraColor: state.paraColor,
+      paraBold: state.paraBold,
+      brandText: state.brandText,
+      brandAlign: state.brandAlign,
+      brandX: state.brandX,
+      brandY: state.brandY,
+      slideText: state.slideText,
+      slideX: state.slideX,
+      slideY: state.slideY,
+      showGuides: document.getElementById('showGuides') ? document.getElementById('showGuides').checked : state.showGuides,
+      showCrop: document.getElementById('showCrop') ? document.getElementById('showCrop').checked : state.showCrop,
+      showSlideNum: document.getElementById('showSlideNum') ? document.getElementById('showSlideNum').checked : state.showSlideNum,
+      showGrid34: document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : state.showGrid34,
+      pastedImages: state.pastedImages ? state.pastedImages.map(pi => ({
+        id: pi.id,
+        src: pi.img.src,
+        x: pi.x,
+        y: pi.y,
+        scale: pi.scale,
+        baseW: pi.baseW,
+        baseH: pi.baseH
+      })) : []
+    };
+
+    if (state.bgType === 'photo' && state.bgPhoto && state.bgPhoto.src) {
+      if (state.bgPhoto.src.length < 1500000) { // Limit background image data URI size to 1.5MB
+        serialized.bgPhotoSrc = state.bgPhoto.src;
+        serialized.bgPhotoX = state.bgPhotoX;
+        serialized.bgPhotoY = state.bgPhotoY;
+        serialized.bgPhotoScale = state.bgPhotoScale;
+      }
+    }
+
+    localStorage.setItem('flatpackman_generator_state', JSON.stringify(serialized));
+  } catch (e) {
+    console.warn("Could not save state:", e);
+  }
+}
+
+let saveStateTimeout = null;
+function saveStateDebounced() {
+  if (saveStateTimeout) clearTimeout(saveStateTimeout);
+  saveStateTimeout = setTimeout(saveState, 500);
+}
+
+function loadState() {
+  try {
+    const data = localStorage.getItem('flatpackman_generator_state');
+    if (!data) return false;
+    const saved = JSON.parse(data);
+    
+    Object.assign(state, saved);
+    
+    if (saved.showGuides !== undefined && document.getElementById('showGuides')) {
+      document.getElementById('showGuides').checked = saved.showGuides;
+    }
+    if (saved.showCrop !== undefined && document.getElementById('showCrop')) {
+      document.getElementById('showCrop').checked = saved.showCrop;
+    }
+    if (saved.showSlideNum !== undefined && document.getElementById('showSlideNum')) {
+      document.getElementById('showSlideNum').checked = saved.showSlideNum;
+    }
+    if (saved.showGrid34 !== undefined && document.getElementById('showGrid34')) {
+      document.getElementById('showGrid34').checked = saved.showGrid34;
+    }
+
+    if (document.getElementById('mainText')) document.getElementById('mainText').value = state.mainText;
+    if (document.getElementById('kickerText')) document.getElementById('kickerText').value = state.kickerText;
+    if (document.getElementById('paraText')) document.getElementById('paraText').value = state.paraText;
+    if (document.getElementById('brandText')) document.getElementById('brandText').value = state.brandText;
+    if (document.getElementById('slideText')) document.getElementById('slideText').value = state.slideText;
+    if (document.getElementById('titleSize')) {
+      document.getElementById('titleSize').value = state.titleSize;
+      document.getElementById('titleSizeVal').textContent = state.titleSize + 'px';
+    }
+    if (document.getElementById('titleLH')) document.getElementById('titleLH').value = state.titleLH;
+    if (document.getElementById('wordSpacing')) document.getElementById('wordSpacing').value = state.wordSpacing;
+
+    document.querySelectorAll('#bgColors .color-swatch').forEach(btn => {
+      const isSwatchActive = state.bgType === 'color' && btn.style.background.toLowerCase().includes(state.bgColor.toLowerCase());
+      btn.classList.toggle('active', isSwatchActive);
+    });
+
+    if (saved.bgPhotoSrc) {
+      const img = new Image();
+      img.onload = function() {
+        state.bgPhoto = img;
+        state.bgType = 'photo';
+        state.bgPhotoX = saved.bgPhotoX;
+        state.bgPhotoY = saved.bgPhotoY;
+        state.bgPhotoScale = saved.bgPhotoScale;
+        
+        const scaleSlider = document.getElementById('photoScale');
+        if (scaleSlider) {
+          scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
+          scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
+          scaleSlider.value = state.bgPhotoScale.toFixed(2);
+          document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
+          document.getElementById('photoScaleContainer').style.display = 'flex';
+        }
+        draw();
+      };
+      img.src = saved.bgPhotoSrc;
+    } else {
+      state.bgPhoto = null;
+      if (document.getElementById('photoScaleContainer')) {
+        document.getElementById('photoScaleContainer').style.display = 'none';
+      }
+    }
+
+    state.pastedImages = [];
+    if (saved.pastedImages && saved.pastedImages.length > 0) {
+      let loadedCount = 0;
+      saved.pastedImages.forEach(piData => {
+        const img = new Image();
+        img.onload = function() {
+          state.pastedImages.push({
+            id: piData.id,
+            img: img,
+            x: piData.x,
+            y: piData.y,
+            scale: piData.scale,
+            baseW: piData.baseW,
+            baseH: piData.baseH
+          });
+          loadedCount++;
+          if (loadedCount === saved.pastedImages.length) {
+            draw();
+          }
+        };
+        img.src = piData.src;
+      });
+    }
+
+    renderWordsUI();
+    draw();
+    return true;
+  } catch (e) {
+    console.warn("Could not load state:", e);
+    return false;
+  }
+}
+
+// Load saved state or use defaults
+if (!loadState()) {
+  document.getElementById('mainText').value = state.mainText;
+  updateWordsFromText(state.mainText);
+}
 </script>
 </body>
 </html>
