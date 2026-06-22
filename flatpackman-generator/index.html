@@ -82,8 +82,7 @@ canvas:active{cursor:grabbing}
 <span>1080 x 1350 (4:5)</span>
 </div>
 <div style="padding:12px 16px; background:rgba(255,255,255,0.02); border-bottom:1px solid var(--border); display:flex; gap:8px">
-  <a href="../index.html" style="flex:1; text-align:center; padding:10px; background:#1e293b; border:1px solid var(--border); color:white; text-decoration:none; font-weight:600; font-size:0.8rem; border-radius:6px; transition:0.2s">⬅️ Wróć</a>
-  <a href="video.html" style="flex:1.2; text-align:center; padding:10px; background:#475569; color:white; text-decoration:none; font-weight:600; font-size:0.8rem; border-radius:6px; transition:0.2s; box-shadow:0 4px 14px rgba(0,0,0,0.2)">🎬 Studio Wideo (Reels)</a>
+  <a href="../index.html" style="flex:1; text-align:center; padding:10px; background:#1e293b; border:1px solid var(--border); color:white; text-decoration:none; font-weight:600; font-size:0.8rem; border-radius:6px; transition:0.2s">⬅️ Wróć do generatora głównego</a>
 </div>
 <div class="panel-scroll">
 
@@ -238,8 +237,10 @@ canvas:active{cursor:grabbing}
 <div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG (pionowy 3:4). Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
-<div class="section" style="border:none;padding-bottom:30px">
-<button class="btn-primary" onclick="showPreview()">Podgląd i zapis PNG</button>
+<div class="section" style="border:none;padding-bottom:30px;display:flex;gap:8px;flex-wrap:wrap;">
+  <button class="small-btn" onclick="undo()" style="margin:0;padding:10px 10px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;flex:1;" title="Cofnij ostatnią zmianę (Ctrl+Z)">↩️ Cofnij</button>
+  <button class="small-btn" onclick="resetProject()" style="margin:0;padding:10px 10px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;flex:1;background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:#fca5a5;" title="Wyczyść projekt do czystego szablonu">🗑️ Wyczyść</button>
+  <button class="btn-primary" onclick="showPreview()" style="flex:1.5;margin:0;padding:10px 12px;font-size:0.85rem;">Podgląd i zapis</button>
 </div>
 
 </div>
@@ -522,12 +523,11 @@ function updateWordsFromText(text) {
       return { text: w, font: oldWord.font, color: oldWord.color };
     }
     
-    // Polish diacritics supported case checking
-    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w) && w.length > 1;
+    // Default style: bold (renders as uppercase on canvas) and white
     return {
       text: w,
-      font: isUppercase ? 'bold' : 'italic',
-      color: isUppercase ? '#FFFFFF' : '#F15A24'
+      font: 'bold',
+      color: '#FFFFFF'
     };
   });
   
@@ -551,8 +551,17 @@ function renderWordsUI() {
     row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px';
     
     const label = document.createElement('span');
-    label.style.cssText = 'font-size:0.8rem;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
+    label.style.cssText = 'font-size:0.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
     label.textContent = w.text;
+    if (w.font === 'bold') {
+      label.style.fontWeight = '900';
+      label.style.textTransform = 'uppercase';
+    } else if (w.font === 'italic') {
+      label.style.fontStyle = 'italic';
+      label.style.fontWeight = '500';
+      label.style.textTransform = 'none';
+    }
+    label.style.color = w.color || '#FFFFFF';
     row.appendChild(label);
     
     const ctrls = document.createElement('div');
@@ -584,6 +593,7 @@ function setWordFont(i, font, btn) {
   state.words[i].font = font;
   btn.closest('.btn-group').querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  renderWordsUI(); // Refresh sidebar UI to show updated styling
   draw();
 }
 
@@ -591,6 +601,7 @@ function setWordColor(i, color, btn) {
   state.words[i].color = color;
   btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  renderWordsUI(); // Refresh sidebar UI to show updated color
   draw();
 }
 
@@ -829,8 +840,9 @@ function draw() {
       const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
       
-      // Keep word as is without checking against titleMaxW
-      lineWords.push(wObj);
+      // Transform bold to uppercase, leave others as is
+      const textToMeasure = wObj.font === 'bold' ? wObj.text.toUpperCase() : wObj.text;
+      lineWords.push({ text: textToMeasure, font: wObj.font, color: wObj.color });
     });
     
     // Do not auto-wrap. Respect exactly the line breaks from the textarea.
