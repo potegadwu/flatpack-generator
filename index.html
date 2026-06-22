@@ -100,25 +100,29 @@ canvas:active { cursor: grabbing; }
 <div class="section">
 <div class="section-title">Tło</div>
 <div class="color-grid" id="bgColors">
-<button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A')"></button>
-<button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF')"></button>
-<button class="color-swatch" style="background:#FFD700" onclick="setBgColor('#FFD700')"></button>
-<button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A')"></button>
-<button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722')"></button>
-<button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF')"></button>
-<button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9')"></button>
+<button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A', this)"></button>
+<button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF', this)"></button>
+<button class="color-swatch" style="background:#FFD700" onclick="setBgColor('#FFD700', this)"></button>
+<button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A', this)"></button>
+<button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722', this)"></button>
+<button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF', this)"></button>
+<button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9', this)"></button>
+<button class="color-swatch" id="gradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="toggleGradient()" title="Gradient"></button>
 </div>
-<div class="row" style="margin-top:10px; flex-wrap: wrap; gap: 6px;">
-<button class="small-btn" id="gradientBtn" onclick="toggleGradient()">Gradient</button>
-<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center">Foto z dysku</label>
+<div class="row" style="margin-top:12px; align-items:center; gap:12px;">
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:10px 16px;font-size:0.85rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;">Wgraj tło</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
-<button class="small-btn" id="clearPhotoBtn" onclick="clearPhoto()" style="display:none">Usuń foto</button>
-<div style="font-size:0.65rem;color:var(--muted);line-height:1.3;width:100%;margin-top:6px;">Możesz wklejać grafiki ze schowka (Ctrl+V). Najedź myszką i wciśnij Delete, aby usunąć grafikę lub tło.</div>
+<div style="font-size:0.65rem;color:var(--muted);line-height:1.4;flex:1;">Możesz wklejać grafiki ze schowka (Ctrl+V). Najedź myszką i wciśnij Delete, aby usunąć grafikę lub tło.</div>
 </div>
-<div class="row" style="margin-top:10px; display:none" id="photoScaleContainer">
+<div style="margin-top:12px; padding:8px 10px; background:rgba(9, 126, 255, 0.05); border:1px dashed rgba(9, 126, 255, 0.3); border-radius:6px; font-size:0.7rem; color:var(--text); line-height:1.4">
+  <strong style="color:var(--accent)">Optymalny rozmiar tła:</strong> 1080 × 1350 px (pion 4:5).<br>
+  <span style="color:var(--muted)">Generator automatycznie powiększy zdjęcie by wypełniło całą ramkę, dlatego unikaj zbyt małych plików, by nie straciły na jakości.</span>
+</div>
+<div class="row" style="margin-top:10px; display:none; align-items:center;" id="photoScaleContainer">
 <label>Skala:</label>
 <input type="range" id="photoScale" min="0.1" max="4.0" step="0.05" value="1.0" oninput="setPhotoScale(this.value)">
-<span class="slider-val" id="photoScaleVal">1.0x</span>
+<span class="slider-val" id="photoScaleVal" style="margin-right:8px">1.0x</span>
+<button class="small-btn" onclick="clearPhoto()" style="padding:4px 8px; font-size:0.7rem; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;">Usuń foto</button>
 </div>
 
 <div id="overlayControls" style="display:none; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
@@ -160,7 +164,11 @@ canvas:active { cursor: grabbing; }
 <div class="section">
 <div class="section-title">Tekst Główny</div>
 <textarea id="mainText" style="min-height:180px;font-size:0.9rem;line-height:1.4" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło..."></textarea>
-<div id="lineSizesContainer"></div>
+<div class="row" style="margin-top:10px">
+<label>Rozmiar:</label>
+<input type="range" id="titleSize" min="24" max="220" value="90" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
+<span class="slider-val" id="titleSizeVal">90px</span>
+</div>
 <div class="row">
 <label>Interlinia:</label>
 <input type="range" id="titleLH" min="0.6" max="2.0" step="0.05" value="0.95" oninput="state.titleLH=+this.value;document.getElementById('titleLHVal').textContent=this.value;draw()">
@@ -197,6 +205,7 @@ canvas:active { cursor: grabbing; }
 <option value="left">Do lewej</option>
 <option value="center">Do środka</option>
 </select>
+<button class="font-btn active" id="paraBoldBtn" onclick="toggleParaBold()" style="width:40px; margin-left:8px; font-weight:bold">B</button>
 </div>
 </div>
 
@@ -233,22 +242,42 @@ canvas:active { cursor: grabbing; }
 <button class="font-btn" style="width:30px;height:30px" onclick="adjustSlideNum(1)">+</button>
 </div>
 </div>
+<div class="toggle-row" style="margin-top:12px; margin-bottom:0;"><label>Pokaż numerację na grafice</label><input type="checkbox" id="showSlideNum" checked onchange="draw()"></div>
 </div>
 
 <div class="section">
-<div class="section-title">Narzędzia</div>
-<div class="toggle-row"><label>Pokaż marginesy 80px</label><input type="checkbox" id="showGuides" checked onchange="draw()"></div>
-<div class="toggle-row"><label>Pokaż crop 1:1 (siatka IG)</label><input type="checkbox" id="showCrop" checked onchange="draw()"></div>
-<div class="toggle-row"><label>Pokaż crop 3:4 (siatka profilu)</label><input type="checkbox" id="showGrid34" checked onchange="draw()"></div>
-<div class="toggle-row"><label>Pokaż numerację</label><input type="checkbox" id="showSlideNum" checked onchange="draw()"></div>
-<div class="toggle-row" style="border-top:1px dashed var(--border); margin-top:8px; padding-top:8px">
+<div class="section-title">Bezpieczne strefy IG (Linie)</div>
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Służą jako podgląd, gdzie Instagram może przyciąć obrazek w aplikacji.</div>
+
+<div class="toggle-row">
+<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny</label>
+<input type="checkbox" id="showGuides" checked onchange="draw()">
+</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Estetyczna granica. Teksty nie powinny wychodzić poza nią, by obrazek miał oddech.</div>
+
+<div class="toggle-row">
+<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1</label>
+<input type="checkbox" id="showCrop" checked onchange="draw()">
+</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG brutalnie utnie górę i dół na siatce Twojego profilu (w klasycznym widoku).</div>
+
+<div class="toggle-row">
+<label><strong style="color:rgba(9, 126, 255, 1)">—</strong> Kafelki profilu: Pion 3:4</label>
+<input type="checkbox" id="showGrid34" checked onchange="draw()">
+</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG. Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
+</div>
+
+<div class="section">
+<div class="section-title">Karta pod tekstem (Apla)</div>
+<div class="toggle-row">
   <label style="font-weight:700; color:var(--text)">Dodaj aplę (kartę pod tekstem)</label>
   <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
 </div>
 <div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
   <div class="row">
     <label>Styl apli:</label>
-    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()">
+    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()" style="background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
       <option value="light-glass">Jasne szkło (Glassmorphism)</option>
       <option value="dark-glass">Ciemne szkło</option>
       <option value="blue">Niebieska</option>
@@ -358,6 +387,7 @@ const state = {
   paraX: 150, paraY: 850,
   paraAlign: 'left',
   paraColor: '#FFFFFF',
+  paraBold: true,
 
   showApla: false,
   aplaStyle: 'light-glass',
@@ -458,24 +488,25 @@ function renderPreviewGrid() {
 const hitBoxes = {};
 let dragging = null;
 
-function setBgColor(hex) {
+function setBgColor(hex, btn) {
   state.bgType = 'color';
   state.bgColor = hex;
   state.gradient = false;
-  document.getElementById('gradientBtn').classList.remove('active');
+  document.getElementById('gradientSwatch').classList.remove('active');
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-  if (window.event && window.event.target && window.event.target.classList) {
-    window.event.target.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
   }
   clearPhoto();
   draw();
 }
 
 function toggleGradient() {
-  state.gradient = !state.gradient;
-  state.bgType = state.gradient ? 'gradient' : 'color';
-  document.getElementById('gradientBtn').classList.toggle('active');
+  state.gradient = true;
+  state.bgType = 'gradient';
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+  document.getElementById('gradientSwatch').classList.add('active');
+  clearPhoto();
   draw();
 }
 
@@ -499,7 +530,6 @@ function handlePhoto(e) {
         state.bgPhotoX = 0;
         state.bgPhotoY = (canvas.height - img.height * state.bgPhotoScale) / 2;
       }
-      document.getElementById('clearPhotoBtn').style.display = '';
       const scaleSlider = document.getElementById('photoScale');
       scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
       scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
@@ -511,7 +541,7 @@ function handlePhoto(e) {
       if (overlayContainer) overlayContainer.style.display = 'flex';
       
       document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-      document.getElementById('gradientBtn').classList.remove('active');
+      document.getElementById('gradientSwatch').classList.remove('active');
       draw();
     };
     img.src = ev.target.result;
@@ -522,7 +552,6 @@ function handlePhoto(e) {
 function clearPhoto() {
   state.bgPhoto = null;
   state.bgType = state.gradient ? 'gradient' : 'color';
-  document.getElementById('clearPhotoBtn').style.display = 'none';
   document.getElementById('photoScaleContainer').style.display = 'none';
   
   const overlayContainer = document.getElementById('overlayControls');
@@ -580,6 +609,16 @@ function setParaColor(c, btn) {
   draw();
 }
 
+function toggleParaBold() {
+  state.paraBold = !state.paraBold;
+  const btn = document.getElementById('paraBoldBtn');
+  if (btn) {
+    if (state.paraBold) btn.classList.add('active');
+    else btn.classList.remove('active');
+  }
+  draw();
+}
+
 function updateWordsFromText(text) {
   state.mainText = text;
   const rawWords = text.trim().split(/\s+/).filter(Boolean);
@@ -592,74 +631,18 @@ function updateWordsFromText(text) {
       return { text: w, font: oldWord.font, color: oldWord.color };
     }
     
-    const uppercaseText = w.toUpperCase();
-    const isSpecial = uppercaseText.includes('IKEA') || uppercaseText.includes('PAX') || uppercaseText.includes('STRESS') || uppercaseText.includes('MONEY') || uppercaseText.includes('TIME');
+    // Polish diacritics supported case checking
+    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w);
     
     return {
       text: w,
-      font: isSpecial ? 'italic' : 'bold',
-      color: isSpecial ? '#00B67A' : '#FFFFFF'
+      font: isUppercase ? 'bold' : 'italic',
+      color: isUppercase ? '#FFFFFF' : '#FFD700'
     };
   });
   
   state.words = newWords;
-  
-  // Dynamic lineSizes sync
-  const rawLines = text.split('\n');
-  const N = rawLines.length;
-  if (!state.lineSizes) {
-    state.lineSizes = [];
-  }
-  while (state.lineSizes.length < N) {
-    state.lineSizes.push(state.titleSize || 90);
-  }
-  if (state.lineSizes.length > N) {
-    state.lineSizes = state.lineSizes.slice(0, N);
-  }
-  
-  renderLineSizesUI();
   renderWordsUI();
-  draw();
-}
-
-function renderLineSizesUI() {
-  const container = document.getElementById('lineSizesContainer');
-  if (!container) return;
-  container.innerHTML = '';
-  
-  const rawLines = state.mainText.split('\n');
-  
-  rawLines.forEach((lineText, index) => {
-    const labelText = rawLines.length === 1 ? 'Rozmiar:' : `Rozmiar linii ${index + 1}:`;
-    const size = state.lineSizes[index] || state.titleSize || 90;
-    
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.style.marginTop = '6px';
-    
-    row.innerHTML = `
-      <label style="min-width: 110px">${labelText}</label>
-      <input type="range" min="24" max="220" value="${size}" oninput="setLineSize(${index}, +this.value)">
-      <span class="slider-val" style="min-width: 45px; text-align: right">${size}px</span>
-    `;
-    container.appendChild(row);
-  });
-}
-
-function setLineSize(index, val) {
-  state.lineSizes[index] = val;
-  if (state.lineSizes.length === 1) {
-    state.titleSize = val;
-  }
-  
-  const container = document.getElementById('lineSizesContainer');
-  if (container) {
-    const row = container.children[index];
-    if (row) {
-      const span = row.querySelector('.slider-val');
-      if (span) span.textContent = val + 'px';
-    }
-  }
   draw();
 }
 
@@ -946,7 +929,7 @@ function draw() {
   let wordCounter = 0;
   
   rawLines.forEach((lineText, lineIndex) => {
-    const curLineSize = state.lineSizes[lineIndex] || state.titleSize || 90;
+    const curLineSize = state.titleSize || 90;
     const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
     if (lineWordTokens.length === 0) {
       ty += curLineSize * state.titleLH;
@@ -1132,7 +1115,7 @@ function draw() {
   ty = state.titleY;
   wordCounter = 0;
   rawLines.forEach((lineText, lineIndex) => {
-    const curLineSize = state.lineSizes[lineIndex] || state.titleSize || 90;
+    const curLineSize = state.titleSize || 90;
     const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
     if (lineWordTokens.length === 0) {
       ty += curLineSize * state.titleLH;
@@ -1205,7 +1188,8 @@ function draw() {
   // Draw actual Paragraph Text
   if (paraVal) {
     const paraSize = 28;
-    ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
+    const weight = state.paraBold ? '800' : '400';
+    ctx.font = `${weight} ${paraSize}px "Rajdhani", sans-serif`;
     ctx.fillStyle = state.paraColor || '#FFFFFF';
     const py = ty + 30;
     
@@ -1269,20 +1253,20 @@ function draw() {
     ctx.fillRect(0, canvas.height - M, canvas.width, M);
     ctx.fillRect(0, M, M, canvas.height - M * 2);
     ctx.fillRect(canvas.width - M, M, M, canvas.height - M * 2);
-    ctx.strokeStyle = 'rgba(9, 126, 255, 0.5)';
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
     ctx.lineWidth = 3;
     ctx.setLineDash([16, 10]);
     ctx.strokeRect(M, M, canvas.width - M * 2, canvas.height - M * 2);
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(9, 126, 255, 0.8)';
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
     ctx.font = 'bold 16px "Geist Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('SAFE AREA (80PX)', canvas.width / 2, M - 6);
+    ctx.fillText('MARGINES', canvas.width / 2, M - 6);
   }
 
   if (!isExporting && document.getElementById('showCrop').checked) {
     const cropY = (canvas.height - canvas.width) / 2;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -1294,14 +1278,14 @@ function draw() {
     ctx.lineTo(canvas.width, canvas.height - cropY);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'right';
     ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
   }
 
   if (!isExporting && document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
-    ctx.strokeStyle = 'rgba(0, 182, 122, 0.4)'; // Trustpilot green
+    ctx.strokeStyle = 'rgba(9, 126, 255, 0.4)'; // bright blue
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -1311,7 +1295,7 @@ function draw() {
     ctx.lineTo(1046, canvas.height);
     ctx.stroke();
     
-    ctx.strokeStyle = 'rgba(9, 126, 255, 0.4)'; // blue
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; // sky blue
     ctx.beginPath();
     ctx.moveTo(135, 0);
     ctx.lineTo(135, canvas.height);
@@ -1320,12 +1304,12 @@ function draw() {
     ctx.stroke();
     ctx.setLineDash([]);
     
-    ctx.fillStyle = 'rgba(0, 182, 122, 0.6)';
+    ctx.fillStyle = 'rgba(9, 126, 255, 0.6)';
     ctx.font = '12px "Geist Mono", monospace';
     ctx.textAlign = 'left';
     ctx.fillText('crop 3:4 dla 4:5 (34px)', 40, 40);
     
-    ctx.fillStyle = 'rgba(9, 126, 255, 0.6)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
     ctx.fillText('crop 3:4 dla 1:1 (135px)', 141, 60);
   }
 
@@ -1882,6 +1866,8 @@ function resetAplaPosition() {
 // Initial initialization
 document.getElementById('mainText').value = state.mainText;
 document.getElementById('paraText').value = state.paraText;
+document.getElementById('titleSize').value = state.titleSize || 90;
+document.getElementById('titleSizeVal').textContent = (state.titleSize || 90) + 'px';
 document.getElementById('showApla').checked = state.showApla;
 toggleAplaControls(state.showApla);
 document.getElementById('aplaStyle').value = state.aplaStyle;
