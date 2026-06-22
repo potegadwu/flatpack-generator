@@ -404,8 +404,9 @@ canvas:active { cursor: grabbing; }
 </div>
 </div>
 
-<div class="section" style="border:none;padding-bottom:30px">
-<button class="btn-primary" onclick="showPreview()">Podgląd i zapis PNG</button>
+<div class="section" style="border:none;padding-bottom:30px;display:flex;gap:10px;">
+  <button class="small-btn" onclick="undo()" style="margin:0;padding:10px 14px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;" title="Cofnij ostatnią zmianę (Ctrl+Z)">↩️ Cofnij</button>
+  <button class="btn-primary" onclick="showPreview()" style="flex:1;margin:0;">Podgląd i zapis</button>
 </div>
 
 </div>
@@ -725,13 +726,11 @@ function updateWordsFromText(text) {
       return { text: w, font: oldWord.font, color: oldWord.color };
     }
     
-    // Polish diacritics supported case checking
-    const isUppercase = w === w.toUpperCase() && /[A-ZĄĆĘŁŃÓŚŹŻ]/.test(w) && w.length > 1;
-    
+    // Default style: bold (renders as uppercase on canvas) and white
     return {
       text: w,
-      font: isUppercase ? 'bold' : 'italic',
-      color: isUppercase ? '#FFFFFF' : '#FFD700'
+      font: 'bold',
+      color: '#FFFFFF'
     };
   });
   
@@ -755,8 +754,21 @@ function renderWordsUI() {
     row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px';
     
     const label = document.createElement('span');
-    label.style.cssText = 'font-size:0.8rem;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
+    label.style.cssText = 'font-size:0.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
     label.textContent = w.text;
+    if (w.font === 'bold') {
+      label.style.fontWeight = '900';
+      label.style.textTransform = 'uppercase';
+    } else if (w.font === 'italic') {
+      label.style.fontStyle = 'italic';
+      label.style.fontWeight = '500';
+      label.style.textTransform = 'none';
+    } else if (w.font === 'mono') {
+      label.style.fontFamily = '"Geist Mono", monospace';
+      label.style.fontWeight = '600';
+      label.style.textTransform = 'none';
+    }
+    label.style.color = w.color || '#FFFFFF';
     row.appendChild(label);
     
     const ctrls = document.createElement('div');
@@ -791,6 +803,7 @@ function setWordFont(i, font, btn) {
   state.words[i].font = font;
   btn.closest('.btn-group').querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  renderWordsUI(); // Refresh sidebar UI to show updated styling
   draw();
 }
 
@@ -798,6 +811,7 @@ function setWordColor(i, color, btn) {
   state.words[i].color = color;
   btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  renderWordsUI(); // Refresh sidebar UI to show updated color
   draw();
 }
 
@@ -1045,11 +1059,12 @@ function draw() {
       const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
       ctx.font = getFontStr(wObj.font, curLineSize);
-      const wWidth = ctx.measureText(wObj.text).width;
+      const textToMeasure = wObj.font === 'bold' ? wObj.text.toUpperCase() : wObj.text;
+      const wWidth = ctx.measureText(textToMeasure).width;
       if (wWidth > titleMaxW) {
         let curChunk = '';
-        for (let j = 0; j < wObj.text.length; j++) {
-          let char = wObj.text[j];
+        for (let j = 0; j < textToMeasure.length; j++) {
+          let char = textToMeasure[j];
           if (ctx.measureText(curChunk + char).width > titleMaxW) {
             lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
             curChunk = char;
@@ -1061,7 +1076,7 @@ function draw() {
           lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
         }
       } else {
-        lineWords.push(wObj);
+        lineWords.push({ text: textToMeasure, font: wObj.font, color: wObj.color });
       }
     });
     
@@ -1109,7 +1124,10 @@ function draw() {
   if (paraVal) {
     const paraSize = 28;
     ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
-    const py = ty + (state.paraY !== undefined ? state.paraY : 15);
+    if (state.paraY === undefined || state.paraY < 300) {
+      state.paraY = ty + 15;
+    }
+    const py = Math.max(state.paraY, ty + 15);
     const isCenter = state.paraAlign === 'center';
     const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
     const uppercaseText = paraVal.toUpperCase();
@@ -1248,11 +1266,12 @@ function draw() {
       const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
       wordCounter++;
       ctx.font = getFontStr(wObj.font, curLineSize);
-      const wWidth = ctx.measureText(wObj.text).width;
+      const textToMeasure = wObj.font === 'bold' ? wObj.text.toUpperCase() : wObj.text;
+      const wWidth = ctx.measureText(textToMeasure).width;
       if (wWidth > titleMaxW) {
         let curChunk = '';
-        for (let j = 0; j < wObj.text.length; j++) {
-          let char = wObj.text[j];
+        for (let j = 0; j < textToMeasure.length; j++) {
+          let char = textToMeasure[j];
           if (ctx.measureText(curChunk + char).width > titleMaxW) {
             lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
             curChunk = char;
@@ -1264,7 +1283,7 @@ function draw() {
           lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
         }
       } else {
-        lineWords.push(wObj);
+        lineWords.push({ text: textToMeasure, font: wObj.font, color: wObj.color });
       }
     });
     
@@ -1313,7 +1332,10 @@ function draw() {
     const weight = state.paraBold ? '800' : '400';
     ctx.font = `${weight} ${paraSize}px "Rajdhani", sans-serif`;
     ctx.fillStyle = state.paraColor || '#FFFFFF';
-    const py = ty + (state.paraY !== undefined ? state.paraY : 15);
+    if (state.paraY === undefined || state.paraY < 300) {
+      state.paraY = ty + 15;
+    }
+    const py = Math.max(state.paraY, ty + 15);
     
     const isCenter = state.paraAlign === 'center';
     const alignX = isCenter ? canvas.width / 2 : state.paraX;
@@ -1666,7 +1688,7 @@ canvas.addEventListener('mousemove', (e) => {
       case 'title': state.titleX = cx; state.titleY = cy; break;
       case 'para': 
         state.paraX = cx; 
-        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        state.paraY = cy; 
         break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
@@ -1931,7 +1953,7 @@ canvas.addEventListener('touchmove', (e) => {
       case 'title': state.titleX = cx; state.titleY = cy; break;
       case 'para': 
         state.paraX = cx; 
-        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        state.paraY = cy; 
         break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
