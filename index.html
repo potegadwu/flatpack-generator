@@ -1083,43 +1083,114 @@ function draw() {
   } else hitBoxes.logo=null;
 
   // ── GUIDES (always on top of content, not exported) ─────
-  if (!isExporting && document.getElementById('showGuides').checked) {
-    // Red safe zone
+  if (!isExporting) {
+    const cropY = (canvas.height - canvas.width) / 2; // = 135px from top and bottom
+
+    // ─ PHOTO FILL ZONES ─────────────────────────────────────
+    // Only show when NO photo is loaded (guidance for user) or always for clarity
+    const hasPhoto = state.bgType === 'photo' && state.bgPhoto;
+
+    // Zone A: FULL 4:5 area (green) — photo must cover entire canvas for 4:5 post
+    // Draw a bright green frame around the WHOLE canvas edge
     ctx.save();
-    ctx.strokeStyle='rgba(239,68,68,0.85)'; ctx.lineWidth=3; ctx.setLineDash([14,8]);
-    ctx.strokeRect(M,M,canvas.width-M*2,canvas.height-M*2);
+    ctx.strokeStyle = 'rgba(34,197,94,0.9)';  // bright green
+    ctx.lineWidth = 4;
     ctx.setLineDash([]);
-    ctx.fillStyle='rgba(239,68,68,0.75)'; ctx.font='bold 14px "Geist Mono",monospace';
-    ctx.textAlign='center'; ctx.fillText('SAFE ZONE ← 80px', canvas.width/2, M-8);
-    // subtle fill on margins
-    ctx.fillStyle='rgba(239,68,68,0.06)';
-    ctx.fillRect(0,0,canvas.width,M); ctx.fillRect(0,canvas.height-M,canvas.width,M);
-    ctx.fillRect(0,M,M,canvas.height-M*2); ctx.fillRect(canvas.width-M,M,M,canvas.height-M*2);
+    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+    // Green corner brackets (top-left)
+    const BL = 60; // bracket length
+    ctx.lineWidth = 6;
+    [[0,0,1,1],[canvas.width,0,-1,1],[0,canvas.height,1,-1],[canvas.width,canvas.height,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+      ctx.beginPath(); ctx.moveTo(cx+dx*2,cy+dy*2+dy*BL); ctx.lineTo(cx+dx*2,cy+dy*2); ctx.lineTo(cx+dx*2+dx*BL,cy+dy*2); ctx.stroke();
+    });
+    // Label at top: "Zdjęcie 4:5"
+    ctx.fillStyle='rgba(34,197,94,1)';
+    ctx.font='bold 20px "Geist Mono",monospace';
+    ctx.textAlign='center';
+    const lbl45 = '▼ ZDJĘCIE MUSI SIĘGAĆ DO KRAWĘDZI (4:5 = 1080×1350 px) ▼';
+    // badge background
+    ctx.fillStyle='rgba(0,0,0,0.6)';
+    ctx.fillRect(0, 0, canvas.width, 36);
+    ctx.fillStyle='rgba(34,197,94,1)';
+    ctx.fillText('▲  KRAWĘDŹ CANVAS = granica zdjęcia 4:5  ▲', canvas.width/2, 24);
     ctx.restore();
-  }
-  if (!isExporting && document.getElementById('showCrop').checked) {
-    const cropY=(canvas.height-canvas.width)/2;
-    ctx.save(); ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=2.5; ctx.setLineDash([10,6]);
-    ctx.beginPath(); ctx.moveTo(0,cropY); ctx.lineTo(canvas.width,cropY); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0,canvas.height-cropY); ctx.lineTo(canvas.width,canvas.height-cropY); ctx.stroke();
+
+    // Zone B: 1:1 crop zone (yellow) — photo must fill this for grid tiles
+    ctx.save();
+    // Fill the areas OUTSIDE 1:1 zone with a yellow overlay to show "this part gets cropped on grid"
+    ctx.fillStyle = 'rgba(251,191,36,0.15)';
+    ctx.fillRect(0, 0, canvas.width, cropY);
+    ctx.fillRect(0, canvas.height - cropY, canvas.width, cropY);
+    // Yellow dashed lines
+    ctx.strokeStyle = 'rgba(251,191,36,0.95)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([12, 6]);
+    ctx.beginPath(); ctx.moveTo(0, cropY); ctx.lineTo(canvas.width, cropY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, canvas.height - cropY); ctx.lineTo(canvas.width, canvas.height - cropY); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.font='bold 13px "Geist Mono",monospace'; ctx.textAlign='right';
-    ctx.fillText('1:1 crop (siatka IG)', canvas.width-10, cropY+16);
-    // label: min photo size for 1:1
-    ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='11px "Geist Mono",monospace'; ctx.textAlign='left';
-    ctx.fillText('Min. 1080×1080 px → bez czarnych pasów', 10, cropY+16);
+
+    // Arrow indicators pointing to crop line
+    ctx.fillStyle = 'rgba(251,191,36,1)';
+    ctx.font = 'bold 13px "Geist Mono",monospace';
+    ctx.textAlign = 'left';
+    // Top line label
+    const topLabelY = cropY - 4;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, topLabelY - 18, canvas.width, 20);
+    ctx.fillStyle = 'rgba(251,191,36,1)';
+    ctx.fillText('▲ obszar ucięty na siatce profilu (1:1)  |  ZDJĘCIE: min. 1080×1080 px', 8, topLabelY - 2);
+    // Bottom line label
+    const botLabelY = canvas.height - cropY + 2;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, botLabelY, canvas.width, 20);
+    ctx.fillStyle = 'rgba(251,191,36,1)';
+    ctx.fillText('▼ obszar ucięty na siatce profilu (1:1)', 8, botLabelY + 14);
+
+    // 1:1 zone bracket arrows on right side
+    const arrowX = canvas.width - 12;
+    ctx.strokeStyle = 'rgba(251,191,36,0.9)'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    // vertical line from cropY to canvas.height-cropY
+    ctx.beginPath(); ctx.moveTo(arrowX, cropY + 20); ctx.lineTo(arrowX, canvas.height - cropY - 20); ctx.stroke();
+    // top arrow head
+    ctx.beginPath(); ctx.moveTo(arrowX-6, cropY+28); ctx.lineTo(arrowX, cropY+12); ctx.lineTo(arrowX+6, cropY+28); ctx.stroke();
+    // bottom arrow head
+    ctx.beginPath(); ctx.moveTo(arrowX-6, canvas.height-cropY-28); ctx.lineTo(arrowX, canvas.height-cropY-12); ctx.lineTo(arrowX+6, canvas.height-cropY-28); ctx.stroke();
+    // side label
+    ctx.save(); ctx.translate(arrowX - 18, canvas.height/2);
+    ctx.rotate(-Math.PI/2); ctx.fillStyle='rgba(251,191,36,0.9)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='center';
+    ctx.fillText('STREFA 1:1 (1080 px)', 0, 0); ctx.restore();
+
     ctx.restore();
-  }
-  if (!isExporting && document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
-    ctx.save(); ctx.strokeStyle='rgba(9,126,255,0.7)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
-    ctx.beginPath(); ctx.moveTo(34,0); ctx.lineTo(34,canvas.height); ctx.moveTo(1046,0); ctx.lineTo(1046,canvas.height); ctx.stroke();
-    ctx.strokeStyle='rgba(56,189,248,0.55)';
-    ctx.beginPath(); ctx.moveTo(135,0); ctx.lineTo(135,canvas.height); ctx.moveTo(945,0); ctx.lineTo(945,canvas.height); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='rgba(9,126,255,0.75)'; ctx.font='bold 12px "Geist Mono",monospace'; ctx.textAlign='left';
-    ctx.fillText('3:4 → 34px', 40, 30);
-    ctx.fillStyle='rgba(56,189,248,0.75)'; ctx.fillText('3:4 → 135px', 141, 50);
-    ctx.restore();
+
+    // ─ SAFE ZONE (red) ──────────────────────────────────────
+    if (document.getElementById('showGuides') && document.getElementById('showGuides').checked) {
+      ctx.save();
+      ctx.strokeStyle='rgba(239,68,68,0.85)'; ctx.lineWidth=3; ctx.setLineDash([14,8]);
+      ctx.strokeRect(M, M, canvas.width-M*2, canvas.height-M*2);
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(239,68,68,0.06)';
+      ctx.fillRect(0,0,canvas.width,M); ctx.fillRect(0,canvas.height-M,canvas.width,M);
+      ctx.fillRect(0,M,M,canvas.height-M*2); ctx.fillRect(canvas.width-M,M,M,canvas.height-M*2);
+      // label
+      ctx.fillStyle='rgba(239,68,68,0.85)'; ctx.font='bold 12px "Geist Mono",monospace'; ctx.textAlign='left';
+      ctx.fillText('— SAFE ZONE (teksty i logotypy wewnątrz)', M+5, M+8);
+      ctx.restore();
+    }
+
+    // ─ 3:4 COLUMN LINES (blue) ──────────────────────────────
+    if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
+      ctx.save();
+      ctx.strokeStyle='rgba(9,126,255,0.65)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
+      ctx.beginPath(); ctx.moveTo(34,0); ctx.lineTo(34,canvas.height); ctx.moveTo(1046,0); ctx.lineTo(1046,canvas.height); ctx.stroke();
+      ctx.strokeStyle='rgba(56,189,248,0.5)';
+      ctx.beginPath(); ctx.moveTo(135,0); ctx.lineTo(135,canvas.height); ctx.moveTo(945,0); ctx.lineTo(945,canvas.height); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(9,126,255,0.8)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='left';
+      ctx.fillText('← 3:4 (34px)', 38, canvas.height - 40);
+      ctx.fillStyle='rgba(56,189,248,0.8)';
+      ctx.fillText('← 3:4 od 1:1 (135px)', 140, canvas.height - 40);
+      ctx.restore();
+    }
   }
 
   // Photo & pasted hitboxes
