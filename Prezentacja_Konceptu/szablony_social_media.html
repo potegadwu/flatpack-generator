@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flat Pack Man - Szablony SoMe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    background: #080a11;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 60px;
+    margin: 0;
+    min-height: 100vh;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .post-card {
+    width: 360px;
+    height: 450px; /* 4:5 aspect ratio (scaled down from 1080x1350) */
+    background: #0F172A;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .grain {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+    opacity: 0.05; mix-blend-mode: overlay;
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .kicker {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #FFD700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kicker::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: #FFD700;
+    border-radius: 50%;
+  }
+  .title {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .title i {
+    color: #FFD700;
+    font-style: italic;
+  }
+  .title.blue-accent i {
+    color: #097EFF;
+  }
+  .title.green-accent i {
+    color: #00B67A;
+  }
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 20px;
+    color: #E2E8F0;
+  }
+  .footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-weight: 900;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+  }
+  .slide-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* Szablon 1 - Wizerunkowy */
+  .t1 { background: #097EFF; }
+  .t1 .kicker { color: #FFD700; }
+  .t1 .kicker::before { background: #FFD700; }
+  .t1 .title { color: #FFFFFF; }
+  .t1 .title i { color: #FFD700; }
+  
+  /* Szablon 2 - Realizacja (ze zdjęciem) */
+  .t2 { background: #1E293B; }
+  .t2 .img-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 60%;
+    background: url('https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
+  }
+  .t2 .img-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(15,23,42,0) 30%, rgba(15,23,42,1) 60%);
+  }
+  .t2 .content {
+    justify-content: flex-end;
+  }
+  .t2 .title { font-size: 28px; }
+
+  /* Szablon 3 - Tips / Wiedza (Jasny) */
+  .t3 { background: #FFD700; color: #0F172A; }
+  .t3 .kicker { color: #097EFF; }
+  .t3 .kicker::before { background: #097EFF; }
+  .t3 .title { color: #0F172A; }
+  .t3 .title i { color: #097EFF; }
+  .t3 .subtitle { color: #334155; }
+  .t3 .brand, .t3 .slide-num { color: rgba(15,23,42,0.6); }
+
+  .label {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    font-family: 'Rajdhani', sans-serif;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Szablon 1 -->
+  <div style="position: relative;">
+    <div class="label">1. Wizerunkowy / Fakty</div>
+    <div class="post-card t1">
+      <div class="grain"></div>
+      <div class="content">
+        <div>
+          <div class="kicker">MISSION STATS</div>
+          <h1 class="title">ZŁOŻYLIŚMY<br><i>MILION</i><br>SZAF W TYM<br>ROKU.</h1>
+          <div class="subtitle">I NIE ZGUBILIŚMY ANI JEDNEJ ŚRUBKI. FLAT PACK MAN TO ZERO STRESU.</div>
+        </div>
+        <div class="footer">
+          <div class="brand">FLATPACK.HELP</div>
+          <div class="slide-num">01/01</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Szablon 2 -->
+  <div style="position: relative;">
+    <div class="label">2. Z realizacji u Klienta</div>
+    <div class="post-card t2">
+      <div class="img-bg"></div>
+      <div class="img-overlay"></div>
+      <div class="grain"></div>
+      <div class="content">
+        <div style="margin-top: auto; margin-bottom: 20px;">
+          <div class="kicker" style="color: #00B67A;">MISSION COMPLETED</div>
+          <h1 class="title">SYPIALNIA<br><i style="color:#00B67A">URATOWANA</i><br>W 2 GODZINY.</h1>
+          <div class="subtitle">KOLEJNY LEVEL ZALICZONY. KLIENT ZADOWOLONY.</div>
+        </div>
+        <div class="footer" style="margin-top: 0;">
+          <div class="brand">FLATPACK.HELP</div>
+          <div class="slide-num">01/03</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Szablon 3 -->
+  <div style="position: relative;">
+    <div class="label">3. Porada / Tips</div>
+    <div class="post-card t3">
+      <div class="grain"></div>
+      <div class="content">
+        <div>
+          <div class="kicker">LEVEL UP: TIPS</div>
+          <h1 class="title">JAK<br><i>PRZYGOTOWAĆ</i><br>POKÓJ NA<br>MONTAŻ?</h1>
+          <div class="subtitle">3 PROSTE KROKI, ŻEBYŚMY MOGLI DZIAŁAĆ Z PRĘDKOŚCIĄ ŚWIATŁA.</div>
+        </div>
+        <div class="footer">
+          <div class="brand">FLATPACK.HELP</div>
+          <div class="slide-num">01/04</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

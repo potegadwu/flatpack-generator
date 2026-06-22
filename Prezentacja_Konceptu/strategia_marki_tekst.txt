@@ -1,0 +1,62 @@
+# Koncept Kreatywny i Strategia Marki: Flat Pack Man 🚀
+
+## 1. Zamysł Kreatywny (The "Starship" Concept)
+
+**Idea:** Składanie mebli z paczek to dla większości ludzi chaotyczna i frustrująca walka ("gdzie jest ta śrubka?", "dlaczego ta instrukcja nie ma sensu?"). **Flat Pack Man** to odpowiedź z przyszłości.
+Marka opiera się na motywie **Star Trek / Sci-Fi / Misji Kosmicznej**. "Flat Pack Man" nie jest zwykłym monterem – to wysoko wyspecjalizowana jednostka (lub wręcz "superbohater/kosmiczny inżynier"), dysponująca precyzją, kosmiczną technologią i szybkością, która przybywa na ratunek, by zaprowadzić porządek w domowym chaosie.
+
+**Dlaczego to działa na kolejne elementy?**
+* **Tonality (Język):** Zamiast "Złożyliśmy dziś szafę", piszemy "Misja PAX zakończona pełnym sukcesem. Sektor sypialni zabezpieczony". Język jest profesjonalny, lekko techniczny, ale z mocnym przymrużeniem oka (luz i humor).
+* **Wyróżnialność (Zaczepność):** Na tle nudnej konkurencji ("Jesteśmy firmą montażową"), motyw odznaki gwiezdnej floty, statku i misji natychmiast przykuwa wzrok w social mediach.
+* **Michał jako Postać:** Karykatura Michała staje się "Kapitanem" lub "Głównym Inżynierem Pokładowym" w futurystycznym uniformie (np. koszulce z logotypem odznaki), który osobiście nadzoruje misje u klientów (stojaki na zdjęciach u Klientów to jego "hologramy/reprezentacje").
+
+---
+
+## 2. Logo (Insignia)
+
+Logotyp jest inspirowany odznaką Gwiezdnej Floty (Starfleet) połączoną z dynamicznym kształtem (np. startujący statek lub zarys klucza imbusowego/narzędzia wkomponowany w literę "F" i "P"). 
+
+* Poniżej wygenerowałem dwa poglądowe szkice/vibe'y, które obrazują estetykę:
+![Logo Concept 1](/C:/Users/Malgorzata/.gemini/antigravity-ide/brain/4ffdafe3-b1b4-4dab-abf3-4eff74ef3259/logo_concept_1_1782123594146.png)
+![Logo Concept 2](/C:/Users/Malgorzata/.gemini/antigravity-ide/brain/4ffdafe3-b1b4-4dab-abf3-4eff74ef3259/logo_concept_2_1782123609797.png)
+
+*Kształt logo w social mediach i stopce może pełnić funkcję stempla jakości (np. "Approved by Flat Pack Man").*
+
+---
+
+## 3. Paleta Kolorów i Typografia
+
+Zgodnie z wytycznymi, zestawiamy mocny, technologiczny niebieski z żywymi kolorami akcentującymi (ostrzegawczymi).
+
+### Kolory
+* **Cosmic Blue (`#097eff`)** – Kolor główny (taki jak na flatpack.help). Oznacza zaufanie, technologię i przestrzeń.
+* **Warp Yellow (`#FFD700`)** – Kolor ostrzegawczy/akcentowy. Oznacza energię, dynamikę i szybkość.
+* **Mission Green (`#00B67A`)** – Kolor "sukcesu" (nawiązujący do Trustpilot). Używany tam, gdzie pokazujemy realizacje i zadowolenie.
+* **Laser Orange (`#FF5722`)** – Używany do Call To Action i elementów zwracających uwagę na grafikach (np. "Book Now!").
+
+### Fonty
+* **Nagłówki (Headings):** **Rajdhani** lub **Montserrat** (bold/black) – Geometryczne, o lekko technicznym, "inżynieryjnym" sznycie, idealne na banery.
+* **Tekst zwykły (Body):** **Inter** – Niezwykle czytelny, nowoczesny font bezszeryfowy, który uspokaja mocne, techniczne nagłówki.
+
+---
+
+## 4. Szablony i Filary Komunikacji w Social Mediach (5 Kategorii)
+
+Komunikacja będzie oparta o ramy "Misji Kosmicznej". 
+
+1. **Z realizacji u Klienta (Mission Logs / Dziennik Kapitański):**
+   * *Wizualnie:* Zdjęcie perfekcyjnie złożonego mebla ze statystykami nakładanymi jak w HUD-zie (Heads-Up Display z gier/filmów) - np. "Czas montażu: 2h 15m", "Poziom trudności: Wymagający", "Status: Gotowe". W rogu stoi nasza maskotka (karykatura Michała).
+2. **Wizerunkowe (Heroic Stats / Ciekawostki Pokładowe):**
+   * *Wizualnie:* Duża typografia, kontrastowe tło (Niebieski/Żółty).
+   * *Copy:* "Czy wiesz, że nasz sprzęt w ciągu 365 dni wkręca x milionów śrubek, nie gubiąc ani jednej? 😉"
+3. **Real Time Marketing (Radar Scan):**
+   * *Wizualnie:* Grafika w formie radaru lub komunikatu alarmowego.
+   * *Copy:* (Lokalne wydarzenia) "Sensory wykryły potężną zniżkę na szafy PAX. Jeśli jedziesz na łowy, nasza jednostka ratunkowa czeka w gotowości do montażu!"
+4. **Opinie (Transmissions / Głosy Ziemian):**
+   * *Wizualnie:* Czysta grafika, opinia w formie chmurki lub komunikatu tekstowego na ekranie. Zastosowanie koloru *Mission Green*.
+5. **Tips & Tricks (Captain's Guide / Instrukcja Przetrwania):**
+   * *Wizualnie:* Krok po kroku, infografiki.
+   * *Copy:* "Jak przygotować pokój na lądowanie Flat Pack Mana?" (Zabezpiecz podłogę, zrób miejsce 2x2m, przygotuj kawę).
+
+> [!TIP]
+> Taka struktura ujednolici Twojego Instagrama/Facebooka i sprawi, że marka będzie natychmiast rozpoznawalna. Użycie mocnego niebieskiego i żółtego (motywy z Ikea, ale w klimacie Sci-Fi) idealnie trafia do podświadomości klienta szukającego kogoś do składania mebli.

@@ -6,7 +6,7 @@
 <title>Flatpack Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0F172A; 
@@ -98,10 +98,10 @@ canvas:active { cursor: grabbing; }
 <div class="section-title">Tło</div>
 <div class="color-grid" id="bgColors">
 <button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A')"></button>
-<button class="color-swatch" style="background:#1E3A8A" onclick="setBgColor('#1E3A8A')"></button>
 <button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF')"></button>
+<button class="color-swatch" style="background:#FFD700" onclick="setBgColor('#FFD700')"></button>
 <button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A')"></button>
-<button class="color-swatch" style="background:#E7BA04" onclick="setBgColor('#E7BA04')"></button>
+<button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722')"></button>
 <button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF')"></button>
 <button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9')"></button>
 </div>
@@ -125,14 +125,14 @@ canvas:active { cursor: grabbing; }
 
 <div class="section">
 <div class="section-title">Nadtytuł</div>
-<input type="text" id="kickerText" value="PROFESSIONAL ASSEMBLY" placeholder="np. PROFESSIONAL ASSEMBLY" oninput="draw()">
+<input type="text" id="kickerText" value="MISSION LOG" placeholder="np. MISSION LOG" oninput="draw()">
 <div class="row" style="margin-top:8px">
 <label>Kolor:</label>
 <div class="btn-group">
-<button class="color-btn active" style="background:#097EFF" onclick="setKickerColor('#097EFF',this)"></button>
+<button class="color-btn active" style="background:#FFD700" onclick="setKickerColor('#FFD700',this)"></button>
+<button class="color-btn" style="background:#097EFF" onclick="setKickerColor('#097EFF',this)"></button>
 <button class="color-btn" style="background:#00B67A" onclick="setKickerColor('#00B67A',this)"></button>
-<button class="color-btn" style="background:#E7BA04" onclick="setKickerColor('#E7BA04',this)"></button>
-<button class="color-btn" style="background:#0F172A" onclick="setKickerColor('#0F172A',this)"></button>
+<button class="color-btn" style="background:#FF5722" onclick="setKickerColor('#FF5722',this)"></button>
 <button class="color-btn" style="background:#FFFFFF" onclick="setKickerColor('#FFFFFF',this)"></button>
 </div>
 </div>
@@ -168,8 +168,8 @@ canvas:active { cursor: grabbing; }
 <div class="btn-group">
 <button class="color-btn active" style="background:#FFFFFF" onclick="setParaColor('#FFFFFF',this)"></button>
 <button class="color-btn" style="background:#097EFF" onclick="setParaColor('#097EFF',this)"></button>
-<button class="color-btn" style="background:#00B67A" onclick="setParaColor('#00B67A',this)"></button>
-<button class="color-btn" style="background:#E7BA04" onclick="setParaColor('#E7BA04',this)"></button>
+<button class="color-btn" style="background:#FFD700" onclick="setParaColor('#FFD700',this)"></button>
+<button class="color-btn" style="background:#FF5722" onclick="setParaColor('#FF5722',this)"></button>
 </div>
 </div>
 <div class="row" style="margin-top:8px">
@@ -321,11 +321,11 @@ const state = {
   gradient: false,
   bgOverlay: 0.40,
 
-  kickerText: 'PROFESSIONAL ASSEMBLY',
-  kickerColor: '#097EFF',
+  kickerText: 'MISSION LOG',
+  kickerColor: '#FFD700',
   kickerX: 150, kickerY: 150,
 
-  mainText: 'SAVE TIME, MONEY AND STRESS!',
+  mainText: 'STARFLEET QUALITY\nASSEMBLY',
   words: [],
   titleX: 150, titleY: 280,
   titleSize: 90,
@@ -333,7 +333,7 @@ const state = {
   titleLH: 0.95,
   wordSpacing: 20,
 
-  paraText: 'NORTHERN IRELAND\'S LEADING FLAT PACK SPECIALISTS SINCE 2012',
+  paraText: 'YOUR FURNITURE, ASSEMBLED AT THE SPEED OF LIGHT.',
   paraX: 150, paraY: 850,
   paraAlign: 'left',
   paraColor: '#FFFFFF',
@@ -678,8 +678,9 @@ function renderWordsUI() {
     colorGroup.innerHTML = `
       <button class="color-btn ${w.color === '#FFFFFF' ? 'active' : ''}" style="width:18px;height:18px;background:#FFFFFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
       <button class="color-btn ${w.color === '#097EFF' ? 'active' : ''}" style="width:18px;height:18px;background:#097EFF" onclick="setWordColor(${i},'#097EFF',this)"></button>
+      <button class="color-btn ${w.color === '#FFD700' ? 'active' : ''}" style="width:18px;height:18px;background:#FFD700" onclick="setWordColor(${i},'#FFD700',this)"></button>
+      <button class="color-btn ${w.color === '#FF5722' ? 'active' : ''}" style="width:18px;height:18px;background:#FF5722" onclick="setWordColor(${i},'#FF5722',this)"></button>
       <button class="color-btn ${w.color === '#00B67A' ? 'active' : ''}" style="width:18px;height:18px;background:#00B67A" onclick="setWordColor(${i},'#00B67A',this)"></button>
-      <button class="color-btn ${w.color === '#E7BA04' ? 'active' : ''}" style="width:18px;height:18px;background:#E7BA04" onclick="setWordColor(${i},'#E7BA04',this)"></button>
     `;
     ctrls.appendChild(colorGroup);
     
@@ -783,11 +784,11 @@ function adjustSlideNum(dir) {
 
 function getFontStr(font, size) {
   switch (font) {
-    case 'bold': return `800 ${size}px "Inter", sans-serif`;
-    case 'italic': return `italic 400 ${size}px "Inter", sans-serif`;
-    case 'bold-italic': return `italic 800 ${size}px "Inter", sans-serif`;
-    case 'mono': return `500 ${size}px "Geist Mono", monospace`;
-    default: return `600 ${size}px "Inter", sans-serif`;
+    case 'bold': return `900 ${size}px "Montserrat", sans-serif`;
+    case 'italic': return `italic 900 ${size}px "Montserrat", sans-serif`;
+    case 'bold-italic': return `italic 900 ${size}px "Montserrat", sans-serif`;
+    case 'mono': return `600 ${size}px "Rajdhani", sans-serif`;
+    default: return `700 ${size}px "Montserrat", sans-serif`;
   }
 }
 
@@ -880,7 +881,7 @@ function draw() {
   // 2. Pre-calculate kicker width & height for Apla
   const kickerVal = document.getElementById('kickerText').value;
   if (kickerVal) {
-    ctx.font = '500 20px "Geist Mono", monospace';
+    ctx.font = '600 20px "Rajdhani", sans-serif';
     ctx.letterSpacing = '6px';
     const lines = kickerVal.toUpperCase().split('\n');
     let maxW = 0;
@@ -976,7 +977,7 @@ function draw() {
   const paraVal = document.getElementById('paraText').value;
   if (paraVal) {
     const paraSize = 28;
-    ctx.font = `600 ${paraSize}px "Inter", sans-serif`;
+    ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
     const py = ty + 30;
     state.paraY = py;
     const isCenter = state.paraAlign === 'center';
@@ -1072,7 +1073,7 @@ function draw() {
     ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.font = '500 20px "Geist Mono", monospace';
+    ctx.font = '600 20px "Rajdhani", sans-serif';
     ctx.fillStyle = state.kickerColor;
     ctx.textAlign = 'left';
     ctx.letterSpacing = '6px';
@@ -1162,7 +1163,7 @@ function draw() {
   // Draw actual Paragraph Text
   if (paraVal) {
     const paraSize = 28;
-    ctx.font = `600 ${paraSize}px "Inter", sans-serif`;
+    ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
     ctx.fillStyle = state.paraColor || '#FFFFFF';
     const py = ty + 30;
     
@@ -1205,7 +1206,7 @@ function draw() {
   // 6. Slide (Numeracja)
   const slideVal = validateAndGetSlideText(false);
   if (slideVal && document.getElementById('showSlideNum').checked) {
-    ctx.font = '600 20px "Geist Mono", monospace';
+    ctx.font = '600 20px "Rajdhani", sans-serif';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
     
     ctx.textAlign = state.slideX > canvas.width / 2 ? 'right' : 'left';
