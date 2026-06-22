@@ -1458,6 +1458,9 @@ function draw() {
       hitBoxes[pi.id] = { x: pi.x, y: pi.y, w: pi.baseW * pi.scale, h: pi.baseH * pi.scale };
     });
   }
+  if (typeof saveStateDebounced === 'function' && !isExporting) {
+    saveStateDebounced();
+  }
 }
 
 function hitTestAplaHandle(mx, my) {
