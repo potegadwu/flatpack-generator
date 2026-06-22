@@ -6,21 +6,21 @@
 <title>Flatpack Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Rajdhani:wght@500;600;700&family=Oswald:wght@400;600;700&family=Anton&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0F172A; 
-  --panel: #1E293B; 
-  --accent: #097EFF; 
-  --border: #334155; 
-  --text: #F8FAFC; 
+  --bg: #0F172A;
+  --panel: #1E293B;
+  --accent: #097EFF;
+  --border: #334155;
+  --text: #F8FAFC;
   --muted: #64748B;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  background: var(--bg); 
-  color: var(--text); 
-  height: 100vh; 
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -32,16 +32,16 @@ body {
 }
 .app { display: flex; height: 100vh; position: relative; z-index: 2; }
 
-.panel { width: 450px; min-width: 450px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.panel { width: 460px; min-width: 460px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .panel-scroll { flex: 1; overflow-y: auto; padding: 0 16px 16px; }
 .panel-scroll::-webkit-scrollbar { width: 6px; }
 .panel-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-.panel-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.panel-header h1 { font-size: 1.25rem; font-weight: 800; color: var(--accent); }
-.panel-header span { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+.panel-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.panel-header h1 { font-size: 1.15rem; font-weight: 800; color: var(--accent); }
+.panel-header span { font-family: 'Geist Mono', monospace; font-size: 0.7rem; color: var(--muted); }
 
-.section { padding: 14px 0; border-bottom: 1px solid var(--border); }
-.section-title { font-family: 'Geist Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 10px; }
+.section { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.section-title { font-family: 'Geist Mono', monospace; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 8px; }
 
 label { font-size: 0.75rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
 input[type="text"], textarea, select { width: 100%; background: #0F172A; border: 1px solid var(--border); color: white; padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; }
@@ -54,9 +54,9 @@ input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 .slider-val { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: var(--text); min-width: 36px; text-align: right; }
 
 .color-grid { display: flex; gap: 6px; flex-wrap: wrap; }
-.color-swatch { width: 36px; height: 36px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
-.color-swatch:hover { border-color: rgba(255,255,255,0.3); }
-.color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.3); }
+.color-swatch { width: 34px; height: 34px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
+.color-swatch:hover { border-color: rgba(255,255,255,0.4); }
+.color-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.4); }
 
 .small-btn { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
 .small-btn:hover { background: rgba(255,255,255,0.07); }
@@ -67,21 +67,19 @@ input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 .font-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 .font-btn:hover:not(.active) { background: rgba(255,255,255,0.05); }
 
-.color-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; }
+.color-btn { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.15s; }
 .color-btn.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.3); }
 .color-btn:hover:not(.active) { border-color: rgba(255,255,255,0.3); }
 
-.btn-primary { width: 100%; padding: 14px; border: none; border-radius: 8px; background: var(--accent); color: white; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(9, 126, 255, 0.4); }
+.btn-primary { width: 100%; padding: 13px; border: none; border-radius: 8px; background: var(--accent); color: white; font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 14px rgba(9, 126, 255, 0.4); }
 .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(9, 126, 255, 0.5); }
 
-.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
-.toggle-row label { margin-bottom: 0; font-size: 0.8rem; color: var(--text); }
-.toggle-row input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; }
+.toggle-row label { margin-bottom: 0; font-size: 0.78rem; color: var(--text); }
+.toggle-row input[type="checkbox"] { accent-color: var(--accent); width: 17px; height: 17px; cursor: pointer; }
 
 .canvas-area { flex: 1; display: flex; justify-content: center; align-items: center; background: #080a11; overflow: hidden; position: relative; }
-canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 40px); cursor: grab; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border-radius: 4px; }
-canvas:active { cursor: grabbing; }
-.hint { font-size: 0.65rem; color: var(--muted); font-weight: 400; }
+canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 40px); cursor: default; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border-radius: 4px; }
 .overlay-thumb {
   width: 100%;
   aspect-ratio: 1;
@@ -111,15 +109,34 @@ canvas:active { cursor: grabbing; }
   justify-content: center;
   transition: all 0.2s ease;
 }
-.logo-thumb-wrapper:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-}
+.logo-thumb-wrapper:hover { transform: translateY(-1px); border-color: var(--accent); }
 .logo-thumb-wrapper.active {
   border-color: var(--accent) !important;
   background: rgba(9, 126, 255, 0.1) !important;
   box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.2);
 }
+
+/* Gradient direction picker */
+.grad-grid { display: grid; grid-template-columns: repeat(6, 34px); gap: 4px; margin-top: 6px; }
+.grad-swatch {
+  width: 34px; height: 34px; border-radius: 6px; border: 2px solid transparent;
+  cursor: pointer; transition: border-color 0.15s; position: relative; overflow: hidden;
+}
+.grad-swatch:hover { border-color: rgba(255,255,255,0.4); }
+.grad-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(9,126,255,0.4); }
+
+/* Font preview pills */
+.font-preview-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.font-pill {
+  padding: 5px 10px; border-radius: 20px; border: 1.5px solid var(--border);
+  cursor: pointer; font-size: 0.8rem; color: var(--text); transition: all 0.15s;
+  white-space: nowrap; background: transparent;
+}
+.font-pill:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+.font-pill.active { border-color: var(--accent); background: rgba(9,126,255,0.12); color: var(--accent); }
+
+/* Watermark section */
+.wm-section { margin-top:6px; }
 </style>
 </head>
 <body>
@@ -128,62 +145,81 @@ canvas:active { cursor: grabbing; }
 <aside class="panel">
 <div class="panel-header">
 <h1>Flatpack Generator</h1>
-<span>1080 x 1350 (4:5)</span>
+<span>1080 × 1350 (4:5)</span>
 </div>
 <div class="panel-scroll">
 
+<!-- TŁO -->
 <div class="section">
 <div class="section-title">Tło</div>
 <div class="color-grid" id="bgColors">
-<button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A', this)"></button>
-<button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF', this)"></button>
-<button class="color-swatch" style="background:#FFD700" onclick="setBgColor('#FFD700', this)"></button>
-<button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A', this)"></button>
-<button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722', this)"></button>
-<button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF', this)"></button>
-<button class="color-swatch" id="gradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="toggleGradient()" title="Gradient"></button>
+<button class="color-swatch active" style="background:#0F172A" onclick="setBgColor('#0F172A', this)" title="Ciemny granat"></button>
+<button class="color-swatch" style="background:#097EFF" onclick="setBgColor('#097EFF', this)" title="Niebieski"></button>
+<button class="color-swatch" style="background:#FFD700" onclick="setBgColor('#FFD700', this)" title="Żółty"></button>
+<button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A', this)" title="Zielony"></button>
+<button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722', this)" title="Pomarańczowy"></button>
+<button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF', this)" title="Biały"></button>
+<button class="color-swatch" style="background:#000000" onclick="setBgColor('#000000', this)" title="Czarny"></button>
 </div>
-<div class="row" style="margin-top:12px; align-items:center; gap:12px;">
-<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:10px 16px;font-size:0.85rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;">Wgraj zdjęcie</label>
+
+<!-- GRADIENT PICKER - visual squares -->
+<div style="margin-top:10px; font-size:0.7rem; font-weight:600; color:var(--muted)">Gradient cienia:</div>
+<div class="grad-grid" id="gradGrid">
+  <button class="grad-swatch" id="gd_off" title="Brak gradientu" onclick="setGradDir('off',this)" style="background:#1e293b">
+    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:#64748b">✕</span>
+  </button>
+  <button class="grad-swatch active" id="gd_bottom-left" title="Lewy dół" onclick="setGradDir('bottom-left',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl1" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl1)"/></svg>
+  </button>
+  <button class="grad-swatch" id="gd_bottom-right" title="Prawy dół" onclick="setGradDir('bottom-right',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl2)"/></svg>
+  </button>
+  <button class="grad-swatch" id="gd_bottom" title="Z dołu" onclick="setGradDir('bottom',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl3)"/></svg>
+  </button>
+  <button class="grad-swatch" id="gd_top" title="Z góry" onclick="setGradDir('top',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl4" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl4)"/></svg>
+  </button>
+  <button class="grad-swatch" id="gd_left" title="Z lewej" onclick="setGradDir('left',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl5" x1="100%" y1="0%" x2="0%" y2="0%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl5)"/></svg>
+  </button>
+  <button class="grad-swatch" id="gd_right" title="Z prawej" onclick="setGradDir('right',this)">
+    <svg width="34" height="34" viewBox="0 0 34 34"><defs><linearGradient id="gl6" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.8)"/></linearGradient></defs><rect width="34" height="34" fill="url(#gl6)"/></svg>
+  </button>
+</div>
+<div class="row" style="margin-top:6px">
+  <label style="white-space:nowrap">Moc cienia:</label>
+  <input type="range" id="overlayOpacity" min="0" max="100" value="40" oninput="state.overlayOpacity=+this.value; document.getElementById('overlayVal').textContent=this.value+'%'; draw()">
+  <span class="slider-val" id="overlayVal" style="min-width:36px;text-align:right">40%</span>
+</div>
+
+<!-- PHOTO UPLOAD -->
+<div class="row" style="margin-top:10px; align-items:center; gap:10px;">
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:8px 14px;font-size:0.82rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;margin:0">Wgraj zdjęcie</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
-<div style="font-size:0.65rem;color:var(--muted);line-height:1.4;flex:1;">Możesz wklejać grafiki ze schowka (Ctrl+V). Najedź myszką i wciśnij Delete, aby usunąć grafikę lub tło.</div>
+<div style="font-size:0.62rem;color:var(--muted);line-height:1.4;flex:1">Ctrl+V wklej. Delete najedź i usuń. Snap do linii bezp. aktywny.</div>
 </div>
-<div style="margin-top:12px; padding:8px 10px; background:rgba(9, 126, 255, 0.05); border:1px dashed rgba(9, 126, 255, 0.3); border-radius:6px; font-size:0.7rem; color:var(--text); line-height:1.4">
-  <strong style="color:var(--accent)">Optymalny rozmiar zdjęcia:</strong> 1080 × 1350 px (pion 4:5).<br>
-  <span style="color:var(--muted)">Generator automatycznie dopasuje zdjęcie, by wypełniło ramkę. Cały post ma format 4:5, a obszar 1:1 (siatka IG) jest oznaczony na canvasie białą linią.</span>
+<div id="photoWarnBox" style="display:none;margin-top:8px;padding:6px 10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:6px;font-size:0.7rem;color:#fca5a5;line-height:1.4">
+  ⚠️ <strong>Zdjęcie za małe!</strong> Pełna pokrywa: min. <strong>1080×1350px</strong> (4:5) lub <strong>1080×1080px</strong> (1:1). Poniżej tego formatu IG doda czarne pasy.
 </div>
-<div class="row" style="margin-top:10px; display:none; align-items:center;" id="photoScaleContainer">
+<div class="row" style="margin-top:8px; display:none; align-items:center;" id="photoScaleContainer">
 <label>Skala:</label>
 <input type="range" id="photoScale" min="0.1" max="4.0" step="0.05" value="1.0" oninput="setPhotoScale(this.value)">
-<span class="slider-val" id="photoScaleVal" style="margin-right:8px">1.0x</span>
-<button class="small-btn" onclick="clearPhoto()" style="padding:4px 8px; font-size:0.7rem; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;">Usuń foto</button>
+<span class="slider-val" id="photoScaleVal" style="margin-right:6px">1.0x</span>
 </div>
-
-<div id="overlayControls" style="display:flex; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
-  <div class="section-title" style="margin-bottom:6px">Cień / Przyciemnienie tła</div>
-  <div class="row" style="margin-top:0">
-    <label style="width:60px">Kierunek:</label>
-    <select id="overlayDir" onchange="state.overlayDir=this.value; draw()" style="flex:1; background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
-      <option value="bottom-left">Lewy dół (po skosie)</option>
-      <option value="bottom-right">Prawy dół (po skosie)</option>
-      <option value="left">Z lewej (pionowo)</option>
-      <option value="right">Z prawej (pionowo)</option>
-      <option value="bottom">Z dołu (poziomo)</option>
-      <option value="top">Z góry (poziomo)</option>
-    </select>
-  </div>
-  <div class="row">
-    <label style="width:60px">Moc:</label>
-    <input type="range" id="overlayOpacity" min="0" max="100" value="40" oninput="state.overlayOpacity=+this.value; document.getElementById('overlayVal').textContent=this.value+'%'; draw()">
-    <span class="slider-val" id="overlayVal" style="min-width:36px;text-align:right">40%</span>
-  </div>
+<div style="margin-top:8px; padding:7px 10px; background:rgba(9, 126, 255, 0.05); border:1px dashed rgba(9, 126, 255, 0.3); border-radius:6px; font-size:0.68rem; color:var(--text); line-height:1.4">
+  <strong style="color:var(--accent)">Format zdjęcia bez czarnych pasów:</strong><br>
+  • <b>Post 4:5 (cały obszar):</b> min. 1080 × 1350 px<br>
+  • <b>Kafelek 1:1 (siatka IG):</b> min. 1080 × 1080 px<br>
+  <span style="color:var(--muted)">Snap do linii bezpiecznych aktywny przy upuszczeniu.</span>
 </div>
 </div>
 
+<!-- NADTYTUŁ -->
 <div class="section">
 <div class="section-title">Nadtytuł</div>
 <input type="text" id="kickerText" value="MISSION LOG" placeholder="np. MISSION LOG" oninput="draw()">
-<div class="row" style="margin-top:8px">
+<div class="row" style="margin-top:6px">
 <label>Kolor:</label>
 <div class="btn-group">
 <button class="color-btn active" style="background:#FFD700" onclick="setKickerColor('#FFD700',this)"></button>
@@ -195,10 +231,22 @@ canvas:active { cursor: grabbing; }
 </div>
 </div>
 
+<!-- TEKST GŁÓWNY -->
 <div class="section">
 <div class="section-title">Tekst Główny</div>
-<textarea id="mainText" style="min-height:180px;font-size:0.9rem;line-height:1.4" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło..."></textarea>
-<div class="row" style="margin-top:10px">
+
+<!-- Font preview pills -->
+<div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px">Font domyślny wszystkich słów (per-słowo można zmienić poniżej):</div>
+<div class="font-preview-row" id="globalFontRow">
+  <button class="font-pill active" id="gf_bold" onclick="setGlobalFont('bold',this)" style="font-family:'Montserrat',sans-serif;font-weight:900;text-transform:uppercase">BOLD</button>
+  <button class="font-pill" id="gf_italic" onclick="setGlobalFont('italic',this)" style="font-family:'Montserrat',sans-serif;font-style:italic;font-weight:700">Italic</button>
+  <button class="font-pill" id="gf_mono" onclick="setGlobalFont('mono',this)" style="font-family:'Rajdhani',sans-serif;font-weight:600">Rajdhani</button>
+  <button class="font-pill" id="gf_oswald" onclick="setGlobalFont('oswald',this)" style="font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase">OSWALD</button>
+  <button class="font-pill" id="gf_anton" onclick="setGlobalFont('anton',this)" style="font-family:'Anton',sans-serif;text-transform:uppercase">ANTON</button>
+</div>
+
+<textarea id="mainText" style="min-height:130px;font-size:0.9rem;line-height:1.4;margin-top:8px" oninput="updateWordsFromText(this.value)" placeholder="Wpisz główne hasło...&#10;Enter = nowa linia (osobno przesuwalna)"></textarea>
+<div class="row" style="margin-top:8px">
 <label>Rozmiar:</label>
 <input type="range" id="titleSize" min="24" max="220" value="90" oninput="state.titleSize=+this.value;document.getElementById('titleSizeVal').textContent=this.value+'px';draw()">
 <span class="slider-val" id="titleSizeVal">90px</span>
@@ -210,21 +258,21 @@ canvas:active { cursor: grabbing; }
 </div>
 <div class="row">
 <label>Odstęp słów:</label>
-<input type="range" id="wordSpacing" min="5" max="80" value="20" oninput="state.wordSpacing=+this.value;document.getElementById('wordSpacingVal').textContent=this.value+'px';draw()">
+<input type="range" id="wordSpacing" min="0" max="80" value="20" oninput="state.wordSpacing=+this.value;document.getElementById('wordSpacingVal').textContent=this.value+'px';draw()">
 <span class="slider-val" id="wordSpacingVal">20px</span>
 </div>
 
-<label style="margin-top:12px; margin-bottom:2px">Edycja pojedynczych słów:</label>
-<div style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.5); border-radius: 6px; padding: 4px;" id="wordsEditorContainer">
-  <!-- Dynamic word editors list -->
+<label style="margin-top:10px; margin-bottom:2px">Edycja słów (kolor / font):</label>
+<div style="max-height: 220px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 6px; padding: 4px;" id="wordsEditorContainer">
 </div>
 </div>
 
+<!-- DOPISEK -->
 <div class="section">
 <div class="section-title">Dopisek pod hasłem</div>
-<textarea id="paraText" placeholder="Dodatkowy tekst pod tytułem..." oninput="onParaInput(this)" maxlength="200" style="min-height:75px"></textarea>
-<div style="font-size:0.7rem;color:var(--muted);text-align:right;margin-top:2px" id="paraCharCount">0/200</div>
-<div class="row" style="margin-top:8px">
+<textarea id="paraText" placeholder="Dodatkowy tekst – pojawia się zaraz pod hasłem..." oninput="onParaInput(this)" maxlength="300" style="min-height:65px"></textarea>
+<div style="font-size:0.68rem;color:var(--muted);text-align:right;margin-top:2px" id="paraCharCount">0/300</div>
+<div class="row" style="margin-top:6px">
 <label>Kolor:</label>
 <div class="btn-group">
 <button class="color-btn active" style="background:#FFFFFF" onclick="setParaColor('#FFFFFF',this)"></button>
@@ -233,28 +281,29 @@ canvas:active { cursor: grabbing; }
 <button class="color-btn" style="background:#00B67A" onclick="setParaColor('#00B67A',this)"></button>
 <button class="color-btn" style="background:#FF5722" onclick="setParaColor('#FF5722',this)"></button>
 </div>
+<button class="font-btn active" id="paraBoldBtn" onclick="toggleParaBold()" style="width:36px;margin-left:6px;font-weight:bold">B</button>
 </div>
-<div class="row" style="margin-top:8px">
+<div class="row" style="margin-top:6px">
 <label>Wyrównanie:</label>
 <select id="paraAlign" onchange="state.paraAlign=this.value;draw()" style="width:auto;flex:1">
 <option value="left">Do lewej</option>
 <option value="center">Do środka</option>
 </select>
-<button class="font-btn active" id="paraBoldBtn" onclick="toggleParaBold()" style="width:40px; margin-left:8px; font-weight:bold">B</button>
 </div>
+<div style="font-size:0.65rem;color:var(--muted);margin-top:4px">Dopisek układa się zawsze zaraz pod tekstem głównym. Możesz go przeciągnąć.</div>
 </div>
 
-<!-- Karta pod tekstem (Apla) -->
+<!-- KARTA POD TEKSTEM (APLA) -->
 <div class="section">
 <div class="section-title">Karta pod tekstem (Apla)</div>
 <div class="toggle-row">
   <label style="font-weight:700; color:var(--text)">Dodaj aplę (kartę pod tekstem)</label>
   <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
 </div>
-<div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
-  <div class="row" style="flex-direction:column; align-items:flex-start; gap:6px; margin-bottom: 12px;">
+<div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:6px">
+  <div class="row" style="flex-direction:column; align-items:flex-start; gap:6px; margin-bottom: 10px;">
     <label>Kolor apli:</label>
-    <div class="color-grid" id="aplaColors" style="display:flex; gap:8px; align-items:center;">
+    <div class="color-grid" id="aplaColors" style="display:flex; gap:6px; align-items:center;">
       <button class="color-btn" data-color="#0F172A" style="background:#0F172A" onclick="setAplaColor('#0F172A', this)" title="Ciemny granat"></button>
       <button class="color-btn" data-color="#097EFF" style="background:#097EFF" onclick="setAplaColor('#097EFF', this)" title="Niebieski"></button>
       <button class="color-btn" data-color="#FFD700" style="background:#FFD700" onclick="setAplaColor('#FFD700', this)" title="Żółty"></button>
@@ -274,40 +323,63 @@ canvas:active { cursor: grabbing; }
     <input type="range" id="aplaH" min="100" max="1350" value="680" oninput="state.aplaH=+this.value;document.getElementById('aplaHVal').textContent=this.value+'px';draw()">
     <span class="slider-val" id="aplaHVal">680px</span>
   </div>
-  <div class="row" style="margin-top:8px; gap:8px;">
+  <div class="row" style="margin-top:6px; gap:8px;">
     <button class="small-btn" style="flex:1" onclick="resetAplaPosition()">Wyśrodkuj aplę</button>
-    <button class="small-btn" style="flex:1; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;" onclick="deleteApla()">Usuń aplę</button>
   </div>
+  <div style="font-size:0.65rem;color:var(--muted);margin-top:5px">Najedź na aplę i wciśnij Delete, aby usunąć.</div>
 </div>
 </div>
 
-<!-- Logotypy / Brand Logo -->
+<!-- LOGOTYPY -->
 <div class="section">
 <div class="section-title">Logotypy / Brand Logo</div>
-<div class="row" style="margin-bottom:10px; flex-direction:column; align-items:flex-start; gap:6px;">
-  <label style="display:block; margin-bottom:4px">Kliknij logo, aby dodać/ukryć na projekcie:</label>
-  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width:100%">
-    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_flatpack_help.png', this)">
-      <img src="assets/logos/logo_flatpack_help.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo Flatpack.help">
-    </div>
-    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_czerw_nieb.png', this)">
-      <img src="assets/logos/logo_czerw_nieb.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo czerwono-niebieskie">
-    </div>
-    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_nieb_biale.png', this)">
-      <img src="assets/logos/logo_nieb_biale.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo niebiesko-białe">
-    </div>
+<label style="display:block; margin-bottom:4px">Kliknij logo, aby dodać/ukryć:</label>
+<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width:100%">
+  <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_flatpack_help.png', this)">
+    <img src="assets/logos/logo_flatpack_help.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo Flatpack.help">
+  </div>
+  <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_czerw_nieb.png', this)">
+    <img src="assets/logos/logo_czerw_nieb.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo czerwono-niebieskie">
+  </div>
+  <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_nieb_biale.png', this)">
+    <img src="assets/logos/logo_nieb_biale.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo niebiesko-białe">
   </div>
 </div>
-<div class="row" id="logoScaleRow" style="display:flex;">
+<div class="row" id="logoScaleRow" style="display:none;margin-top:8px">
   <label>Rozmiar logo:</label>
   <input type="range" id="logoScale" min="0.3" max="3.0" step="0.05" value="1.0" oninput="state.logoScale=+this.value;document.getElementById('logoScaleVal').textContent=this.value+'x';draw()">
   <span class="slider-val" id="logoScaleVal">1.0x</span>
 </div>
 </div>
 
+<!-- ZNAK WODNY -->
 <div class="section">
-<div class="section-title">Stopka & Numeracja</div>
-<input type="text" id="brandText" value="FLATPACK.HELP" oninput="draw()" style="margin-bottom:8px">
+<div class="section-title">Znak Wodny (Watermark)</div>
+<div style="font-size:0.65rem;color:var(--muted);line-height:1.4;margin-bottom:8px">Wgraj własne logo jako znak wodny — pojawia się pod tekstem, na zdjęciu. Przeciągnij w dowolne miejsce.</div>
+<div class="row" style="margin-top:0; gap:10px; align-items:center">
+  <label class="small-btn" for="wmUpload" style="cursor:pointer;padding:7px 12px;font-size:0.8rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;margin:0">Wgraj logo/znak</label>
+  <input type="file" id="wmUpload" accept="image/*" hidden onchange="handleWatermark(event)">
+  <button class="small-btn" onclick="removeWatermark()" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:#fca5a5">Usuń</button>
+</div>
+<div id="wmControls" style="display:none;margin-top:8px">
+  <div class="row">
+    <label>Rozmiar:</label>
+    <input type="range" id="wmScale" min="0.05" max="2.0" step="0.02" value="0.3" oninput="state.wmScale=+this.value;document.getElementById('wmScaleVal').textContent=Math.round(this.value*100)+'%';draw()">
+    <span class="slider-val" id="wmScaleVal">30%</span>
+  </div>
+  <div class="row">
+    <label>Przezroczystość:</label>
+    <input type="range" id="wmOpacity" min="5" max="100" value="40" oninput="state.wmOpacity=+this.value;document.getElementById('wmOpacityVal').textContent=this.value+'%';draw()">
+    <span class="slider-val" id="wmOpacityVal">40%</span>
+  </div>
+  <div style="font-size:0.65rem;color:var(--muted);margin-top:4px">Przeciągnij znak wodny w dowolne miejsce na canvasie. Layoutuje się poniżej tekstu ale może być wszędzie.</div>
+</div>
+</div>
+
+<!-- STOPKA -->
+<div class="section">
+<div class="section-title">Stopka</div>
+<input type="text" id="brandText" value="FLATPACK.HELP" oninput="draw()" style="margin-bottom:6px">
 <div class="row">
 <label>Pozycja:</label>
 <select id="brandAlign" onchange="onBrandAlignChange(this.value)" style="width:auto;flex:1">
@@ -317,52 +389,35 @@ canvas:active { cursor: grabbing; }
 <option value="top-right">Góra - Prawa</option>
 </select>
 </div>
-<div class="row" style="margin-top:8px">
-<label>Numer:</label>
-<div style="display:flex;align-items:center;gap:4px;flex:1">
-<button class="font-btn" style="width:30px;height:30px" onclick="adjustSlideNum(-1)">-</button>
-<input type="text" id="slideText" value="01/03" style="text-align:center;flex:1" oninput="draw()" onblur="validateAndGetSlideText(true); draw()">
-<button class="font-btn" style="width:30px;height:30px" onclick="adjustSlideNum(1)">+</button>
-</div>
-</div>
-<div class="toggle-row" style="margin-top:12px; margin-bottom:0;"><label>Pokaż numerację na grafice</label><input type="checkbox" id="showSlideNum" checked onchange="draw()"></div>
 </div>
 
+<!-- BEZPIECZNE STREFY -->
 <div class="section">
 <div class="section-title">Bezpieczne strefy IG (Linie)</div>
-<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Cały post ma format 4:5 (1080 × 1350 px).</div>
-
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:8px">Linie <strong style="color:#fff">nie zapisują się</strong> na PNG. Format: 4:5 (1080 × 1350 px).</div>
 <div class="toggle-row">
-<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone)</label>
+<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone) 80px</label>
 <input type="checkbox" id="showGuides" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Margines 80px. Teksty i logotypy nie powinny wychodzić poza nią, by zachować estetykę.</div>
-
 <div class="toggle-row">
-<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1 (1080x1080)</label>
+<label><strong style="color:rgba(255,255,255,0.8)">—</strong> Kafelek 1:1 (1080×1080) — crop IG</label>
 <input type="checkbox" id="showCrop" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG przytnie górę i dół do kwadratu (odcinając po 135px z góry i z dołu) na siatce profilu.</div>
-
 <div class="toggle-row">
-<label><strong style="color:rgba(9, 126, 255, 1)">—</strong> Kafelki profilu: Pion 3:4</label>
+<label><strong style="color:rgba(9, 126, 255, 1)">—</strong> Kafelek 3:4 (pionowy IG)</label>
 <input type="checkbox" id="showGrid34" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG (pionowy 3:4). Sprawdź, czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
-<!-- Nakładki Gallery (Postaci i Elementy PNG) -->
+<!-- NAKŁADKI PNG -->
 <div class="section">
-<div class="section-title">Dodaj Postaci & Elementy PNG</div>
-<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:10px;">Kliknij na postać lub element, aby dodać na grafikę. Przeciągaj myszką, powiększaj/zmniejszaj rolką myszy lub suwakiem po zaznaczeniu.</div>
-
-<div class="btn-group" style="margin-bottom:10px; width:100%">
+<div class="section-title">Postaci &amp; Elementy PNG</div>
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:8px">Kliknij aby dodać. Przeciągaj, skaluj rolką. Delete by usunąć.</div>
+<div class="btn-group" style="margin-bottom:8px; width:100%">
   <button class="small-btn active" id="tabChars" onclick="switchOverlayTab('chars')" style="flex:1;text-align:center">Postaci</button>
   <button class="small-btn" id="tabElements" onclick="switchOverlayTab('elems')" style="flex:1;text-align:center">Elementy PNG</button>
 </div>
-
-<!-- Characters list -->
-<div id="overlayCharsContainer" class="overlay-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; overflow-y: auto;">
+<div id="overlayCharsContainer" class="overlay-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 160px; overflow-y: auto;">
   <img src="assets/characters/michal_1.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_1.png', 0.5)" title="Michał 1">
   <img src="assets/characters/michal_2_z_peleryna.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_2_z_peleryna.png', 0.5)" title="Michał z peleryną">
   <img src="assets/characters/michal_3_z_poziomica_i_ftm.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_3_z_poziomica_i_ftm.png', 0.5)" title="Michał z poziomicą">
@@ -371,9 +426,7 @@ canvas:active { cursor: grabbing; }
   <img src="assets/characters/michal_6_z_czerw_logo.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_6_z_czerw_logo.png', 0.5)" title="Michał z czerwonym logo">
   <img src="assets/characters/michal_ala_jeff_style.png" class="overlay-thumb" onclick="addOverlay('assets/characters/michal_ala_jeff_style.png', 0.5)" title="Michał Jeff">
 </div>
-
-<!-- Elements list -->
-<div id="overlayElemsContainer" class="overlay-grid" style="display:none; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; overflow-y: auto;">
+<div id="overlayElemsContainer" class="overlay-grid" style="display:none; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 160px; overflow-y: auto;">
   <img src="assets/elements/element_1.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_1.png', 0.3)" title="Element 1">
   <img src="assets/elements/element_2.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_2.png', 0.3)" title="Element 2">
   <img src="assets/elements/element_3.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_3.png', 0.3)" title="Element 3">
@@ -381,69 +434,65 @@ canvas:active { cursor: grabbing; }
   <img src="assets/elements/element_5.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_5.png', 0.3)" title="Element 5">
   <img src="assets/elements/element_6.png" class="overlay-thumb" onclick="addOverlay('assets/elements/element_6.png', 0.3)" title="Element 6">
 </div>
-
-<!-- Selected element editing controls -->
-<div id="selectedOverlayControls" style="display:none; margin-top:12px; padding:10px; background:rgba(9,126,255,0.08); border:1px solid rgba(9,126,255,0.2); border-radius:6px;">
-  <div style="font-size:0.75rem; font-weight:700; color:white; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+<div id="selectedOverlayControls" style="display:none; margin-top:10px; padding:8px; background:rgba(9,126,255,0.08); border:1px solid rgba(9,126,255,0.2); border-radius:6px;">
+  <div style="font-size:0.72rem; font-weight:700; color:white; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
     <span>Edycja elementu</span>
-    <button class="small-btn" onclick="deselectOverlay()" style="padding:2px 6px; font-size:0.65rem;">Odznacz</button>
+    <button class="small-btn" onclick="deselectOverlay()" style="padding:2px 6px; font-size:0.62rem;">Odznacz</button>
   </div>
   <div class="row">
     <label>Skala:</label>
     <input type="range" id="selectedOverlayScale" min="0.05" max="3.0" step="0.02" value="1.0" oninput="setSelectedOverlayScale(this.value)">
     <span class="slider-val" id="selectedOverlayScaleVal">1.0x</span>
   </div>
-  <div class="row" style="margin-top:8px; gap:6px;">
-    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('front')">Na wierzch</button>
-    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('back')">Na spód</button>
+  <div class="row" style="margin-top:6px; gap:6px;">
+    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('front')">Na wierzch ↑</button>
+    <button class="small-btn" style="flex:1" onclick="moveSelectedOverlay('back')">Na spód ↓</button>
     <button class="small-btn" style="flex:1; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;" onclick="deleteSelectedOverlay()">Usuń</button>
   </div>
 </div>
 </div>
 
-<div class="section" style="border:none;padding-bottom:30px;display:flex;gap:10px;">
-  <button class="small-btn" onclick="undo()" style="margin:0;padding:10px 14px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;" title="Cofnij ostatnią zmianę (Ctrl+Z)">↩️ Cofnij</button>
+<!-- FOOTER BUTTONS -->
+<div class="section" style="border:none;padding-bottom:30px;display:flex;gap:8px;flex-wrap:wrap">
+  <button class="small-btn" onclick="undo()" style="margin:0;padding:9px 12px;font-size:0.78rem;font-weight:700" title="Ctrl+Z">↩️ Cofnij</button>
+  <button class="small-btn" onclick="resetProject()" style="margin:0;padding:9px 12px;font-size:0.78rem;font-weight:700;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#fca5a5">🗑️ Wyczyść</button>
   <button class="btn-primary" onclick="showPreview()" style="flex:1;margin:0;">Podgląd i zapis</button>
 </div>
 
-</div>
+</div><!-- /panel-scroll -->
 </aside>
 
-<main class="canvas-area">
+<main class="canvas-area" id="canvasArea">
 <canvas id="canvas" width="1080" height="1350"></canvas>
 </main>
 </div>
 
-<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px">
-  <div style="background:#1E293B; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
+<!-- PREVIEW MODAL -->
+<div id="previewModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.98);z-index:1000;justify-content:center;align-items:center;overflow-y:auto;padding:20px" onclick="handlePreviewBackdropClick(event)">
+  <div id="previewInner" style="background:#1E293B; border: 1px solid var(--border); border-radius: 12px; display:flex; flex-direction:column; gap:16px; width:100%; max-width:1100px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5)">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom:12px">
-      <h2 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text)">Podgląd publikacji na Instagramie</h2>
+      <h2 style="margin:0;font-size:1.1rem;font-weight:800;color:var(--text)">Podgląd publikacji na Instagramie</h2>
       <button class="small-btn" onclick="closePreview()" style="font-size:1.2rem; line-height:1; padding: 4px 10px">&times;</button>
     </div>
-    
-    <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center">
-      <!-- Left side: Single Post Mockup -->
-      <div style="flex: 1.2; min-width:320px; max-width:550px">
-        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:8px; font-weight:700">Podgląd posta (4:5)</div>
-        <div id="previewPost" style="background:#fff; border-radius:8px; overflow:hidden; border:1px solid #dbdbdb; display:flex; flex-direction:column">
-        </div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center">
+      <!-- Post mockup -->
+      <div style="flex: 1.2; min-width:280px; max-width:480px">
+        <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:6px; font-weight:700">Podgląd posta (4:5)</div>
+        <div id="previewPost" style="background:#fff; border-radius:8px; overflow:hidden; border:1px solid #dbdbdb; display:flex; flex-direction:column"></div>
       </div>
-      
-      <!-- Right side: Feed Grid -->
-      <div style="flex: 1; min-width:320px; max-width:400px">
-        <div id="gridHeader" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:8px; font-weight:700">Siatka profilu (3:4)</div>
-        <div style="display:flex; gap:6px; margin-bottom:10px">
-          <button id="toggleGrid45" class="small-btn active" onclick="setGridUploadFormat('45')">Format uploadu: 4:5</button>
-          <button id="toggleGrid11" class="small-btn" onclick="setGridUploadFormat('11')">Format uploadu: 1:1</button>
+      <!-- Grid -->
+      <div style="flex: 1; min-width:280px; max-width:360px">
+        <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent); margin-bottom:6px; font-weight:700">Siatka profilu IG</div>
+        <div style="display:flex; gap:5px; margin-bottom:8px">
+          <button id="toggleGrid45" class="small-btn active" onclick="setGridUploadFormat('45')">4:5</button>
+          <button id="toggleGrid11" class="small-btn" onclick="setGridUploadFormat('11')">1:1</button>
         </div>
-        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#1E293B; padding:4px; border-radius:8px; border:1px solid var(--border)">
-        </div>
+        <div id="previewGrid" style="display:flex; flex-direction:column; gap:3px; background:#1E293B; padding:4px; border-radius:8px; border:1px solid var(--border)"></div>
       </div>
     </div>
-    
-    <div style="display:flex; gap:12px; width:100%; justify-content:flex-end; border-top: 1px solid var(--border); padding-top:16px; margin-top:8px">
-      <button class="small-btn" onclick="closePreview()" style="padding:10px 24px;font-size:0.85rem">Wróć do edycji</button>
-      <button class="btn-primary" onclick="executeDownload()" style="width:auto;padding:10px 28px;font-size:0.9rem">Zapisz PNG</button>
+    <div style="display:flex; gap:12px; width:100%; justify-content:flex-end; border-top: 1px solid var(--border); padding-top:14px; margin-top:4px">
+      <button class="small-btn" onclick="closePreview()" style="padding:9px 22px;font-size:0.83rem">← Wróć do edycji</button>
+      <button class="btn-primary" onclick="executeDownload()" style="width:auto;padding:9px 26px;font-size:0.87rem">💾 Zapisz PNG</button>
     </div>
   </div>
 </div>
@@ -451,198 +500,95 @@ canvas:active { cursor: grabbing; }
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const M = 80;
+const M = 80; // safe zone margin
 let isExporting = false;
 
+// ── GRAIN ──────────────────────────────────────────────────
 let grainPattern = null;
 const grainImg = new Image();
 grainImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>";
-grainImg.onload = function() {
-  grainPattern = ctx.createPattern(grainImg, 'repeat');
-  draw();
-};
+grainImg.onload = () => { grainPattern = ctx.createPattern(grainImg, 'repeat'); draw(); };
 
+// ── STATE ──────────────────────────────────────────────────
 const state = {
-  bgType: 'color',
-  bgColor: '#0F172A',
-  bgPhoto: null,
+  bgType: 'color', bgColor: '#0F172A', bgPhoto: null,
   bgPhotoX: 0, bgPhotoY: 0, bgPhotoScale: 1,
   gradient: false,
   pastedImages: [],
-  overlayDir: 'bottom-left',
-  overlayOpacity: 40,
+  overlayDir: 'bottom-left', overlayOpacity: 40,
 
-  kickerText: 'MISSION LOG',
-  kickerColor: '#FFD700',
+  kickerText: 'MISSION LOG', kickerColor: '#FFD700',
   kickerX: 150, kickerY: 150,
 
   mainText: 'STARFLEET QUALITY\nASSEMBLY',
-  words: [],
+  words: [], globalFont: 'bold',
   titleX: 150, titleY: 280,
-  titleSize: 90,
-  lineSizes: [90],
-  titleLH: 0.95,
-  wordSpacing: 20,
+  titleSize: 90, titleLH: 0.95, wordSpacing: 20,
 
+  // paraY is computed from title bottom; stored as offset after first drag
   paraText: 'YOUR FURNITURE, ASSEMBLED AT THE SPEED OF LIGHT.',
-  paraX: 150, paraY: 15,
-  paraAlign: 'left',
-  paraColor: '#FFFFFF',
-  paraBold: true,
+  paraX: 150, paraY: null,
+  paraAlign: 'left', paraColor: '#FFFFFF', paraBold: true,
 
-  showApla: false,
-  aplaStyle: '#FFFFFF',
-  aplaX: 100,
-  aplaY: 240,
-  aplaW: 880,
-  aplaH: 680,
+  showApla: false, aplaStyle: '#FFFFFF',
+  aplaX: 100, aplaY: 240, aplaW: 880, aplaH: 680,
 
-  showLogo: true,
-  logoX: 840,
-  logoY: 130,
-  logoScale: 1.0,
-  logoImg: null,
+  showLogo: false, logoX: 840, logoY: 130, logoScale: 1.0, logoImg: null,
 
-  brandText: 'FLATPACK.HELP',
-  brandAlign: 'left',
-  brandX: 150, // Snapped inside safe horizontal zone (135px to 945px)
-  brandY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
+  // watermark
+  wmImg: null, wmX: 150, wmY: 900, wmScale: 0.3, wmOpacity: 40,
 
-  slideText: '01/03',
-  slideX: 930, // Snapped inside safe horizontal zone (135px to 945px)
-  slideY: 1180, // Snapped inside 1:1 crop boundary (135px to 1215px)
+  brandText: 'FLATPACK.HELP', brandAlign: 'left',
+  brandX: 150, brandY: 1220,
+  slideX: 930, slideY: 1220,
 
-  showGuides: true,
-  showCrop: true,
-  showSlideNum: true,
-  showGrid34: true,
+  showGuides: true, showCrop: true, showGrid34: true,
+  lastTitleBottomY: 400,
 };
 
-// Load logo
-const logoImg = new Image();
-logoImg.src = 'assets/logos/logo_flatpack_help.png';
-logoImg.onload = function() {
-  state.logoImg = logoImg;
+// ── LOGO PRELOAD ───────────────────────────────────────────
+const defaultLogoImg = new Image();
+defaultLogoImg.src = 'assets/logos/logo_flatpack_help.png';
+
+// ── GRADIENT DIRECTION ─────────────────────────────────────
+function setGradDir(dir, btn) {
+  state.overlayDir = dir;
+  document.querySelectorAll('.grad-swatch').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
   draw();
-};
-
-let gridUploadFormat = '45';
-let previewFullUrl = '';
-let previewCropUrl = '';
-
-function setGridUploadFormat(format) {
-  gridUploadFormat = format;
-  document.getElementById('toggleGrid45').classList.toggle('active', format === '45');
-  document.getElementById('toggleGrid11').classList.toggle('active', format === '11');
-  renderPreviewGrid();
 }
 
-function renderPreviewGrid() {
-  const gc = document.getElementById('previewGrid');
-  gc.innerHTML = '';
-  const useFullUrl = gridUploadFormat === '45';
-  const displayUrl = useFullUrl ? previewFullUrl : previewCropUrl;
-  
-  for (let r = 0; r < 3; r++) {
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.gap = '3px';
-    row.style.width = '100%';
-    for (let c = 0; c < 3; c++) {
-      const cell = document.createElement('div');
-      cell.style.width = '100%';
-      cell.style.aspectRatio = '3/4'; // 3:4 profile grid aspect ratio
-      cell.style.overflow = 'hidden';
-      cell.style.borderRadius = '2px';
-      cell.style.position = 'relative';
-      cell.style.flex = '1';
-      if (r === 0 && c === 0) { // Top-left is our new preview post in the grid
-        const img = document.createElement('img');
-        img.src = displayUrl;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'cover';
-        cell.appendChild(img);
-        
-        // Add carousel icon in the top right corner
-        const carouselIcon = document.createElement('div');
-        carouselIcon.style.cssText = 'position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);border-radius:3px;padding:3px';
-        carouselIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="13" height="13" rx="1.5"></rect>
-          <path d="M21 8v11a2 2 0 0 1-2 2H8"></path>
-        </svg>`;
-        cell.appendChild(carouselIcon);
-      } else {
-        cell.style.background = '#1E293B';
-        cell.style.border = '1px solid rgba(255,255,255,0.05)';
-        cell.style.display = 'flex';
-        cell.style.alignItems = 'center';
-        cell.style.justifyContent = 'center';
-        cell.innerHTML = '<span style="color:#64748b; font-size:10px; font-weight:600">Post ' + (9 - (r * 3 + c)) + '</span>';
-      }
-      row.appendChild(cell);
-    }
-    gc.appendChild(row);
-  }
+// ── GLOBAL FONT ────────────────────────────────────────────
+function setGlobalFont(font, btn) {
+  state.globalFont = font;
+  document.querySelectorAll('#globalFontRow .font-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Apply to all words
+  state.words = state.words.map(w => ({ ...w, font }));
+  renderWordsUI();
+  draw();
 }
 
-const hitBoxes = {};
-let dragging = null;
-
+// ── BG COLOR ───────────────────────────────────────────────
 function setBgColor(hex, btn) {
-  state.bgType = 'color';
-  state.bgColor = hex;
-  state.gradient = false;
-  document.getElementById('gradientSwatch').classList.remove('active');
+  state.bgType = 'color'; state.bgColor = hex; state.gradient = false;
   document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-  if (btn) {
-    btn.classList.add('active');
-  }
-  clearPhoto();
-  draw();
+  if (btn) btn.classList.add('active');
+  clearPhoto(); draw();
 }
 
-function toggleGradient() {
-  state.gradient = true;
-  state.bgType = 'gradient';
-  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-  document.getElementById('gradientSwatch').classList.add('active');
-  clearPhoto();
-  draw();
-}
-
+// ── PHOTO ──────────────────────────────────────────────────
 function handlePhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(ev) {
+  reader.onload = ev => {
     const img = new Image();
-    img.onload = function() {
-      state.bgPhoto = img;
-      state.bgType = 'photo';
-      const ca = canvas.width / canvas.height;
-      const ia = img.width / img.height;
-      if (ia > ca) {
-        state.bgPhotoScale = canvas.height / img.height;
-        state.bgPhotoX = (canvas.width - img.width * state.bgPhotoScale) / 2;
-        state.bgPhotoY = 0;
-      } else {
-        state.bgPhotoScale = canvas.width / img.width;
-        state.bgPhotoX = 0;
-        state.bgPhotoY = (canvas.height - img.height * state.bgPhotoScale) / 2;
-      }
-      const scaleSlider = document.getElementById('photoScale');
-      scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
-      scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
-      scaleSlider.value = state.bgPhotoScale.toFixed(2);
-      document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
+    img.onload = () => {
+      state.bgPhoto = img; state.bgType = 'photo';
+      fitPhoto();
+      checkPhotoSize(img);
+      document.querySelector('#bgColors .color-swatch.active')?.classList.remove('active');
       document.getElementById('photoScaleContainer').style.display = 'flex';
-      
-      const overlayContainer = document.getElementById('overlayControls');
-      if (overlayContainer) overlayContainer.style.display = 'flex';
-      
-      document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-      document.getElementById('gradientSwatch').classList.remove('active');
       draw();
     };
     img.src = ev.target.result;
@@ -650,35 +596,81 @@ function handlePhoto(e) {
   reader.readAsDataURL(file);
 }
 
+function fitPhoto() {
+  const img = state.bgPhoto;
+  const ca = canvas.width / canvas.height;
+  const ia = img.width / img.height;
+  if (ia > ca) {
+    state.bgPhotoScale = canvas.height / img.height;
+    state.bgPhotoX = (canvas.width - img.width * state.bgPhotoScale) / 2;
+    state.bgPhotoY = 0;
+  } else {
+    state.bgPhotoScale = canvas.width / img.width;
+    state.bgPhotoX = 0;
+    state.bgPhotoY = (canvas.height - img.height * state.bgPhotoScale) / 2;
+  }
+  const sl = document.getElementById('photoScale');
+  sl.min = (state.bgPhotoScale * 0.15).toFixed(2);
+  sl.max = (state.bgPhotoScale * 6.0).toFixed(2);
+  sl.value = state.bgPhotoScale.toFixed(2);
+  document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
+}
+
+function checkPhotoSize(img) {
+  const warn = document.getElementById('photoWarnBox');
+  // Cover 4:5 needs >= 1080x1350; cover 1:1 needs >= 1080x1080
+  const ok = img.width >= 1080 && img.height >= 1080;
+  warn.style.display = ok ? 'none' : 'block';
+}
+
 function clearPhoto() {
   state.bgPhoto = null;
   state.bgType = state.gradient ? 'gradient' : 'color';
   document.getElementById('photoScaleContainer').style.display = 'none';
-  
-  // Keep overlay controls visible so users can add dark gradient cień on top of solid colors too
+  document.getElementById('photoWarnBox').style.display = 'none';
   document.getElementById('photoUpload').value = '';
   draw();
 }
 
 function setPhotoScale(val) {
   if (!state.bgPhoto) return;
-  const oldScale = state.bgPhotoScale;
-  const newScale = parseFloat(val);
-  
-  const canvasCenterX = canvas.width / 2;
-  const canvasCenterY = canvas.height / 2;
-  
-  const imgCenterX = (canvasCenterX - state.bgPhotoX) / oldScale;
-  const imgCenterY = (canvasCenterY - state.bgPhotoY) / oldScale;
-  
-  state.bgPhotoX = canvasCenterX - imgCenterX * newScale;
-  state.bgPhotoY = canvasCenterY - imgCenterY * newScale;
+  const oldScale = state.bgPhotoScale, newScale = parseFloat(val);
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  const imgCX = (cx - state.bgPhotoX) / oldScale;
+  const imgCY = (cy - state.bgPhotoY) / oldScale;
+  state.bgPhotoX = cx - imgCX * newScale;
+  state.bgPhotoY = cy - imgCY * newScale;
   state.bgPhotoScale = newScale;
-  
   document.getElementById('photoScaleVal').textContent = newScale.toFixed(2) + 'x';
   draw();
 }
 
+// ── WATERMARK ──────────────────────────────────────────────
+function handleWatermark(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      state.wmImg = img;
+      state.wmX = M;
+      state.wmY = state.lastTitleBottomY + 60;
+      document.getElementById('wmControls').style.display = 'block';
+      draw();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeWatermark() {
+  state.wmImg = null;
+  document.getElementById('wmControls').style.display = 'none';
+  document.getElementById('wmUpload').value = '';
+  draw();
+}
+
+// ── KICKER ─────────────────────────────────────────────────
 function setKickerColor(c, btn) {
   state.kickerColor = c;
   btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -686,11 +678,10 @@ function setKickerColor(c, btn) {
   draw();
 }
 
+// ── PARA ───────────────────────────────────────────────────
 function onParaInput(el) {
-  const countEl = document.getElementById('paraCharCount');
-  if (countEl) {
-    countEl.textContent = el.value.length + '/200';
-  }
+  const cc = document.getElementById('paraCharCount');
+  if (cc) cc.textContent = el.value.length + '/300';
   draw();
 }
 
@@ -704,95 +695,64 @@ function setParaColor(c, btn) {
 function toggleParaBold() {
   state.paraBold = !state.paraBold;
   const btn = document.getElementById('paraBoldBtn');
-  if (btn) {
-    if (state.paraBold) btn.classList.add('active');
-    else btn.classList.remove('active');
-  }
+  if (btn) btn.classList.toggle('active', state.paraBold);
   draw();
 }
 
+// ── WORDS ──────────────────────────────────────────────────
 function updateWordsFromText(text) {
   state.mainText = text;
   const rawWords = text.trim().split(/\s+/).filter(Boolean);
-  
-  const newWords = rawWords.map((w, index) => {
-    const oldWord = state.words.find((ow, oi) => ow.text === w && oi === index) 
-                 || state.words.find(ow => ow.text === w);
-                 
-    if (oldWord) {
-      return { text: w, font: oldWord.font, color: oldWord.color };
-    }
-    
-    // Default style: bold (renders as uppercase on canvas) and white
-    return {
-      text: w,
-      font: 'bold',
-      color: '#FFFFFF'
-    };
+  const newWords = rawWords.map((w, i) => {
+    const old = state.words.find((ow, oi) => ow.text === w && oi === i) || state.words.find(ow => ow.text === w);
+    return old ? { text: w, font: old.font, color: old.color }
+               : { text: w, font: state.globalFont || 'bold', color: '#FFFFFF' };
   });
-  
   state.words = newWords;
   renderWordsUI();
   draw();
 }
 
 function renderWordsUI() {
-  const container = document.getElementById('wordsEditorContainer');
-  if (!container) return;
-  container.innerHTML = '';
-  
-  if (state.words.length === 0) {
-    container.innerHTML = '<div style="color:var(--muted);font-size:0.75rem;padding:8px;text-align:center">Wpisz tekst, aby edytować słowa</div>';
+  const c = document.getElementById('wordsEditorContainer');
+  if (!c) return; c.innerHTML = '';
+  if (!state.words.length) {
+    c.innerHTML = '<div style="color:var(--muted);font-size:0.72rem;padding:8px;text-align:center">Wpisz tekst powyżej</div>';
     return;
   }
-  
   state.words.forEach((w, i) => {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px';
-    
-    const label = document.createElement('span');
-    label.style.cssText = 'font-size:0.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px';
-    label.textContent = w.text;
-    if (w.font === 'bold') {
-      label.style.fontWeight = '900';
-      label.style.textTransform = 'uppercase';
-    } else if (w.font === 'italic') {
-      label.style.fontStyle = 'italic';
-      label.style.fontWeight = '500';
-      label.style.textTransform = 'none';
-    } else if (w.font === 'mono') {
-      label.style.fontFamily = '"Geist Mono", monospace';
-      label.style.fontWeight = '600';
-      label.style.textTransform = 'none';
-    }
-    label.style.color = w.color || '#FFFFFF';
-    row.appendChild(label);
-    
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:5px;border-bottom:1px solid rgba(255,255,255,0.05);gap:6px';
+    const lbl = document.createElement('span');
+    lbl.style.cssText = 'font-size:0.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100px';
+    lbl.textContent = w.font === 'bold' || w.font === 'oswald' || w.font === 'anton' ? w.text.toUpperCase() : w.text;
+    if (w.font === 'bold') { lbl.style.fontWeight = '900'; lbl.style.textTransform = 'uppercase'; }
+    else if (w.font === 'italic') { lbl.style.fontStyle = 'italic'; lbl.style.fontWeight = '700'; }
+    else if (w.font === 'mono') { lbl.style.fontFamily = '"Rajdhani",sans-serif'; lbl.style.fontWeight = '600'; }
+    else if (w.font === 'oswald') { lbl.style.fontFamily = '"Oswald",sans-serif'; lbl.style.fontWeight = '700'; lbl.style.textTransform = 'uppercase'; }
+    else if (w.font === 'anton') { lbl.style.fontFamily = '"Anton",sans-serif'; lbl.style.textTransform = 'uppercase'; }
+    lbl.style.color = w.color || '#FFFFFF';
+    row.appendChild(lbl);
     const ctrls = document.createElement('div');
-    ctrls.style.cssText = 'display:flex;align-items:center;gap:6px';
-    
-    const fontGroup = document.createElement('div');
-    fontGroup.className = 'btn-group';
-    fontGroup.innerHTML = `
-      <button class="font-btn ${w.font === 'bold' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'bold',this)" title="Pogrubienie (Sans)"><b>B</b></button>
-      <button class="font-btn ${w.font === 'italic' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.75rem" onclick="setWordFont(${i},'italic',this)" title="Kursywa (Italic)"><i>K</i></button>
-      <button class="font-btn ${w.font === 'mono' ? 'active' : ''}" style="width:24px;height:24px;font-size:0.7rem;font-family:'Geist Mono',monospace" onclick="setWordFont(${i},'mono',this)" title="Monospace (Code)">M</button>
+    ctrls.style.cssText = 'display:flex;align-items:center;gap:4px';
+    ctrls.innerHTML = `
+      <div class="btn-group">
+        <button class="font-btn ${w.font==='bold'?'active':''}" style="width:22px;height:22px;font-size:0.68rem;font-weight:900" onclick="setWordFont(${i},'bold',this)" title="Bold">B</button>
+        <button class="font-btn ${w.font==='italic'?'active':''}" style="width:22px;height:22px;font-size:0.68rem;font-style:italic;font-weight:700" onclick="setWordFont(${i},'italic',this)" title="Italic">I</button>
+        <button class="font-btn ${w.font==='mono'?'active':''}" style="width:22px;height:22px;font-size:0.65rem;font-family:'Rajdhani'" onclick="setWordFont(${i},'mono',this)" title="Rajdhani">R</button>
+        <button class="font-btn ${w.font==='oswald'?'active':''}" style="width:22px;height:22px;font-size:0.55rem;font-family:'Oswald'" onclick="setWordFont(${i},'oswald',this)" title="Oswald">O</button>
+        <button class="font-btn ${w.font==='anton'?'active':''}" style="width:22px;height:22px;font-size:0.55rem;font-family:'Anton'" onclick="setWordFont(${i},'anton',this)" title="Anton">A</button>
+      </div>
+      <div class="btn-group">
+        <button class="color-btn ${w.color==='#FFFFFF'?'active':''}" style="width:16px;height:16px;background:#FFFFFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
+        <button class="color-btn ${w.color==='#097EFF'?'active':''}" style="width:16px;height:16px;background:#097EFF" onclick="setWordColor(${i},'#097EFF',this)"></button>
+        <button class="color-btn ${w.color==='#FFD700'?'active':''}" style="width:16px;height:16px;background:#FFD700" onclick="setWordColor(${i},'#FFD700',this)"></button>
+        <button class="color-btn ${w.color==='#FF5722'?'active':''}" style="width:16px;height:16px;background:#FF5722" onclick="setWordColor(${i},'#FF5722',this)"></button>
+        <button class="color-btn ${w.color==='#00B67A'?'active':''}" style="width:16px;height:16px;background:#00B67A" onclick="setWordColor(${i},'#00B67A',this)"></button>
+      </div>
     `;
-    ctrls.appendChild(fontGroup);
-    
-    const colorGroup = document.createElement('div');
-    colorGroup.className = 'btn-group';
-    colorGroup.innerHTML = `
-      <button class="color-btn ${w.color === '#FFFFFF' ? 'active' : ''}" style="width:18px;height:18px;background:#FFFFFF" onclick="setWordColor(${i},'#FFFFFF',this)"></button>
-      <button class="color-btn ${w.color === '#097EFF' ? 'active' : ''}" style="width:18px;height:18px;background:#097EFF" onclick="setWordColor(${i},'#097EFF',this)"></button>
-      <button class="color-btn ${w.color === '#FFD700' ? 'active' : ''}" style="width:18px;height:18px;background:#FFD700" onclick="setWordColor(${i},'#FFD700',this)"></button>
-      <button class="color-btn ${w.color === '#FF5722' ? 'active' : ''}" style="width:18px;height:18px;background:#FF5722" onclick="setWordColor(${i},'#FF5722',this)"></button>
-      <button class="color-btn ${w.color === '#00B67A' ? 'active' : ''}" style="width:18px;height:18px;background:#00B67A" onclick="setWordColor(${i},'#00B67A',this)"></button>
-    `;
-    ctrls.appendChild(colorGroup);
-    
     row.appendChild(ctrls);
-    container.appendChild(row);
+    c.appendChild(row);
   });
 }
 
@@ -800,159 +760,80 @@ function setWordFont(i, font, btn) {
   state.words[i].font = font;
   btn.closest('.btn-group').querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderWordsUI(); // Refresh sidebar UI to show updated styling
-  draw();
+  renderWordsUI(); draw();
 }
 
 function setWordColor(i, color, btn) {
   state.words[i].color = color;
   btn.closest('.btn-group').querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderWordsUI(); // Refresh sidebar UI to show updated color
-  draw();
+  renderWordsUI(); draw();
 }
 
+// ── BRAND ──────────────────────────────────────────────────
 function onBrandAlignChange(val) {
   state.brandAlign = val;
-  if (val === 'left') {
-    state.brandX = 150; // Snapped inside safe horizontal zone (135px to 945px)
-    state.brandY = 1180; // inside 1:1 crop (135px to 1215px)
-    state.slideX = 930; // Snapped inside safe horizontal zone (135px to 945px)
-    state.slideY = 1180;
-  } else if (val === 'center') {
-    state.brandX = canvas.width / 2; // 540
-    state.brandY = 1180;
-    state.slideX = 930; // Snapped inside safe horizontal zone (135px to 945px)
-    state.slideY = 1180;
-  } else if (val === 'right') {
-    state.brandX = 930; // Snapped inside safe horizontal zone (135px to 945px)
-    state.brandY = 1180;
-    state.slideX = 150; // Snapped inside safe horizontal zone (135px to 945px)
-    state.slideY = 1180;
-  } else if (val === 'top-right') {
-    state.brandX = 930; // Snapped inside safe horizontal zone (135px to 945px)
-    state.brandY = 170; // inside 1:1 crop (135px to 1215px)
-    state.slideX = 150; // Snapped inside safe horizontal zone (135px to 945px)
-    state.slideY = 1180;
-  }
+  if (val === 'left')      { state.brandX = M+70; state.brandY = 1220; state.slideX = canvas.width-M-70; state.slideY = 1220; }
+  else if (val === 'center'){ state.brandX = canvas.width/2; state.brandY = 1220; state.slideX = canvas.width-M-70; state.slideY = 1220; }
+  else if (val === 'right') { state.brandX = canvas.width-M-70; state.brandY = 1220; state.slideX = M+70; state.slideY = 1220; }
+  else if (val === 'top-right'){ state.brandX = canvas.width-M-70; state.brandY = 170; state.slideX = M+70; state.slideY = 1220; }
   draw();
 }
 
-function validateAndGetSlideText(updateInput = false) {
-  const el = document.getElementById('slideText');
-  let val = el.value.trim();
-  const m = val.match(/^(\d+)\/(\d+)$/);
-  if (m) {
-    let current = parseInt(m[1], 10);
-    let total = parseInt(m[2], 10);
-    
-    if (isNaN(current) || current < 1) current = 1;
-    if (isNaN(total) || total < 1) total = 1;
-    
-    // Cap current page at total pages
-    if (current > total) {
-      current = total;
-    }
-    
-    const formatted = String(current).padStart(2, '0') + '/' + String(total).padStart(2, '0');
-    if (updateInput && el.value !== formatted) {
-      el.value = formatted;
-    }
-    return formatted;
-  }
-  return val;
-}
-
-function adjustSlideNum(dir) {
-  const el = document.getElementById('slideText');
-  const val = el.value.trim();
-  const m = val.match(/^(\d+)\/(\d+)$/);
-  if (m) {
-    let current = parseInt(m[1], 10);
-    const total = parseInt(m[2], 10);
-    
-    if (dir > 0) {
-      if (current < total) {
-        current++;
-      }
-    } else {
-      if (current > 1) {
-        current--;
-      }
-    }
-    
-    el.value = String(current).padStart(2, '0') + '/' + String(total).padStart(2, '0');
-  } else {
-    const num = parseInt(val, 10);
-    if (!isNaN(num)) {
-      el.value = String(Math.max(1, num + dir));
-    }
-  }
-  draw();
-}
-
+// ── FONT STRINGS ───────────────────────────────────────────
 function getFontStr(font, size) {
   switch (font) {
-    case 'bold': return `900 ${size}px "Montserrat", sans-serif`;
-    case 'italic': return `italic 900 ${size}px "Montserrat", sans-serif`;
-    case 'bold-italic': return `italic 900 ${size}px "Montserrat", sans-serif`;
-    case 'mono': return `600 ${size}px "Rajdhani", sans-serif`;
-    default: return `700 ${size}px "Montserrat", sans-serif`;
+    case 'bold':       return `900 ${size}px "Montserrat", sans-serif`;
+    case 'italic':     return `italic 700 ${size}px "Montserrat", sans-serif`;
+    case 'bold-italic':return `italic 900 ${size}px "Montserrat", sans-serif`;
+    case 'mono':       return `600 ${size}px "Rajdhani", sans-serif`;
+    case 'oswald':     return `700 ${size}px "Oswald", sans-serif`;
+    case 'anton':      return `400 ${size}px "Anton", sans-serif`;
+    default:           return `700 ${size}px "Montserrat", sans-serif`;
   }
 }
 
+function getWordText(wObj) {
+  // bold/oswald/anton → UPPERCASE, others → as typed
+  if (wObj.font === 'bold' || wObj.font === 'oswald' || wObj.font === 'anton') {
+    return wObj.text.toUpperCase();
+  }
+  return wObj.text;
+}
+
+// ── WRAP ────────────────────────────────────────────────────
 function wrapText(text, maxWidth) {
   const lines = [];
   text.split('\n').forEach(para => {
     if (!para) { lines.push(''); return; }
     const words = para.split(' ');
-    let curLine = '';
-    
-    for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      const wordWidth = ctx.measureText(word).width;
-      
-      if (wordWidth > maxWidth) {
-        for (let j = 0; j < word.length; j++) {
-          const char = word[j];
-          const testLine = curLine + char;
-          if (ctx.measureText(testLine).width > maxWidth) {
-            if (curLine) lines.push(curLine);
-            curLine = char;
-          } else {
-            curLine = testLine;
-          }
-        }
-      } else {
-        const testLine = curLine ? curLine + ' ' + word : word;
-        if (ctx.measureText(testLine).width > maxWidth) {
-          if (curLine) lines.push(curLine);
-          curLine = word;
-        } else {
-          curLine = testLine;
-        }
-      }
+    let cur = '';
+    for (const word of words) {
+      const test = cur ? cur + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && cur) { lines.push(cur); cur = word; }
+      else cur = test;
     }
-    if (curLine) lines.push(curLine);
+    if (cur) lines.push(cur);
   });
   return lines;
 }
 
 function drawRoundedRect(ctx, x, y, w, h, r) {
-  if (w < 2 * r) r = w / 2;
-  if (h < 2 * r) r = h / 2;
+  if (w < 2*r) r = w/2; if (h < 2*r) r = h/2;
   ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
+  ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r);
+  ctx.arcTo(x, y, x+w, y, r); ctx.closePath();
 }
 
+// ── HIT BOXES ──────────────────────────────────────────────
+const hitBoxes = {};
+let dragging = null;
+
+// ── DRAW ───────────────────────────────────────────────────
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const maxBottomY = canvas.height - M - 50; // 1220px limit before footer
+  const maxBottomY = canvas.height - M - 50;
 
   // 1. Background
   if (state.bgType === 'photo' && state.bgPhoto) {
@@ -960,1679 +841,870 @@ function draw() {
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
   } else if (state.bgType === 'gradient' || state.gradient) {
     const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    g.addColorStop(0, '#097EFF'); // Bright blue
-    g.addColorStop(1, '#1E3A8A'); // Deep navy
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    g.addColorStop(0, '#097EFF'); g.addColorStop(1, '#1E3A8A');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
-    ctx.fillStyle = state.bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = state.bgColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Draw overlay shadow (cień / przyciemnienie tła) for all backgrounds
-  if (state.overlayOpacity > 0) {
-    let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+  // 2. Shadow overlay
+  if (state.overlayOpacity > 0 && state.overlayDir !== 'off') {
+    let x0=0,y0=0,x1=0,y1=0;
     switch(state.overlayDir) {
-      case 'left': x0 = 0; y0 = 0; x1 = canvas.width; y1 = 0; break;
-      case 'right': x0 = canvas.width; y0 = 0; x1 = 0; y1 = 0; break;
-      case 'bottom-left': x0 = 0; y0 = canvas.height; x1 = canvas.width; y1 = 0; break;
-      case 'bottom-right': x0 = canvas.width; y0 = canvas.height; x1 = 0; y1 = 0; break;
-      case 'bottom': x0 = 0; y0 = canvas.height; x1 = 0; y1 = 0; break;
-      case 'top': x0 = 0; y0 = 0; x1 = 0; y1 = canvas.height; break;
+      case 'left':         x0=0;y0=0;x1=canvas.width;y1=0;break;
+      case 'right':        x0=canvas.width;y0=0;x1=0;y1=0;break;
+      case 'bottom-left':  x0=0;y0=canvas.height;x1=canvas.width;y1=0;break;
+      case 'bottom-right': x0=canvas.width;y0=canvas.height;x1=0;y1=0;break;
+      case 'bottom':       x0=0;y0=canvas.height;x1=0;y1=0;break;
+      case 'top':          x0=0;y0=0;x1=0;y1=canvas.height;break;
     }
-    
-    const g = ctx.createLinearGradient(x0, y0, x1, y1);
-    const alpha = state.overlayOpacity / 100;
-    g.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
-    g.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const g = ctx.createLinearGradient(x0,y0,x1,y1);
+    const a = state.overlayOpacity/100;
+    g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  // Draw Grain pattern if loaded
+  // 3. Grain
   if (grainPattern) {
-    ctx.save();
-    ctx.globalCompositeOperation = 'overlay';
-    ctx.globalAlpha = 0.05;
-    ctx.fillStyle = grainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation='overlay'; ctx.globalAlpha=0.05;
+    ctx.fillStyle=grainPattern; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.restore();
   }
 
-  // 1.5 Pasted Images
+  // 4. Watermark (BELOW text layers) — drawn early so it's under text
+  if (state.wmImg) {
+    const wmH = state.wmImg.height * state.wmScale;
+    const wmW = state.wmImg.width * state.wmScale;
+    ctx.save();
+    ctx.globalAlpha = state.wmOpacity / 100;
+    ctx.drawImage(state.wmImg, state.wmX, state.wmY, wmW, wmH);
+    ctx.restore();
+    hitBoxes.wm = { x: state.wmX, y: state.wmY, w: wmW, h: wmH };
+    if (!isExporting && dragging && dragging.id === 'wm') {
+      ctx.save(); ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
+      ctx.strokeRect(state.wmX, state.wmY, wmW, wmH); ctx.setLineDash([]); ctx.restore();
+    }
+  } else hitBoxes.wm = null;
+
+  // 5. Pasted images (behind text)
   if (state.pastedImages) {
     state.pastedImages.forEach(pi => {
-      ctx.drawImage(pi.img, pi.x, pi.y, pi.baseW * pi.scale, pi.baseH * pi.scale);
-      
-      // Draw selection box around active element (only if not exporting)
+      ctx.drawImage(pi.img, pi.x, pi.y, pi.baseW*pi.scale, pi.baseH*pi.scale);
       if (!isExporting && state.selectedPastedImageId === pi.id) {
-        ctx.save();
-        ctx.strokeStyle = '#097EFF';
-        ctx.lineWidth = 2.5;
-        ctx.setLineDash([6, 4]);
-        ctx.strokeRect(pi.x, pi.y, pi.baseW * pi.scale, pi.baseH * pi.scale);
-        ctx.restore();
+        ctx.save(); ctx.strokeStyle='#097EFF'; ctx.lineWidth=2.5; ctx.setLineDash([6,4]);
+        ctx.strokeRect(pi.x, pi.y, pi.baseW*pi.scale, pi.baseH*pi.scale);
+        ctx.setLineDash([]); ctx.restore();
       }
     });
   }
 
   ctx.textBaseline = 'top';
 
-  // 2. Pre-calculate kicker width & height for Apla
-  const kickerVal = document.getElementById('kickerText').value;
-  if (kickerVal) {
-    ctx.font = '600 20px "Rajdhani", sans-serif';
-    ctx.letterSpacing = '6px';
-    const lines = kickerVal.toUpperCase().split('\n');
-    let maxW = 0;
-    lines.forEach(l => {
-      const w = ctx.measureText(l).width;
-      if (w > maxW) maxW = w;
-    });
-    ctx.letterSpacing = '0px';
-    hitBoxes.kicker = { x: state.kickerX, y: state.kickerY, w: maxW + 22, h: lines.length * 30 };
-  } else {
-    hitBoxes.kicker = null;
-  }
-
-  // 3. Pre-calculate Title size for Apla
+  // ── Pre-calculate title bounds ──────────────────────────
   const titleMaxW = canvas.width - state.titleX - M;
   let ty = state.titleY;
   const titleStartY = ty;
   let maxLineWidth = 0;
   const rawLines = state.mainText.split('\n');
   let wordCounter = 0;
-  
-  rawLines.forEach((lineText, lineIndex) => {
-    const curLineSize = state.titleSize || 90;
-    const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
-    if (lineWordTokens.length === 0) {
-      ty += curLineSize * state.titleLH;
-      return;
-    }
+
+  rawLines.forEach(lineText => {
+    const sz = state.titleSize || 90;
+    const tokens = lineText.trim().split(/\s+/).filter(Boolean);
+    if (!tokens.length) { ty += sz * state.titleLH; return; }
     const lineWords = [];
-    lineWordTokens.forEach(token => {
-      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
+    tokens.forEach(token => {
+      const wObj = state.words[wordCounter] || { text: token, font: state.globalFont||'bold', color: '#FFFFFF' };
       wordCounter++;
-      ctx.font = getFontStr(wObj.font, curLineSize);
-      const textToMeasure = wObj.font === 'bold' ? wObj.text.toUpperCase() : wObj.text;
-      const wWidth = ctx.measureText(textToMeasure).width;
-      if (wWidth > titleMaxW) {
-        let curChunk = '';
-        for (let j = 0; j < textToMeasure.length; j++) {
-          let char = textToMeasure[j];
-          if (ctx.measureText(curChunk + char).width > titleMaxW) {
-            lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
-            curChunk = char;
-          } else {
-            curChunk += char;
-          }
+      ctx.font = getFontStr(wObj.font, sz);
+      const txt = getWordText(wObj);
+      const ww = ctx.measureText(txt).width;
+      if (ww > titleMaxW) {
+        let chunk='';
+        for (const char of txt) {
+          if (ctx.measureText(chunk+char).width > titleMaxW) { lineWords.push({text:chunk,font:wObj.font,color:wObj.color}); chunk=char; }
+          else chunk+=char;
         }
-        if (curChunk) {
-          lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
-        }
-      } else {
-        lineWords.push({ text: textToMeasure, font: wObj.font, color: wObj.color });
-      }
+        if (chunk) lineWords.push({text:chunk,font:wObj.font,color:wObj.color});
+      } else lineWords.push({text:txt,font:wObj.font,color:wObj.color});
     });
-    
-    const subLines = [];
-    let currentSubLine = [];
-    let currentSubLineWidth = 0;
-    
+
+    const subLines = []; let curSub=[], curW=0;
     lineWords.forEach(word => {
-      ctx.font = getFontStr(word.font, curLineSize);
-      const wordWidth = ctx.measureText(word.text).width;
-      const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
-      
-      if (currentSubLineWidth + wordWidth > titleMaxW && currentSubLine.length > 0) {
-        subLines.push(currentSubLine);
-        currentSubLine = [word];
-        currentSubLineWidth = wordWidth;
-      } else {
-        currentSubLine.push(word);
-        currentSubLineWidth += wordWidth + spaceWidth;
-      }
+      ctx.font = getFontStr(word.font, sz);
+      const ww = ctx.measureText(word.text).width;
+      const sw = ctx.measureText(' ').width + (state.wordSpacing||20);
+      if (curW+ww > titleMaxW && curSub.length) { subLines.push(curSub); curSub=[word]; curW=ww; }
+      else { curSub.push(word); curW+=ww+sw; }
     });
-    if (currentSubLine.length > 0) {
-      subLines.push(currentSubLine);
-    }
-    
-    subLines.forEach(subLine => {
-      let tx = state.titleX;
-      subLine.forEach(word => {
-        ctx.font = getFontStr(word.font, curLineSize);
-        const wordWidth = ctx.measureText(word.text).width;
-        const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
-        tx += wordWidth + spaceWidth;
-      });
-      const lineWidth = tx - state.titleX;
-      if (lineWidth > maxLineWidth) maxLineWidth = lineWidth;
-      ty += curLineSize * state.titleLH;
+    if (curSub.length) subLines.push(curSub);
+
+    subLines.forEach(sl => {
+      let tx2=state.titleX;
+      sl.forEach(word => { ctx.font=getFontStr(word.font,sz); tx2+=ctx.measureText(word.text).width+ctx.measureText(' ').width+(state.wordSpacing||20); });
+      const lw=tx2-state.titleX; if(lw>maxLineWidth) maxLineWidth=lw;
+      ty+=sz*state.titleLH;
     });
   });
+
   const titleH = ty - titleStartY;
-  hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
+  hitBoxes.title = { x:state.titleX, y:titleStartY, w:Math.max(100,Math.min(maxLineWidth,titleMaxW)), h:titleH||10 };
   state.lastTitleBottomY = ty;
 
-  // 4. Pre-calculate paragraph height for Apla
+  // ── Para position ───────────────────────────────────────
   const paraVal = document.getElementById('paraText').value;
+  let computedPy;
   if (paraVal) {
     const paraSize = 28;
     ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
-    if (state.paraY === undefined || state.paraY < 300) {
-      state.paraY = ty + 15;
+    // If not dragged yet, sit tight below title
+    if (state.paraY === null || state.paraY === undefined) {
+      computedPy = ty + 10;
+    } else {
+      computedPy = Math.max(state.paraY, ty + 10);
     }
-    const py = Math.max(state.paraY, ty + 15);
     const isCenter = state.paraAlign === 'center';
-    const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
-    const uppercaseText = paraVal.toUpperCase();
-    const wrapped = wrapText(uppercaseText, maxWidth);
-    let currentPy = py;
-    wrapped.forEach(wl => {
-      currentPy += paraSize * 1.5;
-    });
-    const paragraphHeight = currentPy - py;
-    const hitBoxX = isCenter ? (canvas.width / 2 - maxWidth / 2) : state.paraX;
-    hitBoxes.para = { x: hitBoxX, y: py, w: maxWidth, h: paragraphHeight || 10 };
-  } else {
-    hitBoxes.para = null;
-  }
+    const maxW = isCenter ? (canvas.width-M*2) : (canvas.width-state.paraX-M);
+    const wrapped = wrapText(paraVal.toUpperCase(), maxW);
+    let endPy = computedPy;
+    wrapped.forEach(() => endPy += paraSize * 1.4);
+    const hitX = isCenter ? (canvas.width/2-maxW/2) : state.paraX;
+    hitBoxes.para = { x:hitX, y:computedPy, w:maxW, h:Math.max(10,endPy-computedPy) };
+  } else hitBoxes.para = null;
 
-  // DRAW APLA (Background Shape under text)
+  // ── Kicker pre-calc ─────────────────────────────────────
+  const kickerVal = document.getElementById('kickerText').value;
+  if (kickerVal) {
+    ctx.font = '600 20px "Rajdhani", sans-serif'; ctx.letterSpacing='6px';
+    const klines = kickerVal.toUpperCase().split('\n');
+    let kw=0; klines.forEach(l => { const w=ctx.measureText(l).width; if(w>kw)kw=w; });
+    ctx.letterSpacing='0px';
+    hitBoxes.kicker = { x:state.kickerX, y:state.kickerY, w:kw+22, h:klines.length*30 };
+  } else hitBoxes.kicker=null;
+
+  // ── APLA ─────────────────────────────────────────────────
   if (state.showApla && state.aplaStyle !== 'none') {
     ctx.save();
-    const hex = state.aplaStyle || '#FFFFFF';
-    
-    if (hex === 'gradient') {
-      const g = ctx.createLinearGradient(state.aplaX, state.aplaY, state.aplaX, state.aplaY + state.aplaH);
-      g.addColorStop(0, 'rgba(9, 126, 255, 0.85)'); // Bright blue
-      g.addColorStop(1, 'rgba(30, 58, 138, 0.85)'); // Deep navy
-      ctx.fillStyle = g;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-      ctx.shadowBlur = 30;
+    const hex = state.aplaStyle||'#FFFFFF';
+    if (hex==='gradient') {
+      const g=ctx.createLinearGradient(state.aplaX,state.aplaY,state.aplaX,state.aplaY+state.aplaH);
+      g.addColorStop(0,'rgba(9,126,255,0.85)'); g.addColorStop(1,'rgba(30,58,138,0.85)');
+      ctx.fillStyle=g; ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.shadowColor='rgba(0,0,0,0.2)'; ctx.shadowBlur=30;
     } else {
-      let r = 255, g = 255, b = 255;
-      if (hex.startsWith('#')) {
-        r = parseInt(hex.slice(1, 3), 16);
-        g = parseInt(hex.slice(3, 5), 16);
-        b = parseInt(hex.slice(5, 7), 16);
-      }
-      
-      // Frosted glassmorphism effect
-      if (hex === '#FFFFFF') {
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.72)`; // light glass
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-        ctx.shadowBlur = 40;
-      } else if (hex === '#0F172A') {
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.78)`; // dark glass
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-        ctx.shadowBlur = 40;
-      } else {
-        // Colored glassmorphism card
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.82)`;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-        ctx.shadowBlur = 30;
-      }
+      const r=parseInt(hex.slice(1,3),16),g2=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+      if(hex==='#FFFFFF'){ctx.fillStyle=`rgba(${r},${g2},${b},0.72)`;ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.shadowColor='rgba(0,0,0,0.15)';ctx.shadowBlur=40;}
+      else if(hex==='#0F172A'){ctx.fillStyle=`rgba(${r},${g2},${b},0.78)`;ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.shadowColor='rgba(0,0,0,0.35)';ctx.shadowBlur=40;}
+      else{ctx.fillStyle=`rgba(${r},${g2},${b},0.82)`;ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.shadowColor='rgba(0,0,0,0.2)';ctx.shadowBlur=30;}
     }
-    
-    drawRoundedRect(ctx, state.aplaX, state.aplaY, state.aplaW, state.aplaH, 24);
-    ctx.fill();
-    if (ctx.strokeStyle) {
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
+    drawRoundedRect(ctx,state.aplaX,state.aplaY,state.aplaW,state.aplaH,24);
+    ctx.fill(); if(ctx.strokeStyle){ctx.lineWidth=2;ctx.stroke();}
     ctx.restore();
-    
-    hitBoxes.apla = { x: state.aplaX, y: state.aplaY, w: state.aplaW, h: state.aplaH };
-
-    // Draw active select border & circular handles when editing
-    if (!isExporting) {
-      ctx.save();
-      ctx.strokeStyle = '#097EFF';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6, 4]);
-      drawRoundedRect(ctx, state.aplaX, state.aplaY, state.aplaW, state.aplaH, 24);
-      ctx.stroke();
+    hitBoxes.apla={x:state.aplaX,y:state.aplaY,w:state.aplaW,h:state.aplaH};
+    if(!isExporting){
+      ctx.save(); ctx.strokeStyle='#097EFF'; ctx.lineWidth=2; ctx.setLineDash([6,4]);
+      drawRoundedRect(ctx,state.aplaX,state.aplaY,state.aplaW,state.aplaH,24); ctx.stroke();
       ctx.setLineDash([]);
-      
-      ctx.fillStyle = '#FFFFFF';
-      ctx.strokeStyle = '#097EFF';
-      ctx.lineWidth = 2.5;
-      
-      const handles = [
-        { x: state.aplaX, y: state.aplaY }, // tl
-        { x: state.aplaX + state.aplaW / 2, y: state.aplaY }, // tm
-        { x: state.aplaX + state.aplaW, y: state.aplaY }, // tr
-        { x: state.aplaX + state.aplaW, y: state.aplaY + state.aplaH / 2 }, // rm
-        { x: state.aplaX + state.aplaW, y: state.aplaY + state.aplaH }, // br
-        { x: state.aplaX + state.aplaW / 2, y: state.aplaY + state.aplaH }, // bm
-        { x: state.aplaX, y: state.aplaY + state.aplaH }, // bl
-        { x: state.aplaX, y: state.aplaY + state.aplaH / 2 } // lm
-      ];
-      
-      handles.forEach(h => {
-        ctx.beginPath();
-        ctx.arc(h.x, h.y, 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      ctx.restore();
+      [[state.aplaX,state.aplaY],[state.aplaX+state.aplaW/2,state.aplaY],[state.aplaX+state.aplaW,state.aplaY],
+       [state.aplaX+state.aplaW,state.aplaY+state.aplaH/2],[state.aplaX+state.aplaW,state.aplaY+state.aplaH],
+       [state.aplaX+state.aplaW/2,state.aplaY+state.aplaH],[state.aplaX,state.aplaY+state.aplaH],
+       [state.aplaX,state.aplaY+state.aplaH/2]].forEach(([hx,hy])=>{
+        ctx.beginPath(); ctx.arc(hx,hy,8,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.stroke();
+      }); ctx.restore();
     }
-  } else {
-    hitBoxes.apla = null;
-  }
+  } else hitBoxes.apla=null;
 
-  // Draw actual Kicker Text
+  // ── KICKER text ─────────────────────────────────────────
   if (kickerVal) {
-    ctx.fillStyle = state.kickerColor;
-    ctx.beginPath();
-    ctx.arc(state.kickerX + 5, state.kickerY + 11, 5, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = '600 20px "Rajdhani", sans-serif';
-    ctx.fillStyle = state.kickerColor;
-    ctx.textAlign = 'left';
-    ctx.letterSpacing = '6px';
-    const lines = kickerVal.toUpperCase().split('\n');
-    let ky = state.kickerY;
-    lines.forEach(l => {
-      ctx.fillText(l, state.kickerX + 22, ky);
-      ky += 30;
-    });
-    ctx.letterSpacing = '0px';
+    ctx.fillStyle=state.kickerColor;
+    ctx.beginPath(); ctx.arc(state.kickerX+5,state.kickerY+11,5,0,Math.PI*2); ctx.fill();
+    ctx.font='600 20px "Rajdhani", sans-serif'; ctx.fillStyle=state.kickerColor;
+    ctx.textAlign='left'; ctx.letterSpacing='6px';
+    kickerVal.toUpperCase().split('\n').forEach((l,i)=>ctx.fillText(l,state.kickerX+22,state.kickerY+i*30));
+    ctx.letterSpacing='0px';
   }
 
-  // Draw actual Title Text
-  ty = state.titleY;
-  wordCounter = 0;
-  rawLines.forEach((lineText, lineIndex) => {
-    const curLineSize = state.titleSize || 90;
-    const lineWordTokens = lineText.trim().split(/\s+/).filter(Boolean);
-    if (lineWordTokens.length === 0) {
-      ty += curLineSize * state.titleLH;
-      return;
-    }
-    const lineWords = [];
-    lineWordTokens.forEach(token => {
-      const wObj = state.words[wordCounter] || { text: token, font: 'bold', color: '#FFFFFF' };
+  // ── TITLE text ──────────────────────────────────────────
+  ty = state.titleY; wordCounter = 0;
+  rawLines.forEach(lineText => {
+    const sz = state.titleSize||90;
+    const tokens = lineText.trim().split(/\s+/).filter(Boolean);
+    if (!tokens.length) { ty+=sz*state.titleLH; return; }
+    const lineWords=[];
+    tokens.forEach(token => {
+      const wObj = state.words[wordCounter]||{text:token,font:state.globalFont||'bold',color:'#FFFFFF'};
       wordCounter++;
-      ctx.font = getFontStr(wObj.font, curLineSize);
-      const textToMeasure = wObj.font === 'bold' ? wObj.text.toUpperCase() : wObj.text;
-      const wWidth = ctx.measureText(textToMeasure).width;
-      if (wWidth > titleMaxW) {
-        let curChunk = '';
-        for (let j = 0; j < textToMeasure.length; j++) {
-          let char = textToMeasure[j];
-          if (ctx.measureText(curChunk + char).width > titleMaxW) {
-            lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
-            curChunk = char;
-          } else {
-            curChunk += char;
-          }
-        }
-        if (curChunk) {
-          lineWords.push({ text: curChunk, font: wObj.font, color: wObj.color });
-        }
-      } else {
-        lineWords.push({ text: textToMeasure, font: wObj.font, color: wObj.color });
-      }
+      ctx.font=getFontStr(wObj.font,sz);
+      const txt=getWordText(wObj); const ww=ctx.measureText(txt).width;
+      if(ww>titleMaxW){let chunk=''; for(const char of txt){if(ctx.measureText(chunk+char).width>titleMaxW){lineWords.push({text:chunk,font:wObj.font,color:wObj.color});chunk=char;}else chunk+=char;} if(chunk)lineWords.push({text:chunk,font:wObj.font,color:wObj.color});}
+      else lineWords.push({text:txt,font:wObj.font,color:wObj.color});
     });
-    
-    const subLines = [];
-    let currentSubLine = [];
-    let currentSubLineWidth = 0;
-    
-    lineWords.forEach(word => {
-      ctx.font = getFontStr(word.font, curLineSize);
-      const wordWidth = ctx.measureText(word.text).width;
-      const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
-      
-      if (currentSubLineWidth + wordWidth > titleMaxW && currentSubLine.length > 0) {
-        subLines.push(currentSubLine);
-        currentSubLine = [word];
-        currentSubLineWidth = wordWidth;
-      } else {
-        currentSubLine.push(word);
-        currentSubLineWidth += wordWidth + spaceWidth;
-      }
-    });
-    if (currentSubLine.length > 0) {
-      subLines.push(currentSubLine);
-    }
-    
-    subLines.forEach(subLine => {
-      if (ty + curLineSize * state.titleLH > maxBottomY) return;
-      let tx = state.titleX;
-      subLine.forEach(word => {
-        ctx.font = getFontStr(word.font, word.font === 'mono' ? curLineSize * 0.9 : curLineSize);
-        ctx.fillStyle = word.color;
-        ctx.textAlign = 'left';
-        ctx.fillText(word.text, tx, ty);
-        
-        const wordWidth = ctx.measureText(word.text).width;
-        const spaceWidth = ctx.measureText(' ').width + (state.wordSpacing || 20);
-        tx += wordWidth + spaceWidth;
-      });
-      ty += curLineSize * state.titleLH;
+    const subLines=[]; let curSub=[],curW=0;
+    lineWords.forEach(word=>{ctx.font=getFontStr(word.font,sz);const ww=ctx.measureText(word.text).width,sw=ctx.measureText(' ').width+(state.wordSpacing||20);if(curW+ww>titleMaxW&&curSub.length){subLines.push(curSub);curSub=[word];curW=ww;}else{curSub.push(word);curW+=ww+sw;}});
+    if(curSub.length)subLines.push(curSub);
+    subLines.forEach(sl=>{
+      if(ty+sz*state.titleLH>maxBottomY)return;
+      let tx2=state.titleX;
+      sl.forEach(word=>{ctx.font=getFontStr(word.font,word.font==='mono'?sz*0.9:sz);ctx.fillStyle=word.color;ctx.textAlign='left';ctx.fillText(word.text,tx2,ty);tx2+=ctx.measureText(word.text).width+ctx.measureText(' ').width+(state.wordSpacing||20);});
+      ty+=sz*state.titleLH;
     });
   });
 
-  // Draw actual Paragraph Text
+  // ── PARA text ───────────────────────────────────────────
   if (paraVal) {
-    const paraSize = 28;
-    const weight = state.paraBold ? '800' : '400';
-    ctx.font = `${weight} ${paraSize}px "Rajdhani", sans-serif`;
-    ctx.fillStyle = state.paraColor || '#FFFFFF';
-    if (state.paraY === undefined || state.paraY < 300) {
-      state.paraY = ty + 15;
-    }
-    const py = Math.max(state.paraY, ty + 15);
-    
-    const isCenter = state.paraAlign === 'center';
-    const alignX = isCenter ? canvas.width / 2 : state.paraX;
-    const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
-    
-    ctx.textAlign = isCenter ? 'center' : 'left';
-    
-    const uppercaseText = paraVal.toUpperCase();
-    const wrapped = wrapText(uppercaseText, maxWidth);
-    let currentPy = py;
-    wrapped.forEach(wl => {
-      if (currentPy + paraSize * 1.5 > maxBottomY) return;
-      ctx.fillText(wl, alignX, currentPy);
-      currentPy += paraSize * 1.5;
-    });
+    const paraSize=28, weight=state.paraBold?'800':'400';
+    ctx.font=`${weight} ${paraSize}px "Rajdhani", sans-serif`;
+    ctx.fillStyle=state.paraColor||'#FFFFFF';
+    const isCenter=state.paraAlign==='center';
+    const alignX=isCenter?canvas.width/2:state.paraX;
+    const maxW=isCenter?(canvas.width-M*2):(canvas.width-state.paraX-M);
+    ctx.textAlign=isCenter?'center':'left';
+    const wrapped=wrapText(paraVal.toUpperCase(),maxW);
+    let cpY=computedPy;
+    wrapped.forEach(wl=>{if(cpY+paraSize*1.4>maxBottomY)return;ctx.fillText(wl,alignX,cpY);cpY+=paraSize*1.4;});
   }
 
-  // 5. Brand (Stopka / Dopisek flatpack.help)
+  // ── BRAND ───────────────────────────────────────────────
   const brandVal = document.getElementById('brandText').value;
   if (brandVal) {
-    ctx.font = '800 22px "Inter", sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    
-    const align = state.brandAlign;
-    ctx.textAlign = align === 'center' ? 'center' : ((align === 'right' || align === 'top-right') ? 'right' : 'left');
-    
+    ctx.font='800 22px "Inter", sans-serif'; ctx.fillStyle='rgba(255,255,255,0.45)';
+    const align=state.brandAlign;
+    ctx.textAlign=align==='center'?'center':((align==='right'||align==='top-right')?'right':'left');
     ctx.fillText(brandVal, state.brandX, state.brandY);
-    
-    const w = ctx.measureText(brandVal).width + 20;
-    let bx = state.brandX;
-    if (ctx.textAlign === 'center') bx -= w / 2;
-    else if (ctx.textAlign === 'right') bx -= w;
-    hitBoxes.brand = { x: bx, y: state.brandY, w: w, h: 24 };
-  } else {
-    hitBoxes.brand = null;
-  }
+    const w=ctx.measureText(brandVal).width+20;
+    let bx=state.brandX;
+    if(ctx.textAlign==='center')bx-=w/2; else if(ctx.textAlign==='right')bx-=w;
+    hitBoxes.brand={x:bx,y:state.brandY,w:w,h:24};
+  } else hitBoxes.brand=null;
 
-  // 6. Slide (Numeracja)
-  const slideVal = validateAndGetSlideText(false);
-  if (slideVal && document.getElementById('showSlideNum').checked) {
-    ctx.font = '600 20px "Rajdhani", sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-    
-    ctx.textAlign = state.slideX > canvas.width / 2 ? 'right' : 'left';
-    ctx.fillText(slideVal, state.slideX, state.slideY);
-    
-    const w = ctx.measureText(slideVal).width + 20;
-    let sx = state.slideX;
-    if (ctx.textAlign === 'right') sx -= w;
-    hitBoxes.slide = { x: sx, y: state.slideY, w: w, h: 24 };
-  } else {
-    hitBoxes.slide = null;
-  }
-
-  // 7. Guides (Marginesy i siatka IG)
-  if (!isExporting && document.getElementById('showGuides').checked) {
-    ctx.fillStyle = 'rgba(0,0,0,0.4)';
-    ctx.fillRect(0, 0, canvas.width, M);
-    ctx.fillRect(0, canvas.height - M, canvas.width, M);
-    ctx.fillRect(0, M, M, canvas.height - M * 2);
-    ctx.fillRect(canvas.width - M, M, M, canvas.height - M * 2);
-    ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
-    ctx.lineWidth = 3;
-    ctx.setLineDash([16, 10]);
-    ctx.strokeRect(M, M, canvas.width - M * 2, canvas.height - M * 2);
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
-    ctx.font = 'bold 16px "Geist Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('MARGINES', canvas.width / 2, M - 6);
-  }
-
-  if (!isExporting && document.getElementById('showCrop').checked) {
-    const cropY = (canvas.height - canvas.width) / 2;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 8]);
-    ctx.beginPath();
-    ctx.moveTo(0, cropY);
-    ctx.lineTo(canvas.width, cropY);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, canvas.height - cropY);
-    ctx.lineTo(canvas.width, canvas.height - cropY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.font = '12px "Geist Mono", monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('crop 1:1 (siatka IG)', canvas.width - 10, cropY + 14);
-  }
-
-  if (!isExporting && document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
-    ctx.strokeStyle = 'rgba(9, 126, 255, 0.4)'; // bright blue
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 8]);
-    ctx.beginPath();
-    ctx.moveTo(34, 0);
-    ctx.lineTo(34, canvas.height);
-    ctx.moveTo(1046, 0);
-    ctx.lineTo(1046, canvas.height);
-    ctx.stroke();
-    
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; // sky blue
-    ctx.beginPath();
-    ctx.moveTo(135, 0);
-    ctx.lineTo(135, canvas.height);
-    ctx.moveTo(945, 0);
-    ctx.lineTo(945, canvas.height);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    
-    ctx.fillStyle = 'rgba(9, 126, 255, 0.6)';
-    ctx.font = '12px "Geist Mono", monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('crop 3:4 dla 4:5 (34px)', 40, 40);
-    
-    ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
-    ctx.fillText('crop 3:4 dla 1:1 (135px)', 141, 60);
-  }
-
-  // Draw Logo (Red Bag)
+  // ── LOGO ────────────────────────────────────────────────
   if (state.showLogo && state.logoImg) {
-    const h = 90 * (state.logoScale || 1);
-    const w = (state.logoImg.width / state.logoImg.height) * h;
+    const h=90*(state.logoScale||1), w=(state.logoImg.width/state.logoImg.height)*h;
     ctx.drawImage(state.logoImg, state.logoX, state.logoY, w, h);
-    
-    hitBoxes.logo = { x: state.logoX, y: state.logoY, w: w, h: h };
-  } else {
-    hitBoxes.logo = null;
+    hitBoxes.logo={x:state.logoX,y:state.logoY,w:w,h:h};
+  } else hitBoxes.logo=null;
+
+  // ── GUIDES (always on top of content, not exported) ─────
+  if (!isExporting && document.getElementById('showGuides').checked) {
+    // Red safe zone
+    ctx.save();
+    ctx.strokeStyle='rgba(239,68,68,0.85)'; ctx.lineWidth=3; ctx.setLineDash([14,8]);
+    ctx.strokeRect(M,M,canvas.width-M*2,canvas.height-M*2);
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(239,68,68,0.75)'; ctx.font='bold 14px "Geist Mono",monospace';
+    ctx.textAlign='center'; ctx.fillText('SAFE ZONE ← 80px', canvas.width/2, M-8);
+    // subtle fill on margins
+    ctx.fillStyle='rgba(239,68,68,0.06)';
+    ctx.fillRect(0,0,canvas.width,M); ctx.fillRect(0,canvas.height-M,canvas.width,M);
+    ctx.fillRect(0,M,M,canvas.height-M*2); ctx.fillRect(canvas.width-M,M,M,canvas.height-M*2);
+    ctx.restore();
+  }
+  if (!isExporting && document.getElementById('showCrop').checked) {
+    const cropY=(canvas.height-canvas.width)/2;
+    ctx.save(); ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=2.5; ctx.setLineDash([10,6]);
+    ctx.beginPath(); ctx.moveTo(0,cropY); ctx.lineTo(canvas.width,cropY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,canvas.height-cropY); ctx.lineTo(canvas.width,canvas.height-cropY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.font='bold 13px "Geist Mono",monospace'; ctx.textAlign='right';
+    ctx.fillText('1:1 crop (siatka IG)', canvas.width-10, cropY+16);
+    // label: min photo size for 1:1
+    ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='11px "Geist Mono",monospace'; ctx.textAlign='left';
+    ctx.fillText('Min. 1080×1080 px → bez czarnych pasów', 10, cropY+16);
+    ctx.restore();
+  }
+  if (!isExporting && document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
+    ctx.save(); ctx.strokeStyle='rgba(9,126,255,0.7)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
+    ctx.beginPath(); ctx.moveTo(34,0); ctx.lineTo(34,canvas.height); ctx.moveTo(1046,0); ctx.lineTo(1046,canvas.height); ctx.stroke();
+    ctx.strokeStyle='rgba(56,189,248,0.55)';
+    ctx.beginPath(); ctx.moveTo(135,0); ctx.lineTo(135,canvas.height); ctx.moveTo(945,0); ctx.lineTo(945,canvas.height); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(9,126,255,0.75)'; ctx.font='bold 12px "Geist Mono",monospace'; ctx.textAlign='left';
+    ctx.fillText('3:4 → 34px', 40, 30);
+    ctx.fillStyle='rgba(56,189,248,0.75)'; ctx.fillText('3:4 → 135px', 141, 50);
+    ctx.restore();
   }
 
-  // Photo drag handle
-  if (state.bgType === 'photo' && state.bgPhoto) {
-    hitBoxes.photo = { x: 0, y: 0, w: canvas.width, h: canvas.height };
-  } else {
-    hitBoxes.photo = null;
-  }
-  
-  if (state.pastedImages) {
-    state.pastedImages.forEach(pi => {
-      hitBoxes[pi.id] = { x: pi.x, y: pi.y, w: pi.baseW * pi.scale, h: pi.baseH * pi.scale };
-    });
-  }
-  if (typeof saveStateDebounced === 'function' && !isExporting) {
-    saveStateDebounced();
-  }
+  // Photo & pasted hitboxes
+  if (state.bgType==='photo' && state.bgPhoto) hitBoxes.photo={x:0,y:0,w:canvas.width,h:canvas.height};
+  else hitBoxes.photo=null;
+  if (state.pastedImages) state.pastedImages.forEach(pi=>hitBoxes[pi.id]={x:pi.x,y:pi.y,w:pi.baseW*pi.scale,h:pi.baseH*pi.scale});
+
+  if (typeof saveStateDebounced==='function' && !isExporting) saveStateDebounced();
 }
 
-function hitTestAplaHandle(mx, my) {
-  if (!state.showApla) return null;
-  const tolerance = 15; // px hit tolerance
-  
-  // 1. corners
-  // Top-Left (tl)
-  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tl';
-  // Top-Right (tr)
-  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tr';
-  // Bottom-Left (bl)
-  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'bl';
-  // Bottom-Right (br)
-  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'br';
-  
-  // 2. edges
-  // Top-Middle (tm)
-  if (Math.abs(mx - (state.aplaX + state.aplaW / 2)) <= tolerance && Math.abs(my - state.aplaY) <= tolerance) return 'tm';
-  // Bottom-Middle (bm)
-  if (Math.abs(mx - (state.aplaX + state.aplaW / 2)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH)) <= tolerance) return 'bm';
-  // Left-Middle (lm)
-  if (Math.abs(mx - state.aplaX) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH / 2)) <= tolerance) return 'lm';
-  // Right-Middle (rm)
-  if (Math.abs(mx - (state.aplaX + state.aplaW)) <= tolerance && Math.abs(my - (state.aplaY + state.aplaH / 2)) <= tolerance) return 'rm';
-  
+// ── APLA RESIZE HANDLES ────────────────────────────────────
+function hitTestAplaHandle(mx,my){
+  if(!state.showApla)return null; const T=15;
+  if(Math.abs(mx-state.aplaX)<=T&&Math.abs(my-state.aplaY)<=T)return'tl';
+  if(Math.abs(mx-(state.aplaX+state.aplaW))<=T&&Math.abs(my-state.aplaY)<=T)return'tr';
+  if(Math.abs(mx-state.aplaX)<=T&&Math.abs(my-(state.aplaY+state.aplaH))<=T)return'bl';
+  if(Math.abs(mx-(state.aplaX+state.aplaW))<=T&&Math.abs(my-(state.aplaY+state.aplaH))<=T)return'br';
+  if(Math.abs(mx-(state.aplaX+state.aplaW/2))<=T&&Math.abs(my-state.aplaY)<=T)return'tm';
+  if(Math.abs(mx-(state.aplaX+state.aplaW/2))<=T&&Math.abs(my-(state.aplaY+state.aplaH))<=T)return'bm';
+  if(Math.abs(mx-state.aplaX)<=T&&Math.abs(my-(state.aplaY+state.aplaH/2))<=T)return'lm';
+  if(Math.abs(mx-(state.aplaX+state.aplaW))<=T&&Math.abs(my-(state.aplaY+state.aplaH/2))<=T)return'rm';
   return null;
 }
 
-function resizeApla(dx, dy, handle, startW, startH, startX, startY) {
-  if (handle === 'br') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
-  } else if (handle === 'bl') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
-    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
-  } else if (handle === 'tl') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
-    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
-    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
-  } else if (handle === 'tr') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
-    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
-  } else if (handle === 'rm') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW + dx));
-  } else if (handle === 'lm') {
-    state.aplaW = Math.max(100, Math.min(canvas.width, startW - dx));
-    state.aplaX = Math.max(0, Math.min(startX + startW - 100, startX + dx));
-  } else if (handle === 'bm') {
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH + dy));
-  } else if (handle === 'tm') {
-    state.aplaH = Math.max(100, Math.min(canvas.height, startH - dy));
-    state.aplaY = Math.max(0, Math.min(startY + startH - 100, startY + dy));
-  }
-  
-  // Sync to DOM inputs
-  const aplaWEl = document.getElementById('aplaW');
-  if (aplaWEl) {
-    aplaWEl.value = state.aplaW;
-    document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
-  }
-  const aplaHEl = document.getElementById('aplaH');
-  if (aplaHEl) {
-    aplaHEl.value = state.aplaH;
-    document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
-  }
+function resizeApla(dx,dy,handle,sW,sH,sX,sY){
+  if(handle==='br'){state.aplaW=Math.max(100,Math.min(canvas.width,sW+dx));state.aplaH=Math.max(100,Math.min(canvas.height,sH+dy));}
+  else if(handle==='bl'){state.aplaW=Math.max(100,sW-dx);state.aplaX=Math.max(0,sX+dx);state.aplaH=Math.max(100,sH+dy);}
+  else if(handle==='tl'){state.aplaW=Math.max(100,sW-dx);state.aplaX=Math.max(0,sX+dx);state.aplaH=Math.max(100,sH-dy);state.aplaY=Math.max(0,sY+dy);}
+  else if(handle==='tr'){state.aplaW=Math.max(100,sW+dx);state.aplaH=Math.max(100,sH-dy);state.aplaY=Math.max(0,sY+dy);}
+  else if(handle==='rm'){state.aplaW=Math.max(100,sW+dx);}
+  else if(handle==='lm'){state.aplaW=Math.max(100,sW-dx);state.aplaX=Math.max(0,sX+dx);}
+  else if(handle==='bm'){state.aplaH=Math.max(100,sH+dy);}
+  else if(handle==='tm'){state.aplaH=Math.max(100,sH-dy);state.aplaY=Math.max(0,sY+dy);}
+  const aw=document.getElementById('aplaW');if(aw){aw.value=state.aplaW;document.getElementById('aplaWVal').textContent=state.aplaW+'px';}
+  const ah=document.getElementById('aplaH');if(ah){ah.value=state.aplaH;document.getElementById('aplaHVal').textContent=state.aplaH+'px';}
 }
 
+// ── HIT TEST ────────────────────────────────────────────────
 function hitTest(mx, my) {
-  const order = ['logo', 'kicker', 'title', 'para', 'brand', 'slide', 'apla'];
+  // watermark
+  if (hitBoxes.wm) { const b=hitBoxes.wm; if(mx>=b.x&&mx<=b.x+b.w&&my>=b.y&&my<=b.y+b.h) return 'wm'; }
+  const order=['logo','kicker','title','para','brand','apla'];
   for (const id of order) {
-    const b = hitBoxes[id];
-    if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
-      return id;
+    const b=hitBoxes[id];
+    if(b&&mx>=b.x&&mx<=b.x+b.w&&my>=b.y&&my<=b.y+b.h) return id;
+  }
+  if(state.pastedImages){
+    for(let i=state.pastedImages.length-1;i>=0;i--){
+      const pi=state.pastedImages[i]; const b=hitBoxes[pi.id];
+      if(b&&mx>=b.x&&mx<=b.x+b.w&&my>=b.y&&my<=b.y+b.h) return pi.id;
     }
   }
-  if (state.pastedImages) {
-    for (let i = state.pastedImages.length - 1; i >= 0; i--) {
-      const pi = state.pastedImages[i];
-      const b = hitBoxes[pi.id];
-      if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
-        return pi.id;
-      }
-    }
-  }
-  const pb = hitBoxes.photo;
-  if (pb && mx >= pb.x && mx <= pb.x + pb.w && my >= pb.y && my <= pb.y + pb.h) {
-    return 'photo';
-  }
+  const pb=hitBoxes.photo;
+  if(pb&&mx>=pb.x&&mx<=pb.x+pb.w&&my>=pb.y&&my<=pb.y+pb.h) return 'photo';
   return null;
 }
 
 function canvasCoords(e) {
-  const r = canvas.getBoundingClientRect();
-  return {
-    x: (e.clientX - r.left) * (canvas.width / r.width),
-    y: (e.clientY - r.top) * (canvas.height / r.height)
-  };
+  const r=canvas.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*(canvas.width/r.width), y:(e.clientY-r.top)*(canvas.height/r.height) };
 }
 
-canvas.addEventListener('mousedown', (e) => {
-  const { x, y } = canvasCoords(e);
-  
-  const handle = hitTestAplaHandle(x, y);
+// ── SNAP TO GUIDE LINES ───────────────────────────────────
+const SNAP_DIST = 25; // canvas pixels
+const snapLines = {
+  x: [0, M, 34, 135, canvas.width/2, 945, 1046, canvas.width-M, canvas.width],
+  y: [0, M, (canvas.height-canvas.width)/2, canvas.height/2, canvas.height-(canvas.height-canvas.width)/2, canvas.height-M, canvas.height]
+};
+function snapValue(val, guides) {
+  for (const g of guides) { if (Math.abs(val-g) < SNAP_DIST) return g; }
+  return val;
+}
+
+// ── MOUSE EVENTS ──────────────────────────────────────────
+canvas.addEventListener('mousedown', e => {
+  const {x,y} = canvasCoords(e);
+  const handle = hitTestAplaHandle(x,y);
   if (handle) {
-    dragging = {
-      id: 'apla-resize',
-      handle: handle,
-      startW: state.aplaW,
-      startH: state.aplaH,
-      startX: state.aplaX,
-      startY: state.aplaY,
-      mouseStartX: x,
-      mouseStartY: y
-    };
+    dragging={id:'apla-resize',handle,startW:state.aplaW,startH:state.aplaH,startX:state.aplaX,startY:state.aplaY,mouseStartX:x,mouseStartY:y};
     return;
   }
-  
-  const hit = hitTest(x, y);
-  if (hit && hit !== 'photo') {
-    const b = hitBoxes[hit];
-    dragging = { id: hit, offsetX: x - b.x, offsetY: y - b.y };
-    if (hit.startsWith('pasted_')) {
-      state.selectedPastedImageId = hit;
-      updateSelectedImageUI();
-      draw();
-    } else {
-      state.selectedPastedImageId = null;
-      updateSelectedImageUI();
-      draw();
-    }
-  } else if (hit === 'photo' && state.bgPhoto) {
-    dragging = { id: 'photo', offsetX: x - state.bgPhotoX, offsetY: y - state.bgPhotoY };
-    state.selectedPastedImageId = null;
-    updateSelectedImageUI();
-    draw();
+  const hit = hitTest(x,y);
+  if (hit && hit!=='photo') {
+    const b=hitBoxes[hit];
+    dragging={id:hit,offsetX:x-b.x,offsetY:y-b.y};
+    if (hit.startsWith('pasted_')) { state.selectedPastedImageId=hit; updateSelectedImageUI(); draw(); }
+    else { state.selectedPastedImageId=null; updateSelectedImageUI(); draw(); }
+  } else if (hit==='photo'&&state.bgPhoto) {
+    dragging={id:'photo',offsetX:x-state.bgPhotoX,offsetY:y-state.bgPhotoY};
+    state.selectedPastedImageId=null; updateSelectedImageUI(); draw();
   } else {
-    state.selectedPastedImageId = null;
-    updateSelectedImageUI();
-    draw();
+    state.selectedPastedImageId=null; updateSelectedImageUI(); draw();
   }
 });
 
-window.addEventListener('mouseup', () => { dragging = null; });
+window.addEventListener('mouseup', () => { dragging=null; });
 
-canvas.addEventListener('mousemove', (e) => {
-  const { x, y } = canvasCoords(e);
-  
+canvas.addEventListener('mousemove', e => {
+  const {x,y}=canvasCoords(e);
   if (!dragging) {
-    const handle = hitTestAplaHandle(x, y);
+    const handle=hitTestAplaHandle(x,y);
     if (handle) {
-      if (handle === 'tl' || handle === 'br') canvas.style.cursor = 'nwse-resize';
-      else if (handle === 'tr' || handle === 'bl') canvas.style.cursor = 'nesw-resize';
-      else if (handle === 'rm' || handle === 'lm') canvas.style.cursor = 'ew-resize';
-      else if (handle === 'tm' || handle === 'bm') canvas.style.cursor = 'ns-resize';
+      canvas.style.cursor={'tl':'nwse-resize','br':'nwse-resize','tr':'nesw-resize','bl':'nesw-resize','rm':'ew-resize','lm':'ew-resize','tm':'ns-resize','bm':'ns-resize'}[handle]||'crosshair';
       return;
     }
-    
-    const hovered = hitTest(x, y);
-    state.hoveredBlock = hovered;
-    
-    if (hovered && hovered !== 'photo') {
-      canvas.style.cursor = 'pointer';
-    } else if (hovered === 'photo') {
-      canvas.style.cursor = 'grab';
-    } else {
-      canvas.style.cursor = 'default';
-    }
+    const hv=hitTest(x,y);
+    state.hoveredBlock=hv;
+    canvas.style.cursor=hv?'move':'default';
     return;
   }
-  
-  if (dragging.id === 'apla-resize') {
-    const dx = x - dragging.mouseStartX;
-    const dy = y - dragging.mouseStartY;
-    resizeApla(dx, dy, dragging.handle, dragging.startW, dragging.startH, dragging.startX, dragging.startY);
-    draw();
-    return;
+  if (dragging.id==='apla-resize') {
+    resizeApla(x-dragging.mouseStartX,y-dragging.mouseStartY,dragging.handle,dragging.startW,dragging.startH,dragging.startX,dragging.startY);
+    draw(); return;
   }
-  
-  const nx = x - dragging.offsetX;
-  const ny = y - dragging.offsetY;
-
-  if (dragging.id === 'photo') {
-    state.bgPhotoX = nx;
-    state.bgPhotoY = ny;
-    canvas.style.cursor = 'grabbing';
+  const nx=x-dragging.offsetX, ny=y-dragging.offsetY;
+  if (dragging.id==='photo') { state.bgPhotoX=nx; state.bgPhotoY=ny; canvas.style.cursor='grabbing'; }
+  else if (dragging.id==='wm') {
+    state.wmX=Math.max(0,Math.min(canvas.width-10,nx));
+    state.wmY=Math.max(0,Math.min(canvas.height-10,ny));
   } else if (dragging.id.startsWith('pasted_')) {
-    const pi = state.pastedImages.find(p => p.id === dragging.id);
-    if (pi) {
-      pi.x = nx;
-      pi.y = ny;
-      canvas.style.cursor = 'grabbing';
-    }
+    const pi=state.pastedImages.find(p=>p.id===dragging.id);
+    if(pi){pi.x=nx;pi.y=ny;canvas.style.cursor='grabbing';}
   } else {
-    const cx = Math.max(M, Math.min(canvas.width - M, nx));
-    const cy = Math.max(M, Math.min(canvas.height - M, ny));
-    switch (dragging.id) {
-      case 'logo': state.logoX = cx; state.logoY = cy; break;
-      case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
-      case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': 
-        state.paraX = cx; 
-        state.paraY = cy; 
-        break;
-      case 'brand': state.brandX = cx; state.brandY = cy; break;
-      case 'slide': state.slideX = cx; state.slideY = cy; break;
-      case 'apla': state.aplaX = nx; state.aplaY = ny; break;
+    // ALL text elements: free movement entire canvas, with snap
+    const snx=snapValue(nx, snapLines.x);
+    const sny=snapValue(ny, snapLines.y);
+    switch(dragging.id){
+      case 'logo':   state.logoX=snx;state.logoY=sny;break;
+      case 'kicker': state.kickerX=snx;state.kickerY=sny;break;
+      case 'title':  state.titleX=snx;state.titleY=sny;break;
+      case 'para':   state.paraX=snx;state.paraY=sny;break;
+      case 'brand':  state.brandX=snx;state.brandY=sny;break;
+      case 'apla':   state.aplaX=nx;state.aplaY=ny;break;
     }
   }
   draw();
 });
 
-canvas.addEventListener('mouseleave', () => {
-  state.hoveredBlock = null;
-  canvas.style.cursor = 'default';
-});
+canvas.addEventListener('mouseleave', () => { state.hoveredBlock=null; canvas.style.cursor='default'; });
 
-canvas.addEventListener('wheel', (e) => {
+canvas.addEventListener('wheel', e => {
   e.preventDefault();
-  const { x, y } = canvasCoords(e);
-  const hovered = hitTest(x, y);
-
-  if (hovered === 'logo' && state.showLogo) {
-    const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
-    state.logoScale = Math.max(0.3, Math.min(3.0, state.logoScale * zoomFactor));
-    const scaleSlider = document.getElementById('logoScale');
-    if (scaleSlider) {
-      scaleSlider.value = state.logoScale.toFixed(2);
-      document.getElementById('logoScaleVal').textContent = state.logoScale.toFixed(2) + 'x';
-    }
+  const {x,y}=canvasCoords(e);
+  const hv=hitTest(x,y);
+  if (hv==='logo'&&state.showLogo) {
+    state.logoScale=Math.max(0.3,Math.min(3,state.logoScale*(e.deltaY<0?1.05:0.95)));
+    const sl=document.getElementById('logoScale'); if(sl){sl.value=state.logoScale.toFixed(2);document.getElementById('logoScaleVal').textContent=state.logoScale.toFixed(2)+'x';}
+    draw(); return;
+  }
+  if (hv==='wm'&&state.wmImg) {
+    state.wmScale=Math.max(0.05,Math.min(2,state.wmScale*(e.deltaY<0?1.05:0.95)));
+    const sl=document.getElementById('wmScale'); if(sl){sl.value=state.wmScale.toFixed(2);document.getElementById('wmScaleVal').textContent=Math.round(state.wmScale*100)+'%';}
+    draw(); return;
+  }
+  if (hv&&hv.startsWith('pasted_')) {
+    const pi=state.pastedImages.find(p=>p.id===hv);
+    if(pi){const z=e.deltaY<0?1.05:0.95,ns=Math.max(0.05,Math.min(10,pi.scale*z));const ix=(x-pi.x)/pi.scale,iy=(y-pi.y)/pi.scale;pi.x=x-ix*ns;pi.y=y-iy*ns;pi.scale=ns;if(state.selectedPastedImageId===pi.id)updateSelectedImageUI();draw();return;}
+  }
+  if (state.bgPhoto&&(!hv||hv==='photo')) {
+    const z=e.deltaY<0?1.05:0.95,ns=Math.max(state.bgPhotoScale*0.05,Math.min(state.bgPhotoScale*10,state.bgPhotoScale*z));
+    const ix=(x-state.bgPhotoX)/state.bgPhotoScale,iy=(y-state.bgPhotoY)/state.bgPhotoScale;
+    state.bgPhotoX=x-ix*ns; state.bgPhotoY=y-iy*ns; state.bgPhotoScale=ns;
+    const sl=document.getElementById('photoScale'); if(sl){sl.value=ns.toFixed(2);document.getElementById('photoScaleVal').textContent=ns.toFixed(2)+'x';}
     draw();
+  }
+}, {passive:false});
+
+// ── KEYBOARD ──────────────────────────────────────────────
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z') {
+    const ae=document.activeElement;
+    if (!ae||(ae.tagName!=='INPUT'&&ae.tagName!=='TEXTAREA')) { e.preventDefault(); undo(); }
     return;
   }
-
-  if (hovered && hovered.startsWith('pasted_')) {
-    const pi = state.pastedImages.find(p => p.id === hovered);
-    if (pi) {
-      const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
-      const newScale = Math.max(0.05, Math.min(10, pi.scale * zoomFactor));
-      const imgMouseX = (x - pi.x) / pi.scale;
-      const imgMouseY = (y - pi.y) / pi.scale;
-      pi.x = x - imgMouseX * newScale;
-      pi.y = y - imgMouseY * newScale;
-      pi.scale = newScale;
-      if (state.selectedPastedImageId === pi.id) {
-        updateSelectedImageUI();
-      }
-      draw();
-      return;
-    }
-  }
-
-  if (state.bgPhoto && (!hovered || hovered === 'photo')) {
-    const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
-    const newScale = Math.max(state.bgPhotoScale * 0.05, Math.min(state.bgPhotoScale * 10, state.bgPhotoScale * zoomFactor));
-    
-    const imgMouseX = (x - state.bgPhotoX) / state.bgPhotoScale;
-    const imgMouseY = (y - state.bgPhotoY) / state.bgPhotoScale;
-    
-    state.bgPhotoX = x - imgMouseX * newScale;
-    state.bgPhotoY = y - imgMouseY * newScale;
-    state.bgPhotoScale = newScale;
-    
-    const scaleSlider = document.getElementById('photoScale');
-    if (scaleSlider) {
-      scaleSlider.value = newScale.toFixed(2);
-      document.getElementById('photoScaleVal').textContent = newScale.toFixed(2) + 'x';
-    }
-    
-    draw();
-  }
-}, { passive: false });
-
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Delete' || e.key === 'Backspace') {
-    const activeEl = document.activeElement;
-    const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
-    
+  if (e.key==='Delete'||e.key==='Backspace') {
+    const ae=document.activeElement;
+    const isTyping=ae&&(ae.tagName==='INPUT'||ae.tagName==='TEXTAREA');
     if (!isTyping) {
+      e.preventDefault();
       if (state.hoveredBlock) {
-        e.preventDefault();
-        const blockId = state.hoveredBlock;
-        
-        if (blockId === 'photo') {
-          clearPhoto();
-          return;
-        } else if (blockId.startsWith('pasted_')) {
-          state.pastedImages = state.pastedImages.filter(p => p.id !== blockId);
-          if (state.selectedPastedImageId === blockId) {
-            state.selectedPastedImageId = null;
-            updateSelectedImageUI();
-          }
-          state.hoveredBlock = null;
-          canvas.style.cursor = 'default';
-          draw();
-          return;
-        } else if (blockId === 'apla') {
-          deleteApla();
-          state.hoveredBlock = null;
-          canvas.style.cursor = 'default';
-          return;
-        } else if (blockId === 'logo') {
-          state.showLogo = false;
-          const logoScaleRow = document.getElementById('logoScaleRow');
-          if (logoScaleRow) logoScaleRow.style.display = 'none';
-          document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
-          state.hoveredBlock = null;
-          canvas.style.cursor = 'default';
-          draw();
-          return;
+        const bid=state.hoveredBlock;
+        if (bid==='photo') { clearPhoto(); return; }
+        if (bid.startsWith('pasted_')) { state.pastedImages=state.pastedImages.filter(p=>p.id!==bid); state.hoveredBlock=null; canvas.style.cursor='default'; draw(); return; }
+        if (bid==='apla') { deleteApla(); state.hoveredBlock=null; canvas.style.cursor='default'; return; }
+        if (bid==='logo') { state.showLogo=false; document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active')); document.getElementById('logoScaleRow').style.display='none'; state.hoveredBlock=null; draw(); return; }
+        if (bid==='wm') { removeWatermark(); state.hoveredBlock=null; return; }
+        let inp=null;
+        if(bid==='title')inp=document.getElementById('mainText');
+        else if(bid==='kicker')inp=document.getElementById('kickerText');
+        else if(bid==='para')inp=document.getElementById('paraText');
+        else if(bid==='brand')inp=document.getElementById('brandText');
+        if(inp){inp.value='';inp.focus();if(bid==='title')updateWordsFromText('');else draw();return;}
+      }
+      if (state.selectedPastedImageId) { state.pastedImages=state.pastedImages.filter(p=>p.id!==state.selectedPastedImageId); state.selectedPastedImageId=null; updateSelectedImageUI(); draw(); }
+    }
+  }
+});
+
+// ── PASTE (Ctrl+V) ─────────────────────────────────────────
+window.addEventListener('paste', e => {
+  if (!e.clipboardData?.items) return;
+  for (const item of e.clipboardData.items) {
+    if (item.type.indexOf('image')!==-1) {
+      const blob=item.getAsFile(), src=URL.createObjectURL(blob), img=new Image();
+      img.onload=()=>{
+        if (!state.bgPhoto) {
+          state.bgPhoto=img; state.bgType='photo'; fitPhoto(); checkPhotoSize(img);
+          document.querySelectorAll('#bgColors .color-swatch').forEach(s=>s.classList.remove('active'));
+          document.getElementById('photoScaleContainer').style.display='flex'; draw();
         } else {
-          let inputEl = null;
-          if (blockId === 'title') inputEl = document.getElementById('mainText');
-          else if (blockId === 'kicker') inputEl = document.getElementById('kickerText');
-          else if (blockId === 'para') inputEl = document.getElementById('paraText');
-          else if (blockId === 'brand') inputEl = document.getElementById('brandText');
-          else if (blockId === 'slide') inputEl = document.getElementById('slideText');
-          
-          if (inputEl) {
-            inputEl.value = '';
-            inputEl.focus();
-            if (blockId === 'title') {
-              updateWordsFromText('');
-            } else {
-              draw();
-            }
-            return;
-          }
+          if(!state.pastedImages)state.pastedImages=[];
+          let ss=1;if(img.width>canvas.width*0.8||img.height>canvas.height*0.8)ss=Math.min((canvas.width*0.8)/img.width,(canvas.height*0.8)/img.height);
+          const id='pasted_'+Date.now();
+          state.pastedImages.push({id,img,x:(canvas.width-img.width*ss)/2,y:(canvas.height-img.height*ss)/2,scale:ss,baseW:img.width,baseH:img.height});
+          state.selectedPastedImageId=id; updateSelectedImageUI(); draw();
         }
-      }
-      
-      if (state.selectedPastedImageId) {
-        e.preventDefault();
-        state.pastedImages = state.pastedImages.filter(p => p.id !== state.selectedPastedImageId);
-        state.selectedPastedImageId = null;
-        updateSelectedImageUI();
-        draw();
-        return;
-      }
+      };
+      img.src=src; e.preventDefault(); break;
     }
   }
 });
 
-window.addEventListener('paste', (e) => {
-  if (e.clipboardData && e.clipboardData.items) {
-    for (let i = 0; i < e.clipboardData.items.length; i++) {
-      let item = e.clipboardData.items[i];
-      if (item.type.indexOf('image') !== -1) {
-        let blob = item.getAsFile();
-        let URLObj = window.URL || window.webkitURL;
-        let source = URLObj.createObjectURL(blob);
-        let img = new Image();
-        img.onload = function() {
-          if (!state.bgPhoto) {
-            // Jeśli nie ma tła, wklejone zdjęcie staje się tłem (z suwakiem)
-            state.bgPhoto = img;
-            state.bgType = 'photo';
-            const ca = canvas.width / canvas.height;
-            const ia = img.width / img.height;
-            if (ia > ca) {
-              state.bgPhotoScale = canvas.height / img.height;
-              state.bgPhotoX = (canvas.width - img.width * state.bgPhotoScale) / 2;
-              state.bgPhotoY = 0;
-            } else {
-              state.bgPhotoScale = canvas.width / img.width;
-              state.bgPhotoX = 0;
-              state.bgPhotoY = (canvas.height - img.height * state.bgPhotoScale) / 2;
-            }
-            document.getElementById('clearPhotoBtn').style.display = '';
-            const scaleSlider = document.getElementById('photoScale');
-            scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
-            scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
-            scaleSlider.value = state.bgPhotoScale.toFixed(2);
-            document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
-            document.getElementById('photoScaleContainer').style.display = 'flex';
-            
-            const overlayContainer = document.getElementById('overlayControls');
-            if (overlayContainer) overlayContainer.style.display = 'flex';
-            
-            document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
-            document.getElementById('gradientBtn').classList.remove('active');
-            draw();
-          } else {
-            // Jeśli tło już jest, wklejone zdjęcie staje się nakładką
-            if (!state.pastedImages) state.pastedImages = [];
-            
-            let startScale = 1.0;
-            if (img.width > canvas.width * 0.8 || img.height > canvas.height * 0.8) {
-               startScale = Math.min((canvas.width * 0.8) / img.width, (canvas.height * 0.8) / img.height);
-            }
-            
-            state.pastedImages.push({
-              id: 'pasted_' + Date.now(),
-              img: img,
-              x: (canvas.width - img.width * startScale) / 2,
-              y: (canvas.height - img.height * startScale) / 2,
-              scale: startScale,
-              baseW: img.width,
-              baseH: img.height
-            });
-            draw();
-          }
-        };
-        img.src = source;
-        e.preventDefault();
-        break;
-      }
-    }
-  }
-});
+// ── TOUCH ─────────────────────────────────────────────────
+canvas.addEventListener('touchstart', e => {
+  if(e.touches.length!==1)return; e.preventDefault();
+  const{x,y}=canvasCoords(e.touches[0]);
+  const handle=hitTestAplaHandle(x,y);
+  if(handle){dragging={id:'apla-resize',handle,startW:state.aplaW,startH:state.aplaH,startX:state.aplaX,startY:state.aplaY,mouseStartX:x,mouseStartY:y};return;}
+  const hit=hitTest(x,y);
+  if(hit&&hit!=='photo'){const b=hitBoxes[hit];dragging={id:hit,offsetX:x-b.x,offsetY:y-b.y};}
+  else if(hit==='photo'&&state.bgPhoto){dragging={id:'photo',offsetX:x-state.bgPhotoX,offsetY:y-state.bgPhotoY};}
+},{passive:false});
 
-canvas.addEventListener('touchstart', (e) => {
-  if (e.touches.length !== 1) return;
-  e.preventDefault();
-  const { x, y } = canvasCoords(e.touches[0]);
-  
-  const handle = hitTestAplaHandle(x, y);
-  if (handle) {
-    dragging = {
-      id: 'apla-resize',
-      handle: handle,
-      startW: state.aplaW,
-      startH: state.aplaH,
-      startX: state.aplaX,
-      startY: state.aplaY,
-      mouseStartX: x,
-      mouseStartY: y
-    };
-    return;
-  }
-  
-  const hit = hitTest(x, y);
-  if (hit && hit !== 'photo') {
-    const b = hitBoxes[hit];
-    dragging = { id: hit, offsetX: x - b.x, offsetY: y - b.y };
-  } else if (hit === 'photo' && state.bgPhoto) {
-    dragging = { id: 'photo', offsetX: x - state.bgPhotoX, offsetY: y - state.bgPhotoY };
-  }
-}, { passive: false });
-
-canvas.addEventListener('touchmove', (e) => {
-  if (!dragging || e.touches.length !== 1) return;
-  e.preventDefault();
-  const { x, y } = canvasCoords(e.touches[0]);
-  
-  if (dragging.id === 'apla-resize') {
-    const dx = x - dragging.mouseStartX;
-    const dy = y - dragging.mouseStartY;
-    resizeApla(dx, dy, dragging.handle, dragging.startW, dragging.startH, dragging.startX, dragging.startY);
-    draw();
-    return;
-  }
-  
-  const nx = x - dragging.offsetX;
-  const ny = y - dragging.offsetY;
-  if (dragging.id === 'photo') {
-    state.bgPhotoX = nx;
-    state.bgPhotoY = ny;
-  } else {
-    const cx = Math.max(M, Math.min(canvas.width - M, nx));
-    const cy = Math.max(M, Math.min(canvas.height - M, ny));
-    switch (dragging.id) {
-      case 'logo': state.logoX = cx; state.logoY = cy; break;
-      case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
-      case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': 
-        state.paraX = cx; 
-        state.paraY = cy; 
-        break;
-      case 'brand': state.brandX = cx; state.brandY = cy; break;
-      case 'slide': state.slideX = cx; state.slideY = cy; break;
-      case 'apla': state.aplaX = nx; state.aplaY = ny; break;
-    }
-  }
+canvas.addEventListener('touchmove',e=>{
+  if(!dragging||e.touches.length!==1)return; e.preventDefault();
+  const{x,y}=canvasCoords(e.touches[0]);
+  if(dragging.id==='apla-resize'){resizeApla(x-dragging.mouseStartX,y-dragging.mouseStartY,dragging.handle,dragging.startW,dragging.startH,dragging.startX,dragging.startY);draw();return;}
+  const nx=x-dragging.offsetX,ny=y-dragging.offsetY;
+  if(dragging.id==='photo'){state.bgPhotoX=nx;state.bgPhotoY=ny;}
+  else if(dragging.id==='wm'){state.wmX=Math.max(0,Math.min(canvas.width-10,nx));state.wmY=Math.max(0,Math.min(canvas.height-10,ny));}
+  else{const snx=snapValue(nx,snapLines.x),sny=snapValue(ny,snapLines.y);switch(dragging.id){case'logo':state.logoX=snx;state.logoY=sny;break;case'kicker':state.kickerX=snx;state.kickerY=sny;break;case'title':state.titleX=snx;state.titleY=sny;break;case'para':state.paraX=snx;state.paraY=sny;break;case'brand':state.brandX=snx;state.brandY=sny;break;case'apla':state.aplaX=nx;state.aplaY=ny;break;}}
   draw();
-}, { passive: false });
+},{passive:false});
 
-canvas.addEventListener('touchend', () => { dragging = null; });
+canvas.addEventListener('touchend',()=>{dragging=null;});
 
+// ── DOWNLOAD / PREVIEW ────────────────────────────────────
 function downloadImage() {
-  isExporting = true;
-  draw();
+  isExporting=true; draw();
   try {
-    const url = canvas.toDataURL('image/png', 1.0);
-    const link = document.createElement('a');
-    link.download = 'post_ig_' + Date.now() + '.png';
-    link.href = url;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (err) {
-    alert('Błąd eksportu. Spróbuj najpierw wgrać zdjęcie przyciskiem "Z dysku".');
+    const url=canvas.toDataURL('image/png',1.0);
+    const a=document.createElement('a');
+    a.download='flatpack_post_'+Date.now()+'.png'; a.href=url;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  } catch(err) { alert('Błąd eksportu. Upewnij się, że zdjęcie pochodzi z tego samego serwera.'); }
+  isExporting=false; draw();
+}
+
+let gridUploadFormat='45', previewFullUrl='', previewCropUrl='';
+
+function setGridUploadFormat(fmt) {
+  gridUploadFormat=fmt;
+  document.getElementById('toggleGrid45').classList.toggle('active',fmt==='45');
+  document.getElementById('toggleGrid11').classList.toggle('active',fmt==='11');
+  renderPreviewGrid();
+}
+
+function renderPreviewGrid() {
+  const gc=document.getElementById('previewGrid'); gc.innerHTML='';
+  const displayUrl=gridUploadFormat==='45'?previewFullUrl:previewCropUrl;
+  for(let r=0;r<3;r++){
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;gap:3px;width:100%';
+    for(let c=0;c<3;c++){
+      const cell=document.createElement('div');
+      cell.style.cssText='width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:2px;position:relative;flex:1';
+      if(r===0&&c===0){
+        const img=document.createElement('img');
+        img.src=displayUrl; img.style.cssText='width:100%;height:100%;object-fit:cover';
+        cell.appendChild(img);
+        const ic=document.createElement('div');
+        ic.style.cssText='position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);border-radius:3px;padding:3px';
+        ic.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="3" y="3" width="13" height="13" rx="1.5"></rect><path d="M21 8v11a2 2 0 0 1-2 2H8"></path></svg>`;
+        cell.appendChild(ic);
+      } else {
+        cell.style.background='#1E293B'; cell.style.border='1px solid rgba(255,255,255,0.05)';
+        cell.style.display='flex'; cell.style.alignItems='center'; cell.style.justifyContent='center';
+        cell.innerHTML=`<span style="color:#64748b;font-size:9px;font-weight:600">Post ${9-(r*3+c)}</span>`;
+      }
+      row.appendChild(cell);
+    }
+    gc.appendChild(row);
   }
-  isExporting = false;
-  draw();
 }
 
 function showPreview() {
-  isExporting = true;
-  draw();
-  const fullUrl = canvas.toDataURL('image/png', 1.0);
-  const cropCanvas = document.createElement('canvas');
-  cropCanvas.width = 1080; cropCanvas.height = 1080;
-  const cCtx = cropCanvas.getContext('2d');
-  cCtx.drawImage(canvas, 0, 135, 1080, 1080, 0, 0, 1080, 1080);
-  const cropUrl = cropCanvas.toDataURL('image/png', 1.0);
-  isExporting = false;
-  draw();
-
-  previewFullUrl = fullUrl;
-  previewCropUrl = cropUrl;
+  isExporting=true; draw();
+  const fullUrl=canvas.toDataURL('image/png',1.0);
+  const cc=document.createElement('canvas'); cc.width=1080; cc.height=1080;
+  cc.getContext('2d').drawImage(canvas,0,135,1080,1080,0,0,1080,1080);
+  const cropUrl=cc.toDataURL('image/png',1.0);
+  isExporting=false; draw();
+  previewFullUrl=fullUrl; previewCropUrl=cropUrl;
   renderPreviewGrid();
 
-  // --- POST MOCKUP (IG chrome desktop viewport layout) ---
-  const pc = document.getElementById('previewPost');
-  pc.innerHTML = '';
-  
-  const splitContainer = document.createElement('div');
-  splitContainer.style.cssText = 'display:flex; width:100%; background:#fff; min-height:400px';
-  
-  // Left side: Post image (4:5)
-  const imgCol = document.createElement('div');
-  imgCol.style.cssText = 'flex: 1.2; background:#000; display:flex; align-items:center; justify-content:center; border-right: 1px solid #efefef';
-  const imgEl = document.createElement('img');
-  imgEl.src = fullUrl;
-  imgEl.style.cssText = 'width:100%; display:block; object-fit:contain';
-  imgCol.appendChild(imgEl);
-  splitContainer.appendChild(imgCol);
-  
-  // Right side: Profile & Caption
-  const infoCol = document.createElement('div');
-  infoCol.style.cssText = 'flex: 1; display:flex; flex-direction:column; background:#fff';
-  
-  const hdr = document.createElement('div');
-  hdr.style.cssText = 'display:flex;align-items:center;padding:12px;gap:10px;border-bottom:1px solid #efefef';
-  hdr.innerHTML = '<div style="width:32px;height:32px;border-radius:50%;background:#097EFF;display:flex;align-items:center;justify-content:center;font-size:14px;color:white">🧰</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#262626">flatpackhelp</div><div style="font-size:11px;color:#8e8e8e">Belfast & Northern Ireland</div></div><span style="font-size:18px;color:#262626;cursor:pointer">···</span>';
+  // Post mockup
+  const pc=document.getElementById('previewPost'); pc.innerHTML='';
+  const split=document.createElement('div');
+  split.style.cssText='display:flex;width:100%;background:#fff;min-height:350px';
+  // Image column — use object-fit:cover with the 4:5 ratio properly
+  const imgCol=document.createElement('div');
+  imgCol.style.cssText='flex:0 0 auto;width:55%;background:#000;display:flex;align-items:stretch;overflow:hidden';
+  const imgWrap=document.createElement('div');
+  imgWrap.style.cssText='width:100%;aspect-ratio:4/5;overflow:hidden;position:relative';
+  const imgEl=document.createElement('img');
+  imgEl.src=fullUrl;
+  imgEl.style.cssText='width:100%;height:100%;object-fit:contain;display:block;background:#000';
+  imgWrap.appendChild(imgEl); imgCol.appendChild(imgWrap);
+  split.appendChild(imgCol);
+  // Info column
+  const infoCol=document.createElement('div');
+  infoCol.style.cssText='flex:1;display:flex;flex-direction:column;background:#fff;min-width:0';
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:flex;align-items:center;padding:10px;gap:8px;border-bottom:1px solid #efefef';
+  hdr.innerHTML='<div style="width:30px;height:30px;border-radius:50%;background:#097EFF;display:flex;align-items:center;justify-content:center;font-size:13px;color:white">🧰</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:#262626">flatpackhelp</div><div style="font-size:10px;color:#8e8e8e">Belfast & NI</div></div><span style="font-size:16px;color:#262626;cursor:pointer">···</span>';
   infoCol.appendChild(hdr);
-  
-  const capScroll = document.createElement('div');
-  capScroll.style.cssText = 'flex:1; padding:12px; font-size:13px; color:#262626; overflow-y:auto; line-height:1.5; border-bottom:1px solid #efefef';
-  
-  const kickerVal = document.getElementById('kickerText').value;
-  const captionVal = document.getElementById('mainText').value;
-  const paraVal = document.getElementById('paraText').value;
-  let formattedText = `<span style="font-weight:700">flatpackhelp</span> `;
-  if (kickerVal) formattedText += `<br><span style="color:#8e8e8e;font-size:11px;font-weight:700">${kickerVal}</span><br>`;
-  formattedText += `<strong>${captionVal}</strong>`;
-  if (paraVal) formattedText += `<br><br>${paraVal}`;
-  formattedText += `<br><br><span style="color:#00376b">#flatpackhelp #ikeapax #handyman #furnitureassembly #belfast #handymanhelp</span>`;
-  
-  capScroll.innerHTML = formattedText;
-  infoCol.appendChild(capScroll);
-  
-  const act = document.createElement('div');
-  act.style.cssText = 'display:flex;align-items:center;padding:10px 12px;gap:14px';
-  act.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8" style="margin-left:auto"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+  const cap=document.createElement('div');
+  cap.style.cssText='flex:1;padding:10px;font-size:12px;color:#262626;overflow-y:auto;line-height:1.5;border-bottom:1px solid #efefef';
+  const kv=document.getElementById('kickerText').value, mv=document.getElementById('mainText').value, pv=document.getElementById('paraText').value;
+  let ft=`<span style="font-weight:700">flatpackhelp</span> `;
+  if(kv)ft+=`<br><span style="color:#8e8e8e;font-size:10px;font-weight:700">${kv}</span><br>`;
+  ft+=`<strong>${mv}</strong>`;
+  if(pv)ft+=`<br><br>${pv}`;
+  ft+=`<br><br><span style="color:#00376b">#flatpackhelp #ikeapax #handyman #belfast</span>`;
+  cap.innerHTML=ft; infoCol.appendChild(cap);
+  const act=document.createElement('div');
+  act.style.cssText='padding:8px 10px;font-size:11px;font-weight:700;color:#262626;border-top:1px solid #efefef';
+  act.textContent='1 284 polubień';
   infoCol.appendChild(act);
-  
-  const lk = document.createElement('div');
-  lk.style.cssText = 'padding:0 12px 10px;font-size:13px;font-weight:700;color:#262626';
-  lk.textContent = '1 284 polubień';
-  infoCol.appendChild(lk);
-  
-  splitContainer.appendChild(infoCol);
-  pc.appendChild(splitContainer);
-
-  document.getElementById('previewModal').style.display = 'flex';
+  split.appendChild(infoCol);
+  pc.appendChild(split);
+  document.getElementById('previewModal').style.display='flex';
 }
 
-function closePreview() {
-  document.getElementById('previewModal').style.display = 'none';
+function closePreview() { document.getElementById('previewModal').style.display='none'; }
+function executeDownload() { closePreview(); downloadImage(); }
+
+// Click outside inner box → close preview (like old behavior)
+function handlePreviewBackdropClick(e) {
+  if (e.target===document.getElementById('previewModal')) closePreview();
 }
 
-function executeDownload() {
-  closePreview();
-  downloadImage();
-}
+// ── APLA ──────────────────────────────────────────────────
+function toggleAplaControls(show) { const c=document.getElementById('aplaControls'); if(c)c.style.display=show?'block':'none'; }
+function resetAplaPosition() { state.aplaX=(canvas.width-state.aplaW)/2; state.aplaY=(canvas.height-state.aplaH)/2; draw(); }
+function deleteApla() { state.showApla=false; const e=document.getElementById('showApla'); if(e)e.checked=false; toggleAplaControls(false); draw(); }
+function setAplaColor(color,btn) { state.aplaStyle=color; document.querySelectorAll('#aplaColors .color-btn').forEach(s=>s.classList.remove('active')); if(btn)btn.classList.add('active'); draw(); }
 
-function toggleAplaControls(show) {
-  const ctrl = document.getElementById('aplaControls');
-  if (ctrl) {
-    ctrl.style.display = show ? 'block' : 'none';
-  }
-}
-
-function resetAplaPosition() {
-  state.aplaX = (canvas.width - state.aplaW) / 2;
-  state.aplaY = (canvas.height - state.aplaH) / 2;
-  draw();
-}
-
-function deleteApla() {
-  state.showApla = false;
-  const showAplaEl = document.getElementById('showApla');
-  if (showAplaEl) showAplaEl.checked = false;
-  toggleAplaControls(false);
-  draw();
-}
-
-function setAplaColor(color, btn) {
-  state.aplaStyle = color;
-  document.querySelectorAll('#aplaColors .color-btn').forEach(s => s.classList.remove('active'));
-  if (btn) {
-    btn.classList.add('active');
-  }
-  draw();
-}
-
-function toggleLogo(src, element) {
-  if (state.showLogo && state.logoImg && state.logoImg.src.endsWith(src)) {
-    state.showLogo = false;
-    document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
-    document.getElementById('logoScaleRow').style.display = 'none';
+// ── LOGO ──────────────────────────────────────────────────
+function toggleLogo(src,element) {
+  if (state.showLogo && state.logoImg && state.logoImg.src.includes(src.split('/').pop())) {
+    state.showLogo=false; document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active'));
+    document.getElementById('logoScaleRow').style.display='none';
   } else {
-    const img = new Image();
-    img.onload = function() {
-      state.logoImg = img;
-      state.showLogo = true;
-      document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
-      if (element) {
-        element.classList.add('active');
-      }
-      document.getElementById('logoScaleRow').style.display = 'flex';
-      draw();
-    };
-    img.src = src;
+    const img=new Image();
+    img.onload=()=>{ state.logoImg=img; state.showLogo=true; document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active')); if(element)element.classList.add('active'); document.getElementById('logoScaleRow').style.display='flex'; draw(); };
+    img.src=src;
   }
   draw();
 }
 
+// ── OVERLAY TABS ──────────────────────────────────────────
 function switchOverlayTab(tab) {
-  document.getElementById('tabChars').classList.toggle('active', tab === 'chars');
-  document.getElementById('tabElements').classList.toggle('active', tab === 'elems');
-  document.getElementById('overlayCharsContainer').style.display = tab === 'chars' ? 'grid' : 'none';
-  document.getElementById('overlayElemsContainer').style.display = tab === 'elems' ? 'grid' : 'none';
+  document.getElementById('tabChars').classList.toggle('active',tab==='chars');
+  document.getElementById('tabElements').classList.toggle('active',tab==='elems');
+  document.getElementById('overlayCharsContainer').style.display=tab==='chars'?'grid':'none';
+  document.getElementById('overlayElemsContainer').style.display=tab==='elems'?'grid':'none';
 }
 
-function addOverlay(src, defaultScale) {
-  const img = new Image();
-  img.onload = function() {
-    if (!state.pastedImages) state.pastedImages = [];
-    
-    // Auto-fit to sensible size on canvas
-    let targetH = canvas.height * defaultScale;
-    let scale = targetH / img.height;
-    
-    const id = 'pasted_' + Date.now();
-    state.pastedImages.push({
-      id: id,
-      img: img,
-      x: (canvas.width - img.width * scale) / 2,
-      y: (canvas.height - img.height * scale) / 2,
-      scale: scale,
-      baseW: img.width,
-      baseH: img.height
-    });
-    state.selectedPastedImageId = id;
-    updateSelectedImageUI();
-    draw();
+function addOverlay(src,defScale) {
+  const img=new Image();
+  img.onload=()=>{
+    if(!state.pastedImages)state.pastedImages=[];
+    const th=canvas.height*defScale, sc=th/img.height;
+    const id='pasted_'+Date.now();
+    state.pastedImages.push({id,img,x:(canvas.width-img.width*sc)/2,y:(canvas.height-img.height*sc)/2,scale:sc,baseW:img.width,baseH:img.height});
+    state.selectedPastedImageId=id; updateSelectedImageUI(); draw();
   };
-  img.src = src;
+  img.src=src;
 }
 
 function updateSelectedImageUI() {
-  const container = document.getElementById('selectedOverlayControls');
-  if (!container) return;
-  
-  if (state.selectedPastedImageId) {
-    const pi = state.pastedImages.find(p => p.id === state.selectedPastedImageId);
-    if (pi) {
-      container.style.display = 'block';
-      const scaleInput = document.getElementById('selectedOverlayScale');
-      scaleInput.value = pi.scale.toFixed(2);
-      document.getElementById('selectedOverlayScaleVal').textContent = pi.scale.toFixed(2) + 'x';
-      return;
-    }
-  }
-  container.style.display = 'none';
+  const c=document.getElementById('selectedOverlayControls'); if(!c)return;
+  if(state.selectedPastedImageId){const pi=state.pastedImages.find(p=>p.id===state.selectedPastedImageId);if(pi){c.style.display='block';const si=document.getElementById('selectedOverlayScale');si.value=pi.scale.toFixed(2);document.getElementById('selectedOverlayScaleVal').textContent=pi.scale.toFixed(2)+'x';return;}}
+  c.style.display='none';
 }
 
-function deselectOverlay() {
-  state.selectedPastedImageId = null;
-  updateSelectedImageUI();
-  draw();
-}
-
-function setSelectedOverlayScale(val) {
-  if (!state.selectedPastedImageId) return;
-  const pi = state.pastedImages.find(p => p.id === state.selectedPastedImageId);
-  if (pi) {
-    pi.scale = parseFloat(val);
-    document.getElementById('selectedOverlayScaleVal').textContent = pi.scale.toFixed(2) + 'x';
-    draw();
-  }
-}
+function deselectOverlay() { state.selectedPastedImageId=null; updateSelectedImageUI(); draw(); }
+function setSelectedOverlayScale(val) { if(!state.selectedPastedImageId)return; const pi=state.pastedImages.find(p=>p.id===state.selectedPastedImageId); if(pi){pi.scale=parseFloat(val);document.getElementById('selectedOverlayScaleVal').textContent=pi.scale.toFixed(2)+'x';draw();} }
 
 function moveSelectedOverlay(dir) {
-  if (!state.selectedPastedImageId) return;
-  const index = state.pastedImages.findIndex(p => p.id === state.selectedPastedImageId);
-  if (index !== -1) {
-    const pi = state.pastedImages.splice(index, 1)[0];
-    if (dir === 'front') {
-      state.pastedImages.push(pi);
-    } else {
-      state.pastedImages.unshift(pi);
-    }
-    draw();
-  }
+  if(!state.selectedPastedImageId)return;
+  const idx=state.pastedImages.findIndex(p=>p.id===state.selectedPastedImageId);
+  if(idx!==-1){const pi=state.pastedImages.splice(idx,1)[0];if(dir==='front')state.pastedImages.push(pi);else state.pastedImages.unshift(pi);draw();}
 }
 
-function deleteSelectedOverlay() {
-  if (!state.selectedPastedImageId) return;
-  state.pastedImages = state.pastedImages.filter(p => p.id !== state.selectedPastedImageId);
-  state.selectedPastedImageId = null;
-  updateSelectedImageUI();
-  draw();
+function deleteSelectedOverlay() { if(!state.selectedPastedImageId)return; state.pastedImages=state.pastedImages.filter(p=>p.id!==state.selectedPastedImageId); state.selectedPastedImageId=null; updateSelectedImageUI(); draw(); }
+
+// ── UNDO STACK ────────────────────────────────────────────
+const undoStack=[], maxUndo=30;
+let isUndoing=false;
+
+function serializeState() {
+  return JSON.stringify({
+    bgType:state.bgType,bgColor:state.bgColor,gradient:state.gradient,
+    overlayDir:state.overlayDir,overlayOpacity:state.overlayOpacity,
+    kickerText:state.kickerText,kickerColor:state.kickerColor,kickerX:state.kickerX,kickerY:state.kickerY,
+    mainText:state.mainText,words:state.words?state.words.map(w=>({text:w.text,font:w.font,color:w.color})):[],
+    globalFont:state.globalFont,
+    titleX:state.titleX,titleY:state.titleY,titleSize:state.titleSize,titleLH:state.titleLH,wordSpacing:state.wordSpacing,
+    paraText:state.paraText,paraX:state.paraX,paraY:state.paraY,paraAlign:state.paraAlign,paraColor:state.paraColor,paraBold:state.paraBold,
+    showApla:state.showApla,aplaStyle:state.aplaStyle,aplaX:state.aplaX,aplaY:state.aplaY,aplaW:state.aplaW,aplaH:state.aplaH,
+    showLogo:state.showLogo,logoX:state.logoX,logoY:state.logoY,logoScale:state.logoScale,
+    logoImgSrc:state.logoImg?state.logoImg.src:null,
+    wmScale:state.wmScale,wmOpacity:state.wmOpacity,wmX:state.wmX,wmY:state.wmY,
+    brandText:state.brandText,brandAlign:state.brandAlign,brandX:state.brandX,brandY:state.brandY,
+    slideX:state.slideX,slideY:state.slideY,
+    showGuides:document.getElementById('showGuides')?document.getElementById('showGuides').checked:true,
+    showCrop:document.getElementById('showCrop')?document.getElementById('showCrop').checked:true,
+    showGrid34:document.getElementById('showGrid34')?document.getElementById('showGrid34').checked:true,
+    pastedImages:state.pastedImages?state.pastedImages.map(pi=>({id:pi.id,src:pi.img.src,x:pi.x,y:pi.y,scale:pi.scale,baseW:pi.baseW,baseH:pi.baseH})):[],
+    ...(state.bgType==='photo'&&state.bgPhoto&&state.bgPhoto.src&&state.bgPhoto.src.length<1500000?{bgPhotoSrc:state.bgPhoto.src,bgPhotoX:state.bgPhotoX,bgPhotoY:state.bgPhotoY,bgPhotoScale:state.bgPhotoScale}:{})
+  });
 }
-
-// Caching / auto-save state logic
-function saveState() {
-  if (isExporting) return;
-  try {
-    const serialized = {
-      bgType: state.bgType,
-      bgColor: state.bgColor,
-      gradient: state.gradient,
-      overlayDir: state.overlayDir,
-      overlayOpacity: state.overlayOpacity,
-      kickerText: state.kickerText,
-      kickerColor: state.kickerColor,
-      kickerX: state.kickerX,
-      kickerY: state.kickerY,
-      mainText: state.mainText,
-      words: state.words ? state.words.map(w => ({ text: w.text, font: w.font, color: w.color })) : [],
-      titleX: state.titleX,
-      titleY: state.titleY,
-      titleSize: state.titleSize,
-      titleLH: state.titleLH,
-      wordSpacing: state.wordSpacing,
-      paraText: state.paraText,
-      paraX: state.paraX,
-      paraY: state.paraY,
-      paraAlign: state.paraAlign,
-      paraColor: state.paraColor,
-      paraBold: state.paraBold,
-      showApla: state.showApla,
-      aplaStyle: state.aplaStyle,
-      aplaX: state.aplaX,
-      aplaY: state.aplaY,
-      aplaW: state.aplaW,
-      aplaH: state.aplaH,
-      showLogo: state.showLogo,
-      logoX: state.logoX,
-      logoY: state.logoY,
-      logoScale: state.logoScale,
-      logoImgSrc: state.logoImg ? state.logoImg.src : null,
-      brandText: state.brandText,
-      brandAlign: state.brandAlign,
-      brandX: state.brandX,
-      brandY: state.brandY,
-      slideText: state.slideText,
-      slideX: state.slideX,
-      slideY: state.slideY,
-      showGuides: document.getElementById('showGuides') ? document.getElementById('showGuides').checked : state.showGuides,
-      showCrop: document.getElementById('showCrop') ? document.getElementById('showCrop').checked : state.showCrop,
-      showSlideNum: document.getElementById('showSlideNum') ? document.getElementById('showSlideNum').checked : state.showSlideNum,
-      showGrid34: document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : state.showGrid34,
-      pastedImages: state.pastedImages ? state.pastedImages.map(pi => ({
-        id: pi.id,
-        src: pi.img.src,
-        x: pi.x,
-        y: pi.y,
-        scale: pi.scale,
-        baseW: pi.baseW,
-        baseH: pi.baseH
-      })) : []
-    };
-
-    if (state.bgType === 'photo' && state.bgPhoto && state.bgPhoto.src) {
-      if (state.bgPhoto.src.length < 1500000) { // Limit background image data URI size to 1.5MB
-        serialized.bgPhotoSrc = state.bgPhoto.src;
-        serialized.bgPhotoX = state.bgPhotoX;
-        serialized.bgPhotoY = state.bgPhotoY;
-        serialized.bgPhotoScale = state.bgPhotoScale;
-      }
-    }
-
-    localStorage.setItem('flatpack_generator_state', JSON.stringify(serialized));
-    pushToUndoStack();
-  } catch (e) {
-    console.warn("Could not save state:", e);
-  }
-}
-
-let saveStateTimeout = null;
-function saveStateDebounced() {
-  if (saveStateTimeout) clearTimeout(saveStateTimeout);
-  saveStateTimeout = setTimeout(saveState, 500);
-}
-
-// Undo Stack History
-const undoStack = [];
-const maxUndoDepth = 30;
-let isUndoing = false;
 
 function pushToUndoStack() {
-  if (isUndoing) return;
-  try {
-    const serialized = {
-      bgType: state.bgType,
-      bgColor: state.bgColor,
-      gradient: state.gradient,
-      overlayDir: state.overlayDir,
-      overlayOpacity: state.overlayOpacity,
-      kickerText: state.kickerText,
-      kickerColor: state.kickerColor,
-      kickerX: state.kickerX,
-      kickerY: state.kickerY,
-      mainText: state.mainText,
-      words: state.words ? state.words.map(w => ({ text: w.text, font: w.font, color: w.color })) : [],
-      titleX: state.titleX,
-      titleY: state.titleY,
-      titleSize: state.titleSize,
-      titleLH: state.titleLH,
-      wordSpacing: state.wordSpacing,
-      paraText: state.paraText,
-      paraX: state.paraX,
-      paraY: state.paraY,
-      paraAlign: state.paraAlign,
-      paraColor: state.paraColor,
-      paraBold: state.paraBold,
-      showApla: state.showApla,
-      aplaStyle: state.aplaStyle,
-      aplaX: state.aplaX,
-      aplaY: state.aplaY,
-      aplaW: state.aplaW,
-      aplaH: state.aplaH,
-      showLogo: state.showLogo,
-      logoX: state.logoX,
-      logoY: state.logoY,
-      logoScale: state.logoScale,
-      logoImgSrc: state.logoImg ? state.logoImg.src : null,
-      brandText: state.brandText,
-      brandAlign: state.brandAlign,
-      brandX: state.brandX,
-      brandY: state.brandY,
-      slideText: state.slideText,
-      slideX: state.slideX,
-      slideY: state.slideY,
-      showGuides: document.getElementById('showGuides') ? document.getElementById('showGuides').checked : state.showGuides,
-      showCrop: document.getElementById('showCrop') ? document.getElementById('showCrop').checked : state.showCrop,
-      showSlideNum: document.getElementById('showSlideNum') ? document.getElementById('showSlideNum').checked : state.showSlideNum,
-      showGrid34: document.getElementById('showGrid34') ? document.getElementById('showGrid34').checked : state.showGrid34,
-      pastedImages: state.pastedImages ? state.pastedImages.map(pi => ({
-        id: pi.id,
-        src: pi.img.src,
-        x: pi.x,
-        y: pi.y,
-        scale: pi.scale,
-        baseW: pi.baseW,
-        baseH: pi.baseH
-      })) : []
-    };
-
-    if (state.bgType === 'photo' && state.bgPhoto && state.bgPhoto.src) {
-      serialized.bgPhotoSrc = state.bgPhoto.src;
-      serialized.bgPhotoX = state.bgPhotoX;
-      serialized.bgPhotoY = state.bgPhotoY;
-      serialized.bgPhotoScale = state.bgPhotoScale;
-    }
-
-    const serializedStr = JSON.stringify(serialized);
-    if (undoStack.length > 0 && undoStack[undoStack.length - 1] === serializedStr) {
-      return;
-    }
-
-    undoStack.push(serializedStr);
-    if (undoStack.length > maxUndoDepth) {
-      undoStack.shift();
-    }
-  } catch (e) {
-    console.warn("Could not push to undo stack:", e);
-  }
+  if(isUndoing)return;
+  const s=serializeState();
+  if(undoStack.length>0&&undoStack[undoStack.length-1]===s)return;
+  undoStack.push(s); if(undoStack.length>maxUndo)undoStack.shift();
 }
+
+function saveState() { if(isExporting)return; try{localStorage.setItem('fgstate',serializeState());pushToUndoStack();}catch(e){console.warn(e);} }
+let saveT=null;
+function saveStateDebounced(){if(saveT)clearTimeout(saveT);saveT=setTimeout(saveState,500);}
 
 function undo() {
-  if (undoStack.length <= 1) return;
-  isUndoing = true;
-  undoStack.pop(); // Remove current state
-  const prevStr = undoStack[undoStack.length - 1];
-  try {
-    const saved = JSON.parse(prevStr);
-    applySerializedState(saved);
-    localStorage.setItem('flatpack_generator_state', prevStr);
-  } catch (e) {
-    console.warn("Undo failed:", e);
-  }
-  isUndoing = false;
+  if(undoStack.length<=1)return;
+  isUndoing=true; undoStack.pop();
+  try{const s=JSON.parse(undoStack[undoStack.length-1]);applySerializedState(s);localStorage.setItem('fgstate',JSON.stringify(s));}catch(e){console.warn(e);}
+  isUndoing=false;
 }
 
-// Bind Ctrl+Z
-window.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-    const activeEl = document.activeElement;
-    const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
-    if (!isTyping) {
-      e.preventDefault();
-      undo();
-    }
-  }
-});
-
+// ── APPLY STATE ───────────────────────────────────────────
 function applySerializedState(saved) {
   Object.assign(state, saved);
-  if (state.paraY !== undefined && state.paraY < 300) {
-    state.paraY = undefined; // Force recalculation to absolute
-  }
-  
-  if (saved.showGuides !== undefined && document.getElementById('showGuides')) {
-    document.getElementById('showGuides').checked = saved.showGuides;
-  }
-  if (saved.showCrop !== undefined && document.getElementById('showCrop')) {
-    document.getElementById('showCrop').checked = saved.showCrop;
-  }
-  if (saved.showSlideNum !== undefined && document.getElementById('showSlideNum')) {
-    document.getElementById('showSlideNum').checked = saved.showSlideNum;
-  }
-  if (saved.showGrid34 !== undefined && document.getElementById('showGrid34')) {
-    document.getElementById('showGrid34').checked = saved.showGrid34;
-  }
+  // paraY: if stored as relative (small number), reset to null so it recalculates
+  if (state.paraY !== undefined && state.paraY !== null && state.paraY < 300) state.paraY = null;
 
-  if (document.getElementById('mainText')) document.getElementById('mainText').value = state.mainText;
-  if (document.getElementById('kickerText')) document.getElementById('kickerText').value = state.kickerText;
-  if (document.getElementById('paraText')) document.getElementById('paraText').value = state.paraText;
-  if (document.getElementById('brandText')) document.getElementById('brandText').value = state.brandText;
-  if (document.getElementById('slideText')) document.getElementById('slideText').value = state.slideText;
-  if (document.getElementById('titleSize')) {
-    document.getElementById('titleSize').value = state.titleSize;
-    document.getElementById('titleSizeVal').textContent = state.titleSize + 'px';
-  }
-  if (document.getElementById('titleLH')) document.getElementById('titleLH').value = state.titleLH;
-  if (document.getElementById('wordSpacing')) document.getElementById('wordSpacing').value = state.wordSpacing;
-  if (document.getElementById('aplaW')) {
-    document.getElementById('aplaW').value = state.aplaW;
-    document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
-  }
-  if (document.getElementById('aplaH')) {
-    document.getElementById('aplaH').value = state.aplaH;
-    document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
-  }
-  if (document.getElementById('logoScale')) {
-    document.getElementById('logoScale').value = state.logoScale;
-    document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
-  }
-  if (document.getElementById('showApla')) {
-    document.getElementById('showApla').checked = state.showApla;
-    toggleAplaControls(state.showApla);
-  }
+  const setText=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val||'';};
+  setText('mainText',state.mainText); setText('kickerText',state.kickerText);
+  setText('paraText',state.paraText); setText('brandText',state.brandText);
 
-  const activeAplaStyle = state.aplaStyle || '#FFFFFF';
-  document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-color') === activeAplaStyle);
+  const setNum=(id,val,suffix,dispId)=>{const e=document.getElementById(id);if(e){e.value=val;if(dispId)document.getElementById(dispId).textContent=val+suffix;}};
+  setNum('titleSize',state.titleSize,'px','titleSizeVal');
+  setNum('titleLH',state.titleLH,'','titleLHVal');
+  setNum('wordSpacing',state.wordSpacing,'px','wordSpacingVal');
+  setNum('aplaW',state.aplaW,'px','aplaWVal');
+  setNum('aplaH',state.aplaH,'px','aplaHVal');
+  setNum('logoScale',state.logoScale,'x','logoScaleVal');
+  setNum('overlayOpacity',state.overlayOpacity,'%','overlayVal');
+  setNum('wmScale',state.wmScale||0.3,'%','wmScaleVal'); if(document.getElementById('wmScaleVal'))document.getElementById('wmScaleVal').textContent=Math.round((state.wmScale||0.3)*100)+'%';
+  setNum('wmOpacity',state.wmOpacity||40,'%','wmOpacityVal');
+
+  const sg=id=>document.getElementById(id)?document.getElementById(id).checked=saved[id]??true:null;
+  sg('showGuides'); sg('showCrop'); sg('showGrid34');
+  const sl=document.getElementById('showSlideNum'); if(sl)sl.checked=saved.showSlideNum??false;
+  const sa=document.getElementById('showApla'); if(sa){sa.checked=state.showApla;toggleAplaControls(state.showApla);}
+  const pbb=document.getElementById('paraBoldBtn'); if(pbb)pbb.classList.toggle('active',state.paraBold);
+  const pa=document.getElementById('paraAlign'); if(pa)pa.value=state.paraAlign||'left';
+  const ba=document.getElementById('brandAlign'); if(ba)ba.value=state.brandAlign||'left';
+
+  // gradient direction picker
+  document.querySelectorAll('.grad-swatch').forEach(s=>s.classList.remove('active'));
+  const gd=document.getElementById('gd_'+(state.overlayDir||'bottom-left'));
+  if(gd)gd.classList.add('active');
+
+  // global font pills
+  document.querySelectorAll('#globalFontRow .font-pill').forEach(b=>b.classList.remove('active'));
+  const gfb=document.getElementById('gf_'+(state.globalFont||'bold'));
+  if(gfb)gfb.classList.add('active');
+
+  // apla colors
+  document.querySelectorAll('#aplaColors .color-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-color')===(state.aplaStyle||'#FFFFFF')));
+
+  // bg swatches
+  document.querySelectorAll('#bgColors .color-swatch').forEach(b=>{
+    const bg=b.style.background.toLowerCase();
+    b.classList.toggle('active',state.bgType==='color'&&!state.gradient&&bg.includes((state.bgColor||'').toLowerCase()));
   });
 
-  document.querySelectorAll('#bgColors .color-swatch').forEach(btn => {
-    const isSwatchActive = state.bgType === 'color' && !state.gradient && btn.style.background.toLowerCase().includes(state.bgColor.toLowerCase());
-    btn.classList.toggle('active', isSwatchActive);
-  });
-  if (document.getElementById('gradientSwatch')) {
-    document.getElementById('gradientSwatch').classList.toggle('active', state.gradient || state.bgType === 'gradient');
-  }
-
-  if (saved.logoImgSrc) {
-    const img = new Image();
-    img.onload = function() {
-      state.logoImg = img;
-      draw();
-    };
-    img.src = saved.logoImgSrc;
-    
-    document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
-      const thumbImg = w.querySelector('img');
-      if (thumbImg && (saved.logoImgSrc.endsWith(thumbImg.getAttribute('src')) || thumbImg.getAttribute('src').endsWith(saved.logoImgSrc))) {
-        w.classList.add('active');
-      } else {
-        w.classList.remove('active');
-      }
+  // logo
+  if(saved.logoImgSrc){
+    const img=new Image();
+    img.onload=()=>{state.logoImg=img;draw();};
+    img.src=saved.logoImgSrc;
+    document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>{
+      const ti=w.querySelector('img');
+      w.classList.toggle('active',ti&&(saved.logoImgSrc.includes(ti.getAttribute('src').split('/').pop())||ti.getAttribute('src').split('/').pop()===saved.logoImgSrc.split('/').pop()));
     });
-    document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
-  } else {
-    state.logoImg = null;
-    state.showLogo = false;
-    document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
-    document.getElementById('logoScaleRow').style.display = 'none';
+    document.getElementById('logoScaleRow').style.display=state.showLogo?'flex':'none';
+  } else { state.logoImg=null; state.showLogo=false; document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active')); document.getElementById('logoScaleRow').style.display='none'; }
+
+  // background photo
+  if(saved.bgPhotoSrc){
+    const img=new Image();
+    img.onload=()=>{state.bgPhoto=img;state.bgType='photo';state.bgPhotoX=saved.bgPhotoX||0;state.bgPhotoY=saved.bgPhotoY||0;state.bgPhotoScale=saved.bgPhotoScale||1;
+      const sl=document.getElementById('photoScale');if(sl){sl.min=(state.bgPhotoScale*0.15).toFixed(2);sl.max=(state.bgPhotoScale*6).toFixed(2);sl.value=state.bgPhotoScale.toFixed(2);document.getElementById('photoScaleVal').textContent=state.bgPhotoScale.toFixed(2)+'x';document.getElementById('photoScaleContainer').style.display='flex';}
+      draw();};
+    img.src=saved.bgPhotoSrc;
+  } else { state.bgPhoto=null; const psc=document.getElementById('photoScaleContainer');if(psc)psc.style.display='none'; }
+
+  // pasted images
+  state.pastedImages=[];
+  if(saved.pastedImages&&saved.pastedImages.length){
+    let cnt=0;
+    saved.pastedImages.forEach(pd=>{const img=new Image();img.onload=()=>{state.pastedImages.push({id:pd.id,img,x:pd.x,y:pd.y,scale:pd.scale,baseW:pd.baseW,baseH:pd.baseH});cnt++;if(cnt===saved.pastedImages.length)draw();};img.src=pd.src;});
   }
 
-  if (saved.bgPhotoSrc) {
-    const img = new Image();
-    img.onload = function() {
-      state.bgPhoto = img;
-      state.bgType = 'photo';
-      state.bgPhotoX = saved.bgPhotoX;
-      state.bgPhotoY = saved.bgPhotoY;
-      state.bgPhotoScale = saved.bgPhotoScale;
-      
-      const scaleSlider = document.getElementById('photoScale');
-      if (scaleSlider) {
-        scaleSlider.min = (state.bgPhotoScale * 0.15).toFixed(2);
-        scaleSlider.max = (state.bgPhotoScale * 6.0).toFixed(2);
-        scaleSlider.value = state.bgPhotoScale.toFixed(2);
-        document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
-        document.getElementById('photoScaleContainer').style.display = 'flex';
-      }
-      draw();
-    };
-    img.src = saved.bgPhotoSrc;
-  } else {
-    state.bgPhoto = null;
-    if (document.getElementById('photoScaleContainer')) {
-      document.getElementById('photoScaleContainer').style.display = 'none';
-    }
-  }
-
-  state.pastedImages = [];
-  if (saved.pastedImages && saved.pastedImages.length > 0) {
-    let loadedCount = 0;
-    saved.pastedImages.forEach(piData => {
-      const img = new Image();
-      img.onload = function() {
-        state.pastedImages.push({
-          id: piData.id,
-          img: img,
-          x: piData.x,
-          y: piData.y,
-          scale: piData.scale,
-          baseW: piData.baseW,
-          baseH: piData.baseH
-        });
-        loadedCount++;
-        if (loadedCount === saved.pastedImages.length) {
-          draw();
-        }
-      };
-      img.src = piData.src;
-    });
-  }
-
-  renderWordsUI();
-  draw();
+  renderWordsUI(); draw();
 }
 
 function loadState() {
-  try {
-    const data = localStorage.getItem('flatpack_generator_state');
-    if (!data) return false;
-    const saved = JSON.parse(data);
-    applySerializedState(saved);
-    return true;
-  } catch (e) {
-    console.warn("Could not load state:", e);
-    return false;
-  }
+  try{const d=localStorage.getItem('fgstate');if(!d)return false;applySerializedState(JSON.parse(d));return true;}catch(e){return false;}
 }
 
+// ── RESET ─────────────────────────────────────────────────
 function resetProject() {
-  if (confirm("Czy na pewno chcesz wyczyścić cały projekt i rozpocząć od nowa z czystym szablonem?")) {
-    state.bgType = 'color';
-    state.bgColor = '#000000'; // Pure black background
-    state.bgPhoto = null;
-    state.pastedImages = [];
-    state.gradient = false;
-    state.kickerText = '';
-    state.mainText = '';
-    state.paraText = '';
-    state.showLogo = false;
-    state.showApla = false;
-    state.words = [];
-    state.bgPhotoSrc = null;
-    state.brandText = '';
-    state.slideText = '';
-    state.showGuides = true;
-    state.showCrop = true;
-    state.showGrid34 = true;
-    state.showSlideNum = false;
-    
-    // Clear inputs in UI
-    if (document.getElementById('mainText')) document.getElementById('mainText').value = '';
-    if (document.getElementById('kickerText')) document.getElementById('kickerText').value = '';
-    if (document.getElementById('paraText')) document.getElementById('paraText').value = '';
-    if (document.getElementById('brandText')) document.getElementById('brandText').value = '';
-    if (document.getElementById('slideText')) document.getElementById('slideText').value = '';
-    if (document.getElementById('showGuides')) document.getElementById('showGuides').checked = true;
-    if (document.getElementById('showCrop')) document.getElementById('showCrop').checked = true;
-    if (document.getElementById('showGrid34')) document.getElementById('showGrid34').checked = true;
-    if (document.getElementById('showSlideNum')) document.getElementById('showSlideNum').checked = false;
-    if (document.getElementById('showApla')) {
-      document.getElementById('showApla').checked = false;
-      toggleAplaControls(false);
-    }
-    document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
-    if (document.getElementById('logoScaleRow')) document.getElementById('logoScaleRow').style.display = 'none';
-    if (document.getElementById('photoScaleContainer')) document.getElementById('photoScaleContainer').style.display = 'none';
-    
-    // Reset colors in UI
-    document.querySelectorAll('#bgColors .color-swatch').forEach(btn => btn.classList.remove('active'));
-    
-    renderWordsUI();
-    saveState();
-    draw();
-  }
+  if(!confirm('Wyczyścić cały projekt? Zaczynasz od czystego szablonu z liniami.'))return;
+  Object.assign(state,{
+    bgType:'color',bgColor:'#000000',bgPhoto:null,pastedImages:[],gradient:false,
+    kickerText:'',mainText:'',paraText:'',showLogo:false,showApla:false,
+    words:[],brandText:'',globalFont:'bold',
+    showGuides:true,showCrop:true,showGrid34:true,
+    overlayOpacity:0,paraY:null,wmImg:null,
+  });
+  ['mainText','kickerText','paraText','brandText'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['showGuides','showCrop','showGrid34'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=true;});
+  const ssn=document.getElementById('showSlideNum');if(ssn)ssn.checked=false;
+  const sa=document.getElementById('showApla');if(sa){sa.checked=false;toggleAplaControls(false);}
+  document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active'));
+  document.getElementById('logoScaleRow').style.display='none';
+  document.getElementById('photoScaleContainer').style.display='none';
+  document.getElementById('photoWarnBox').style.display='none';
+  document.getElementById('wmControls').style.display='none';
+  document.querySelectorAll('#bgColors .color-swatch').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.grad-swatch').forEach(s=>s.classList.remove('active'));
+  document.getElementById('gd_off').classList.add('active');
+  renderWordsUI(); saveState(); draw();
 }
 
-// Load saved state or use defaults
+// ── INIT ──────────────────────────────────────────────────
 if (!loadState()) {
   document.getElementById('mainText').value = state.mainText;
   document.getElementById('paraText').value = state.paraText;
-  document.getElementById('titleSize').value = state.titleSize || 90;
-  document.getElementById('titleSizeVal').textContent = (state.titleSize || 90) + 'px';
-  document.getElementById('showApla').checked = state.showApla;
-  toggleAplaControls(state.showApla);
-  
-  const activeAplaStyle = state.aplaStyle || '#FFFFFF';
-  document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
-    if (btn.getAttribute('data-color') === activeAplaStyle) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
+  document.getElementById('titleSize').value = state.titleSize;
+  document.getElementById('titleSizeVal').textContent = state.titleSize + 'px';
+  document.getElementById('titleLH').value = state.titleLH;
+  document.getElementById('titleLHVal').textContent = state.titleLH;
+  document.getElementById('wordSpacing').value = state.wordSpacing;
+  document.getElementById('wordSpacingVal').textContent = state.wordSpacing + 'px';
   document.getElementById('aplaW').value = state.aplaW;
   document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
   document.getElementById('aplaH').value = state.aplaH;
   document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
+  document.getElementById('showApla').checked = state.showApla;
+  toggleAplaControls(state.showApla);
   document.getElementById('logoScale').value = state.logoScale;
   document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
-
-  const activeLogoSrc = 'assets/logos/logo_flatpack_help.png';
-  document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
-    const img = w.querySelector('img');
-    if (img && img.getAttribute('src') === activeLogoSrc) {
-      w.classList.add('active');
-    } else {
-      w.classList.remove('active');
-    }
-  });
-  document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
-
+  document.getElementById('overlayOpacity').value = state.overlayOpacity;
+  document.getElementById('overlayVal').textContent = state.overlayOpacity + '%';
+  document.querySelectorAll('#aplaColors .color-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-color')===(state.aplaStyle||'#FFFFFF')));
   updateWordsFromText(state.mainText);
 }
-pushToUndoStack(); // Save initial loaded state as first item in the history stack
+pushToUndoStack();
 </script>
 </body>
 </html>
