@@ -310,7 +310,7 @@ const state = {
   wordSpacing: 20,
 
   paraText: '',
-  paraX: 150, paraY: 850,
+  paraX: 150, paraY: 15,
   paraAlign: 'left',
   paraColor: '#FFFFFF',
   paraBold: true,
@@ -862,6 +862,7 @@ function draw() {
   
   const titleH = ty - titleStartY;
   hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
+  state.lastTitleBottomY = ty;
 
   // 4. Dopisek pod hasłem (Paragraph / Akapit)
   const paraVal = document.getElementById('paraText').value;
@@ -871,8 +872,7 @@ function draw() {
     ctx.font = `${weight} ${paraSize}px "Inter", sans-serif`;
     ctx.fillStyle = state.paraColor || '#FFFFFF';
     
-    const py = ty + 30;
-    state.paraY = py;
+    const py = ty + (state.paraY !== undefined ? state.paraY : 15);
     
     const isCenter = state.paraAlign === 'center';
     const alignX = isCenter ? canvas.width / 2 : state.paraX;
@@ -1105,7 +1105,10 @@ canvas.addEventListener('mousemove', (e) => {
     switch (dragging.id) {
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'para': 
+        state.paraX = cx; 
+        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
     }
@@ -1273,7 +1276,10 @@ canvas.addEventListener('touchmove', (e) => {
     switch (dragging.id) {
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'para': 
+        state.paraX = cx; 
+        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
     }
@@ -1471,6 +1477,9 @@ function loadState() {
     const saved = JSON.parse(data);
     
     Object.assign(state, saved);
+    if (state.paraY > 200) {
+      state.paraY = 15;
+    }
     
     if (saved.showGuides !== undefined && document.getElementById('showGuides')) {
       document.getElementById('showGuides').checked = saved.showGuides;

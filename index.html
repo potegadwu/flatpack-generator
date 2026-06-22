@@ -487,7 +487,7 @@ const state = {
   wordSpacing: 20,
 
   paraText: 'YOUR FURNITURE, ASSEMBLED AT THE SPEED OF LIGHT.',
-  paraX: 150, paraY: 850,
+  paraX: 150, paraY: 15,
   paraAlign: 'left',
   paraColor: '#FFFFFF',
   paraBold: true,
@@ -1102,14 +1102,14 @@ function draw() {
   });
   const titleH = ty - titleStartY;
   hitBoxes.title = { x: state.titleX, y: titleStartY, w: Math.max(100, Math.min(maxLineWidth, titleMaxW)), h: titleH || 10 };
+  state.lastTitleBottomY = ty;
 
   // 4. Pre-calculate paragraph height for Apla
   const paraVal = document.getElementById('paraText').value;
   if (paraVal) {
     const paraSize = 28;
     ctx.font = `600 ${paraSize}px "Rajdhani", sans-serif`;
-    const py = ty + 30;
-    state.paraY = py;
+    const py = ty + (state.paraY !== undefined ? state.paraY : 15);
     const isCenter = state.paraAlign === 'center';
     const maxWidth = isCenter ? (canvas.width - M * 2) : (canvas.width - state.paraX - M);
     const uppercaseText = paraVal.toUpperCase();
@@ -1313,7 +1313,7 @@ function draw() {
     const weight = state.paraBold ? '800' : '400';
     ctx.font = `${weight} ${paraSize}px "Rajdhani", sans-serif`;
     ctx.fillStyle = state.paraColor || '#FFFFFF';
-    const py = ty + 30;
+    const py = ty + (state.paraY !== undefined ? state.paraY : 15);
     
     const isCenter = state.paraAlign === 'center';
     const alignX = isCenter ? canvas.width / 2 : state.paraX;
@@ -1664,7 +1664,10 @@ canvas.addEventListener('mousemove', (e) => {
       case 'logo': state.logoX = cx; state.logoY = cy; break;
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'para': 
+        state.paraX = cx; 
+        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
       case 'apla': state.aplaX = nx; state.aplaY = ny; break;
@@ -1926,7 +1929,10 @@ canvas.addEventListener('touchmove', (e) => {
       case 'logo': state.logoX = cx; state.logoY = cy; break;
       case 'kicker': state.kickerX = cx; state.kickerY = cy; break;
       case 'title': state.titleX = cx; state.titleY = cy; break;
-      case 'para': state.paraX = cx; state.paraY = cy; break;
+      case 'para': 
+        state.paraX = cx; 
+        state.paraY = cy - (state.lastTitleBottomY || 700); 
+        break;
       case 'brand': state.brandX = cx; state.brandY = cy; break;
       case 'slide': state.slideX = cx; state.slideY = cy; break;
       case 'apla': state.aplaX = nx; state.aplaY = ny; break;
@@ -2263,6 +2269,9 @@ function loadState() {
     const saved = JSON.parse(data);
     
     Object.assign(state, saved);
+    if (state.paraY > 200) {
+      state.paraY = 15;
+    }
     
     if (saved.showGuides !== undefined && document.getElementById('showGuides')) {
       document.getElementById('showGuides').checked = saved.showGuides;
