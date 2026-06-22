@@ -98,6 +98,28 @@ canvas:active { cursor: grabbing; }
   border-color: var(--accent) !important;
   box-shadow: 0 4px 10px rgba(9, 126, 255, 0.2);
 }
+.logo-thumb-wrapper {
+  position: relative;
+  aspect-ratio: 1.5;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.logo-thumb-wrapper:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+.logo-thumb-wrapper.active {
+  border-color: var(--accent) !important;
+  background: rgba(9, 126, 255, 0.1) !important;
+  box-shadow: 0 0 0 2px rgba(9, 126, 255, 0.2);
+}
 </style>
 </head>
 <body>
@@ -122,7 +144,6 @@ canvas:active { cursor: grabbing; }
 <button class="color-swatch" style="background:#00B67A" onclick="setBgColor('#00B67A', this)"></button>
 <button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722', this)"></button>
 <button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF', this)"></button>
-<button class="color-swatch" style="background:#F1F5F9;border:1px solid #ddd" onclick="setBgColor('#F1F5F9', this)"></button>
 <button class="color-swatch" id="gradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="toggleGradient()" title="Gradient"></button>
 </div>
 <div class="row" style="margin-top:12px; align-items:center; gap:12px;">
@@ -141,7 +162,7 @@ canvas:active { cursor: grabbing; }
 <button class="small-btn" onclick="clearPhoto()" style="padding:4px 8px; font-size:0.7rem; background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5;">Usuń foto</button>
 </div>
 
-<div id="overlayControls" style="display:none; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
+<div id="overlayControls" style="display:flex; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
   <div class="section-title" style="margin-bottom:6px">Cień / Przyciemnienie tła</div>
   <div class="row" style="margin-top:0">
     <label style="width:60px">Kierunek:</label>
@@ -212,6 +233,7 @@ canvas:active { cursor: grabbing; }
 <button class="color-btn active" style="background:#FFFFFF" onclick="setParaColor('#FFFFFF',this)"></button>
 <button class="color-btn" style="background:#097EFF" onclick="setParaColor('#097EFF',this)"></button>
 <button class="color-btn" style="background:#FFD700" onclick="setParaColor('#FFD700',this)"></button>
+<button class="color-btn" style="background:#00B67A" onclick="setParaColor('#00B67A',this)"></button>
 <button class="color-btn" style="background:#FF5722" onclick="setParaColor('#FF5722',this)"></button>
 </div>
 </div>
@@ -225,7 +247,7 @@ canvas:active { cursor: grabbing; }
 </div>
 </div>
 
-<<!-- Karta pod tekstem (Apla) -->
+<!-- Karta pod tekstem (Apla) -->
 <div class="section">
 <div class="section-title">Karta pod tekstem (Apla)</div>
 <div class="toggle-row">
@@ -233,15 +255,17 @@ canvas:active { cursor: grabbing; }
   <input type="checkbox" id="showApla" onchange="toggleAplaControls(this.checked); state.showApla=this.checked; draw()">
 </div>
 <div id="aplaControls" style="display:none; margin-top:8px; border-left:2px solid var(--accent); padding-left:10px; margin-bottom:10px">
-  <div class="row">
-    <label>Styl apli:</label>
-    <select id="aplaStyle" onchange="state.aplaStyle=this.value;draw()" style="background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
-      <option value="light-glass">Jasne szkło (Glassmorphism)</option>
-      <option value="dark-glass">Ciemne szkło</option>
-      <option value="blue">Niebieska</option>
-      <option value="green">Zielona (Trustpilot)</option>
-      <option value="navy">Granatowa</option>
-    </select>
+  <div class="row" style="flex-direction:column; align-items:flex-start; gap:6px; margin-bottom: 12px;">
+    <label>Kolor apli:</label>
+    <div class="color-grid" id="aplaColors" style="display:flex; gap:8px; align-items:center;">
+      <button class="color-btn" data-color="#0F172A" style="background:#0F172A" onclick="setAplaColor('#0F172A', this)" title="Ciemny granat"></button>
+      <button class="color-btn" data-color="#097EFF" style="background:#097EFF" onclick="setAplaColor('#097EFF', this)" title="Niebieski"></button>
+      <button class="color-btn" data-color="#FFD700" style="background:#FFD700" onclick="setAplaColor('#FFD700', this)" title="Żółty"></button>
+      <button class="color-btn" data-color="#00B67A" style="background:#00B67A" onclick="setAplaColor('#00B67A', this)" title="Zielony"></button>
+      <button class="color-btn" data-color="#FF5722" style="background:#FF5722" onclick="setAplaColor('#FF5722', this)" title="Pomarańczowy"></button>
+      <button class="color-btn active" data-color="#FFFFFF" style="background:#FFFFFF; border:1px solid #ddd" onclick="setAplaColor('#FFFFFF', this)" title="Biały"></button>
+      <button class="color-btn" data-color="gradient" id="aplaGradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="setAplaColor('gradient', this)" title="Gradient"></button>
+    </div>
   </div>
   <div class="row">
     <label>Szerokość:</label>
@@ -263,20 +287,21 @@ canvas:active { cursor: grabbing; }
 <!-- Logotypy / Brand Logo -->
 <div class="section">
 <div class="section-title">Logotypy / Brand Logo</div>
-<div class="toggle-row">
-  <label>Pokaż logo na grafice</label>
-  <input type="checkbox" id="showLogo" checked onchange="state.showLogo=this.checked;draw()">
+<div class="row" style="margin-bottom:10px; flex-direction:column; align-items:flex-start; gap:6px;">
+  <label style="display:block; margin-bottom:4px">Kliknij logo, aby dodać/ukryć na projekcie:</label>
+  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width:100%">
+    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_flatpack_help.png', this)">
+      <img src="assets/logos/logo_flatpack_help.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo Flatpack.help">
+    </div>
+    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_czerw_nieb.png', this)">
+      <img src="assets/logos/logo_czerw_nieb.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo czerwono-niebieskie">
+    </div>
+    <div class="logo-thumb-wrapper" onclick="toggleLogo('assets/logos/logo_nieb_biale.png', this)">
+      <img src="assets/logos/logo_nieb_biale.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Logo niebiesko-białe">
+    </div>
+  </div>
 </div>
-<div class="row">
-  <label>Wybierz logo:</label>
-  <select id="logoSelect" onchange="changeLogo(this.value)" style="flex:1; background:#0F172A; border:1px solid var(--border); color:white; padding:6px; border-radius:6px;">
-    <option value="assets/logos/logo_flatpack_help.png">Logo Flatpack.help</option>
-    <option value="assets/logos/logo_czerw_nieb.png">Logo czerwono-niebieskie</option>
-    <option value="assets/logos/logo_nieb_biale.png">Logo niebiesko-białe</option>
-    <option value="assets/logo.png">Czerwona torba (Oryginał)</option>
-  </select>
-</div>
-<div class="row">
+<div class="row" id="logoScaleRow" style="display:flex;">
   <label>Rozmiar logo:</label>
   <input type="range" id="logoScale" min="0.3" max="3.0" step="0.05" value="1.0" oninput="state.logoScale=+this.value;document.getElementById('logoScaleVal').textContent=this.value+'x';draw()">
   <span class="slider-val" id="logoScaleVal">1.0x</span>
@@ -329,7 +354,7 @@ canvas:active { cursor: grabbing; }
 <div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG. Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
-<<!-- Nakładki Gallery (Postaci i Elementy PNG) -->
+<!-- Nakładki Gallery (Postaci i Elementy PNG) -->
 <div class="section">
 <div class="section-title">Dodaj Postaci & Elementy PNG</div>
 <div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:10px;">Kliknij na postać lub element, aby dodać na grafikę. Przeciągaj myszką, powiększaj/zmniejszaj rolką myszy lub suwakiem po zaznaczeniu.</div>
@@ -468,7 +493,7 @@ const state = {
   paraBold: true,
 
   showApla: false,
-  aplaStyle: 'light-glass',
+  aplaStyle: '#FFFFFF',
   aplaX: 100,
   aplaY: 240,
   aplaW: 880,
@@ -632,16 +657,7 @@ function clearPhoto() {
   state.bgType = state.gradient ? 'gradient' : 'color';
   document.getElementById('photoScaleContainer').style.display = 'none';
   
-  const overlayContainer = document.getElementById('overlayControls');
-  if (overlayContainer) overlayContainer.style.display = 'none';
-  state.overlayOpacity = 40;
-  const overlayOpacityEl = document.getElementById('overlayOpacity');
-  if (overlayOpacityEl) {
-    overlayOpacityEl.value = 40;
-    const valEl = document.getElementById('overlayVal');
-    if (valEl) valEl.textContent = '40%';
-  }
-  
+  // Keep overlay controls visible so users can add dark gradient cień on top of solid colors too
   document.getElementById('photoUpload').value = '';
   draw();
 }
@@ -931,26 +947,6 @@ function draw() {
   if (state.bgType === 'photo' && state.bgPhoto) {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
-      
-    if (state.overlayOpacity > 0) {
-      let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-      switch(state.overlayDir) {
-        case 'left': x0 = 0; y0 = 0; x1 = canvas.width; y1 = 0; break;
-        case 'right': x0 = canvas.width; y0 = 0; x1 = 0; y1 = 0; break;
-        case 'bottom-left': x0 = 0; y0 = canvas.height; x1 = canvas.width; y1 = 0; break;
-        case 'bottom-right': x0 = canvas.width; y0 = canvas.height; x1 = 0; y1 = 0; break;
-        case 'bottom': x0 = 0; y0 = canvas.height; x1 = 0; y1 = 0; break;
-        case 'top': x0 = 0; y0 = 0; x1 = 0; y1 = canvas.height; break;
-      }
-      
-      const g = ctx.createLinearGradient(x0, y0, x1, y1);
-      const alpha = state.overlayOpacity / 100;
-      g.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
-      g.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
   } else if (state.bgType === 'gradient' || state.gradient) {
     const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
     g.addColorStop(0, '#097EFF'); // Bright blue
@@ -959,6 +955,27 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
     ctx.fillStyle = state.bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Draw overlay shadow (cień / przyciemnienie tła) for all backgrounds
+  if (state.overlayOpacity > 0) {
+    let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+    switch(state.overlayDir) {
+      case 'left': x0 = 0; y0 = 0; x1 = canvas.width; y1 = 0; break;
+      case 'right': x0 = canvas.width; y0 = 0; x1 = 0; y1 = 0; break;
+      case 'bottom-left': x0 = 0; y0 = canvas.height; x1 = canvas.width; y1 = 0; break;
+      case 'bottom-right': x0 = canvas.width; y0 = canvas.height; x1 = 0; y1 = 0; break;
+      case 'bottom': x0 = 0; y0 = canvas.height; x1 = 0; y1 = 0; break;
+      case 'top': x0 = 0; y0 = 0; x1 = 0; y1 = canvas.height; break;
+    }
+    
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    const alpha = state.overlayOpacity / 100;
+    g.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
+    g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    
+    ctx.fillStyle = g;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
@@ -1111,25 +1128,42 @@ function draw() {
   // DRAW APLA (Background Shape under text)
   if (state.showApla && state.aplaStyle !== 'none') {
     ctx.save();
-    if (state.aplaStyle === 'light-glass') {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-      ctx.shadowBlur = 40;
-    } else if (state.aplaStyle === 'dark-glass') {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-      ctx.shadowBlur = 40;
-    } else if (state.aplaStyle === 'blue') {
-      ctx.fillStyle = 'rgba(9, 126, 255, 0.9)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    } else if (state.aplaStyle === 'green') {
-      ctx.fillStyle = 'rgba(0, 182, 122, 0.9)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    } else if (state.aplaStyle === 'navy') {
-      ctx.fillStyle = 'rgba(30, 58, 138, 0.9)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    const hex = state.aplaStyle || '#FFFFFF';
+    
+    if (hex === 'gradient') {
+      const g = ctx.createLinearGradient(state.aplaX, state.aplaY, state.aplaX, state.aplaY + state.aplaH);
+      g.addColorStop(0, 'rgba(9, 126, 255, 0.85)'); // Bright blue
+      g.addColorStop(1, 'rgba(30, 58, 138, 0.85)'); // Deep navy
+      ctx.fillStyle = g;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      ctx.shadowBlur = 30;
+    } else {
+      let r = 255, g = 255, b = 255;
+      if (hex.startsWith('#')) {
+        r = parseInt(hex.slice(1, 3), 16);
+        g = parseInt(hex.slice(3, 5), 16);
+        b = parseInt(hex.slice(5, 7), 16);
+      }
+      
+      // Frosted glassmorphism effect
+      if (hex === '#FFFFFF') {
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.72)`; // light glass
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 40;
+      } else if (hex === '#0F172A') {
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.78)`; // dark glass
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+        ctx.shadowBlur = 40;
+      } else {
+        // Colored glassmorphism card
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.82)`;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+        ctx.shadowBlur = 30;
+      }
     }
     
     drawRoundedRect(ctx, state.aplaX, state.aplaY, state.aplaW, state.aplaH, 24);
@@ -1646,6 +1680,18 @@ canvas.addEventListener('wheel', (e) => {
   const { x, y } = canvasCoords(e);
   const hovered = hitTest(x, y);
 
+  if (hovered === 'logo' && state.showLogo) {
+    const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
+    state.logoScale = Math.max(0.3, Math.min(3.0, state.logoScale * zoomFactor));
+    const scaleSlider = document.getElementById('logoScale');
+    if (scaleSlider) {
+      scaleSlider.value = state.logoScale.toFixed(2);
+      document.getElementById('logoScaleVal').textContent = state.logoScale.toFixed(2) + 'x';
+    }
+    draw();
+    return;
+  }
+
   if (hovered && hovered.startsWith('pasted_')) {
     const pi = state.pastedImages.find(p => p.id === hovered);
     if (pi) {
@@ -1713,6 +1759,33 @@ window.addEventListener('keydown', (e) => {
           state.hoveredBlock = null;
           canvas.style.cursor = 'default';
           return;
+        } else if (blockId === 'logo') {
+          state.showLogo = false;
+          const logoScaleRow = document.getElementById('logoScaleRow');
+          if (logoScaleRow) logoScaleRow.style.display = 'none';
+          document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
+          state.hoveredBlock = null;
+          canvas.style.cursor = 'default';
+          draw();
+          return;
+        } else {
+          let inputEl = null;
+          if (blockId === 'title') inputEl = document.getElementById('mainText');
+          else if (blockId === 'kicker') inputEl = document.getElementById('kickerText');
+          else if (blockId === 'para') inputEl = document.getElementById('paraText');
+          else if (blockId === 'brand') inputEl = document.getElementById('brandText');
+          else if (blockId === 'slide') inputEl = document.getElementById('slideText');
+          
+          if (inputEl) {
+            inputEl.value = '';
+            inputEl.focus();
+            if (blockId === 'title') {
+              updateWordsFromText('');
+            } else {
+              draw();
+            }
+            return;
+          }
         }
       }
       
@@ -1723,26 +1796,6 @@ window.addEventListener('keydown', (e) => {
         updateSelectedImageUI();
         draw();
         return;
-      }
-    }
-  }
-});
-      
-      let inputEl = null;
-      if (blockId === 'title') inputEl = document.getElementById('mainText');
-      else if (blockId === 'kicker') inputEl = document.getElementById('kickerText');
-      else if (blockId === 'para') inputEl = document.getElementById('paraText');
-      else if (blockId === 'brand') inputEl = document.getElementById('brandText');
-      else if (blockId === 'slide') inputEl = document.getElementById('slideText');
-      
-      if (inputEl) {
-        inputEl.value = '';
-        inputEl.focus();
-        if (blockId === 'title') {
-          updateWordsFromText('');
-        } else {
-          draw();
-        }
       }
     }
   }
@@ -2001,13 +2054,35 @@ function deleteApla() {
   draw();
 }
 
-function changeLogo(src) {
-  const img = new Image();
-  img.onload = function() {
-    state.logoImg = img;
-    draw();
-  };
-  img.src = src;
+function setAplaColor(color, btn) {
+  state.aplaStyle = color;
+  document.querySelectorAll('#aplaColors .color-btn').forEach(s => s.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  }
+  draw();
+}
+
+function toggleLogo(src, element) {
+  if (state.showLogo && state.logoImg && state.logoImg.src.endsWith(src)) {
+    state.showLogo = false;
+    document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
+    document.getElementById('logoScaleRow').style.display = 'none';
+  } else {
+    const img = new Image();
+    img.onload = function() {
+      state.logoImg = img;
+      state.showLogo = true;
+      document.querySelectorAll('.logo-thumb-wrapper').forEach(w => w.classList.remove('active'));
+      if (element) {
+        element.classList.add('active');
+      }
+      document.getElementById('logoScaleRow').style.display = 'flex';
+      draw();
+    };
+    img.src = src;
+  }
+  draw();
 }
 
 function switchOverlayTab(tab) {
@@ -2105,16 +2180,34 @@ document.getElementById('titleSize').value = state.titleSize || 90;
 document.getElementById('titleSizeVal').textContent = (state.titleSize || 90) + 'px';
 document.getElementById('showApla').checked = state.showApla;
 toggleAplaControls(state.showApla);
-document.getElementById('aplaStyle').value = state.aplaStyle;
+// Set active Apla color button from state
+const activeAplaStyle = state.aplaStyle || '#FFFFFF';
+document.querySelectorAll('#aplaColors .color-btn').forEach(btn => {
+  if (btn.getAttribute('data-color') === activeAplaStyle) {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
+});
 document.getElementById('aplaW').value = state.aplaW;
 document.getElementById('aplaWVal').textContent = state.aplaW + 'px';
 document.getElementById('aplaH').value = state.aplaH;
 document.getElementById('aplaHVal').textContent = state.aplaH + 'px';
 document.getElementById('logoScale').value = state.logoScale;
 document.getElementById('logoScaleVal').textContent = state.logoScale + 'x';
-if (document.getElementById('logoSelect')) {
-  document.getElementById('logoSelect').value = 'assets/logos/logo_flatpack_help.png';
-}
+
+// Update active logo thumbnail class on load
+const activeLogoSrc = 'assets/logos/logo_flatpack_help.png';
+document.querySelectorAll('.logo-thumb-wrapper').forEach(w => {
+  const img = w.querySelector('img');
+  if (img && img.getAttribute('src') === activeLogoSrc) {
+    w.classList.add('active');
+  } else {
+    w.classList.remove('active');
+  }
+});
+document.getElementById('logoScaleRow').style.display = state.showLogo ? 'flex' : 'none';
+
 updateWordsFromText(state.mainText);
 </script>
 </body>

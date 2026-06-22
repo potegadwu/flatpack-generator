@@ -111,7 +111,7 @@ canvas:active{cursor:grabbing}
 <span class="slider-val" id="photoScaleVal">1.0x</span>
 </div>
 
-<div id="overlayControls" style="display:none; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
+<div id="overlayControls" style="display:flex; flex-direction:column; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.05)">
   <div class="section-title" style="margin-bottom:6px">Cień / Przyciemnienie tła</div>
   <div class="row" style="margin-top:0">
     <label style="width:60px">Kierunek:</label>
@@ -453,8 +453,7 @@ function clearPhoto() {
   state.bgType = 'color';
   const psc = document.getElementById('photoScaleContainer');
   if (psc) psc.style.display = 'none';
-  const overlayCont = document.getElementById('overlayControls');
-  if (overlayCont) overlayCont.style.display = 'none';
+  // Keep overlay controls visible so users can add dark gradient shadow on top of solid colors too
   const pu = document.getElementById('photoUpload');
   if (pu) pu.value = '';
   draw();
@@ -741,28 +740,29 @@ function draw() {
   if (state.bgType === 'photo' && state.bgPhoto) {
     ctx.drawImage(state.bgPhoto, state.bgPhotoX, state.bgPhotoY,
       state.bgPhoto.width * state.bgPhotoScale, state.bgPhoto.height * state.bgPhotoScale);
-      
-    if (state.overlayOpacity > 0) {
-      let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-      switch(state.overlayDir) {
-        case 'left': x0 = 0; y0 = 0; x1 = canvas.width; y1 = 0; break;
-        case 'right': x0 = canvas.width; y0 = 0; x1 = 0; y1 = 0; break;
-        case 'bottom-left': x0 = 0; y0 = canvas.height; x1 = canvas.width; y1 = 0; break;
-        case 'bottom-right': x0 = canvas.width; y0 = canvas.height; x1 = 0; y1 = 0; break;
-        case 'bottom': x0 = 0; y0 = canvas.height; x1 = 0; y1 = 0; break;
-        case 'top': x0 = 0; y0 = 0; x1 = 0; y1 = canvas.height; break;
-      }
-      
-      const g = ctx.createLinearGradient(x0, y0, x1, y1);
-      const alpha = state.overlayOpacity / 100;
-      g.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
-      g.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
   } else {
     ctx.fillStyle = state.bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Draw overlay shadow (cień / przyciemnienie tła) for all backgrounds
+  if (state.overlayOpacity > 0) {
+    let x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+    switch(state.overlayDir) {
+      case 'left': x0 = 0; y0 = 0; x1 = canvas.width; y1 = 0; break;
+      case 'right': x0 = canvas.width; y0 = 0; x1 = 0; y1 = 0; break;
+      case 'bottom-left': x0 = 0; y0 = canvas.height; x1 = canvas.width; y1 = 0; break;
+      case 'bottom-right': x0 = canvas.width; y0 = canvas.height; x1 = 0; y1 = 0; break;
+      case 'bottom': x0 = 0; y0 = canvas.height; x1 = 0; y1 = 0; break;
+      case 'top': x0 = 0; y0 = 0; x1 = 0; y1 = canvas.height; break;
+    }
+    
+    const g = ctx.createLinearGradient(x0, y0, x1, y1);
+    const alpha = state.overlayOpacity / 100;
+    g.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
+    g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    
+    ctx.fillStyle = g;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
