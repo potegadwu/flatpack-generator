@@ -117,7 +117,7 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 }
 
 /* Gradient direction picker */
-.grad-grid { display: grid; grid-template-columns: repeat(6, 34px); gap: 4px; margin-top: 6px; }
+.grad-grid { display: flex; flex-direction: row; gap: 4px; margin-top: 6px; }
 .grad-swatch {
   width: 34px; height: 34px; border-radius: 6px; border: 2px solid transparent;
   cursor: pointer; transition: border-color 0.15s; position: relative; overflow: hidden;
@@ -355,11 +355,23 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 <!-- ZNAK WODNY -->
 <div class="section">
 <div class="section-title">Znak Wodny (Watermark)</div>
-<div style="font-size:0.65rem;color:var(--muted);line-height:1.4;margin-bottom:8px">Wgraj własne logo jako znak wodny — pojawia się pod tekstem, na zdjęciu. Przeciągnij w dowolne miejsce.</div>
+<div style="font-size:0.65rem;color:var(--muted);line-height:1.4;margin-bottom:8px">Wgraj logo lub wybierz markowe poniżej — pojawia się pod tekstem na zdjęciu. Przeciągnij suwakami i myszką.</div>
 <div class="row" style="margin-top:0; gap:10px; align-items:center">
-  <label class="small-btn" for="wmUpload" style="cursor:pointer;padding:7px 12px;font-size:0.8rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;margin:0">Wgraj logo/znak</label>
+  <label class="small-btn" for="wmUpload" style="cursor:pointer;padding:7px 12px;font-size:0.8rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;margin:0">Wgraj własny plik</label>
   <input type="file" id="wmUpload" accept="image/*" hidden onchange="handleWatermark(event)">
   <button class="small-btn" onclick="removeWatermark()" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:#fca5a5">Usuń</button>
+</div>
+<div style="font-size:0.7rem; font-weight:600; color:var(--muted); margin-top:8px; margin-bottom:4px">Użyj logo marki jako znak wodny:</div>
+<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width:100%; margin-bottom:6px">
+  <div class="logo-thumb-wrapper wm-preset-logo" onclick="setWatermarkLogo('assets/logos/logo_flatpack_help.png', this)">
+    <img src="assets/logos/logo_flatpack_help.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Znak wodny: Logo Flatpack.help">
+  </div>
+  <div class="logo-thumb-wrapper wm-preset-logo" onclick="setWatermarkLogo('assets/logos/logo_czerw_nieb.png', this)">
+    <img src="assets/logos/logo_czerw_nieb.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Znak wodny: Logo czerwono-niebieskie">
+  </div>
+  <div class="logo-thumb-wrapper wm-preset-logo" onclick="setWatermarkLogo('assets/logos/logo_nieb_biale.png', this)">
+    <img src="assets/logos/logo_nieb_biale.png" style="max-width:100%; max-height:100%; object-fit:contain" title="Znak wodny: Logo niebiesko-białe">
+  </div>
 </div>
 <div id="wmControls" style="display:none;margin-top:8px">
   <div class="row">
@@ -396,12 +408,16 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 <div class="section-title">Bezpieczne strefy IG (Linie)</div>
 <div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:8px">Linie <strong style="color:#fff">nie zapisują się</strong> na PNG. Format: 4:5 (1080 × 1350 px).</div>
 <div class="toggle-row">
-<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone) 80px</label>
-<input type="checkbox" id="showGuides" checked onchange="draw()">
+<label><strong style="color:rgba(34,197,94,1)">—</strong> Krawędź canvas (Granica zdjęcia 4:5)</label>
+<input type="checkbox" id="showCanvas45" checked onchange="draw()">
 </div>
 <div class="toggle-row">
-<label><strong style="color:rgba(255,255,255,0.8)">—</strong> Kafelek 1:1 (1080×1080) — crop IG</label>
+<label><strong style="color:rgba(251,191,36,1)">—</strong> Kafelek 1:1 (1080×1080) — crop IG</label>
 <input type="checkbox" id="showCrop" checked onchange="draw()">
+</div>
+<div class="toggle-row">
+<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone) 80px</label>
+<input type="checkbox" id="showGuides" checked onchange="draw()">
 </div>
 <div class="toggle-row">
 <label><strong style="color:rgba(9, 126, 255, 1)">—</strong> Kafelek 3:4 (pionowy IG)</label>
@@ -611,7 +627,7 @@ const state = {
   brandX: 150, brandY: 1220,
   slideX: 930, slideY: 1220,
 
-  showGuides: true, showCrop: true, showGrid34: true,
+  showCanvas45: true, showGuides: true, showCrop: true, showGrid34: true,
   lastTitleBottomY: 400,
 };
 
@@ -724,6 +740,7 @@ function handleWatermark(e) {
       state.wmImg = img;
       state.wmX = M;
       state.wmY = state.lastTitleBottomY + 60;
+      document.querySelectorAll('.wm-preset-logo').forEach(el => el.classList.remove('active'));
       document.getElementById('wmControls').style.display = 'block';
       draw();
     };
@@ -732,8 +749,23 @@ function handleWatermark(e) {
   reader.readAsDataURL(file);
 }
 
+function setWatermarkLogo(src, element) {
+  const img = new Image();
+  img.onload = () => {
+    state.wmImg = img;
+    state.wmX = M;
+    state.wmY = state.lastTitleBottomY + 60;
+    document.querySelectorAll('.wm-preset-logo').forEach(el => el.classList.remove('active'));
+    if (element) element.classList.add('active');
+    document.getElementById('wmControls').style.display = 'block';
+    draw();
+  };
+  img.src = src;
+}
+
 function removeWatermark() {
   state.wmImg = null;
+  document.querySelectorAll('.wm-preset-logo').forEach(el => el.classList.remove('active'));
   document.getElementById('wmControls').style.display = 'none';
   document.getElementById('wmUpload').value = '';
   draw();
@@ -1155,93 +1187,89 @@ function draw() {
   if (!isExporting) {
     const cropY = (canvas.height - canvas.width) / 2; // = 135px from top and bottom
 
-    // ─ PHOTO FILL ZONES ─────────────────────────────────────
-    // Only show when NO photo is loaded (guidance for user) or always for clarity
-    const hasPhoto = state.bgType === 'photo' && state.bgPhoto;
-
     // Zone A: FULL 4:5 area (green) — photo must cover entire canvas for 4:5 post
-    // Draw a bright green frame around the WHOLE canvas edge
-    ctx.save();
-    ctx.strokeStyle = 'rgba(34,197,94,0.9)';  // bright green
-    ctx.lineWidth = 4;
-    ctx.setLineDash([]);
-    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
-    // Green corner brackets (top-left)
-    const BL = 60; // bracket length
-    ctx.lineWidth = 6;
-    [[0,0,1,1],[canvas.width,0,-1,1],[0,canvas.height,1,-1],[canvas.width,canvas.height,-1,-1]].forEach(([cx,cy,dx,dy])=>{
-      ctx.beginPath(); ctx.moveTo(cx+dx*2,cy+dy*2+dy*BL); ctx.lineTo(cx+dx*2,cy+dy*2); ctx.lineTo(cx+dx*2+dx*BL,cy+dy*2); ctx.stroke();
-    });
-    // Label at top: "Zdjęcie 4:5"
-    ctx.fillStyle='rgba(34,197,94,1)';
-    ctx.font='bold 20px "Geist Mono",monospace';
-    ctx.textAlign='center';
-    const lbl45 = '▼ ZDJĘCIE MUSI SIĘGAĆ DO KRAWĘDZI (4:5 = 1080×1350 px) ▼';
-    // badge background
-    ctx.fillStyle='rgba(0,0,0,0.6)';
-    ctx.fillRect(0, 0, canvas.width, 36);
-    ctx.fillStyle='rgba(34,197,94,1)';
-    ctx.fillText('▲  KRAWĘDŹ CANVAS = granica zdjęcia 4:5  ▲', canvas.width/2, 24);
-    ctx.restore();
+    if (document.getElementById('showCanvas45') && document.getElementById('showCanvas45').checked) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(34,197,94,1)';  // intense green
+      ctx.lineWidth = 5;
+      ctx.setLineDash([]);
+      ctx.strokeRect(2.5, 2.5, canvas.width - 5, canvas.height - 5);
+      // Green corner brackets
+      const BL = 60; // bracket length
+      ctx.lineWidth = 8;
+      [[0,0,1,1],[canvas.width,0,-1,1],[0,canvas.height,1,-1],[canvas.width,canvas.height,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+        ctx.beginPath(); ctx.moveTo(cx+dx*3,cy+dy*3+dy*BL); ctx.lineTo(cx+dx*3,cy+dy*3); ctx.lineTo(cx+dx*3+dx*BL,cy+dy*3); ctx.stroke();
+      });
+      // Label at top: "KRAWĘDŹ CANVAS = granica zdjęcia 4:5"
+      ctx.fillStyle='rgba(0,0,0,0.65)';
+      ctx.fillRect(0, 0, canvas.width, 38);
+      ctx.fillStyle='rgba(34,197,94,1)';
+      ctx.font='bold 20px "Geist Mono",monospace';
+      ctx.textAlign='center';
+      ctx.fillText('▲  KRAWĘDŹ CANVAS = granica zdjęcia 4:5  ▲', canvas.width/2, 24);
+      ctx.restore();
+    }
 
     // Zone B: 1:1 crop zone (yellow) — photo must fill this for grid tiles
-    ctx.save();
-    // Fill the areas OUTSIDE 1:1 zone with a yellow overlay to show "this part gets cropped on grid"
-    ctx.fillStyle = 'rgba(251,191,36,0.15)';
-    ctx.fillRect(0, 0, canvas.width, cropY);
-    ctx.fillRect(0, canvas.height - cropY, canvas.width, cropY);
-    // Yellow dashed lines
-    ctx.strokeStyle = 'rgba(251,191,36,0.95)';
-    ctx.lineWidth = 3;
-    ctx.setLineDash([12, 6]);
-    ctx.beginPath(); ctx.moveTo(0, cropY); ctx.lineTo(canvas.width, cropY); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, canvas.height - cropY); ctx.lineTo(canvas.width, canvas.height - cropY); ctx.stroke();
-    ctx.setLineDash([]);
+    if (document.getElementById('showCrop') && document.getElementById('showCrop').checked) {
+      ctx.save();
+      // Fill the areas OUTSIDE 1:1 zone with a yellow overlay
+      ctx.fillStyle = 'rgba(251,191,36,0.18)';
+      ctx.fillRect(0, 0, canvas.width, cropY);
+      ctx.fillRect(0, canvas.height - cropY, canvas.width, cropY);
+      // Yellow dashed lines - stronger and thicker
+      ctx.strokeStyle = 'rgba(251,191,36,1)';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([16, 6]);
+      ctx.beginPath(); ctx.moveTo(0, cropY); ctx.lineTo(canvas.width, cropY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, canvas.height - cropY); ctx.lineTo(canvas.width, canvas.height - cropY); ctx.stroke();
+      ctx.setLineDash([]);
 
-    // Arrow indicators pointing to crop line
-    ctx.fillStyle = 'rgba(251,191,36,1)';
-    ctx.font = 'bold 13px "Geist Mono",monospace';
-    ctx.textAlign = 'left';
-    // Top line label
-    const topLabelY = cropY - 4;
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
-    ctx.fillRect(0, topLabelY - 18, canvas.width, 20);
-    ctx.fillStyle = 'rgba(251,191,36,1)';
-    ctx.fillText('▲ obszar ucięty na siatce profilu (1:1)  |  ZDJĘCIE: min. 1080×1080 px', 8, topLabelY - 2);
-    // Bottom line label
-    const botLabelY = canvas.height - cropY + 2;
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
-    ctx.fillRect(0, botLabelY, canvas.width, 20);
-    ctx.fillStyle = 'rgba(251,191,36,1)';
-    ctx.fillText('▼ obszar ucięty na siatce profilu (1:1)', 8, botLabelY + 14);
+      // Arrow indicators pointing to crop line
+      ctx.fillStyle = 'rgba(251,191,36,1)';
+      ctx.font = 'bold 13px "Geist Mono",monospace';
+      ctx.textAlign = 'left';
+      // Top line label
+      const topLabelY = cropY - 4;
+      ctx.fillStyle = 'rgba(0,0,0,0.65)';
+      ctx.fillRect(0, topLabelY - 18, canvas.width, 20);
+      ctx.fillStyle = 'rgba(251,191,36,1)';
+      ctx.fillText('▲ obszar ucięty na siatce profilu (1:1)  |  ZDJĘCIE: min. 1080×1080 px', 8, topLabelY - 2);
+      // Bottom line label
+      const botLabelY = canvas.height - cropY + 2;
+      ctx.fillStyle = 'rgba(0,0,0,0.65)';
+      ctx.fillRect(0, botLabelY, canvas.width, 20);
+      ctx.fillStyle = 'rgba(251,191,36,1)';
+      ctx.fillText('▼ obszar ucięty na siatce profilu (1:1)', 8, botLabelY + 14);
 
-    // 1:1 zone bracket arrows on right side
-    const arrowX = canvas.width - 12;
-    ctx.strokeStyle = 'rgba(251,191,36,0.9)'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
-    // vertical line from cropY to canvas.height-cropY
-    ctx.beginPath(); ctx.moveTo(arrowX, cropY + 20); ctx.lineTo(arrowX, canvas.height - cropY - 20); ctx.stroke();
-    // top arrow head
-    ctx.beginPath(); ctx.moveTo(arrowX-6, cropY+28); ctx.lineTo(arrowX, cropY+12); ctx.lineTo(arrowX+6, cropY+28); ctx.stroke();
-    // bottom arrow head
-    ctx.beginPath(); ctx.moveTo(arrowX-6, canvas.height-cropY-28); ctx.lineTo(arrowX, canvas.height-cropY-12); ctx.lineTo(arrowX+6, canvas.height-cropY-28); ctx.stroke();
-    // side label
-    ctx.save(); ctx.translate(arrowX - 18, canvas.height/2);
-    ctx.rotate(-Math.PI/2); ctx.fillStyle='rgba(251,191,36,0.9)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='center';
-    ctx.fillText('STREFA 1:1 (1080 px)', 0, 0); ctx.restore();
+      // 1:1 zone bracket arrows on right side
+      const arrowX = canvas.width - 12;
+      ctx.strokeStyle = 'rgba(251,191,36,1)'; ctx.lineWidth = 3; ctx.setLineDash([]);
+      // vertical line from cropY to canvas.height-cropY
+      ctx.beginPath(); ctx.moveTo(arrowX, cropY + 20); ctx.lineTo(arrowX, canvas.height - cropY - 20); ctx.stroke();
+      // top arrow head
+      ctx.beginPath(); ctx.moveTo(arrowX-6, cropY+28); ctx.lineTo(arrowX, cropY+12); ctx.lineTo(arrowX+6, cropY+28); ctx.stroke();
+      // bottom arrow head
+      ctx.beginPath(); ctx.moveTo(arrowX-6, canvas.height-cropY-28); ctx.lineTo(arrowX, canvas.height-cropY-12); ctx.lineTo(arrowX+6, canvas.height-cropY-28); ctx.stroke();
+      // side label
+      ctx.save(); ctx.translate(arrowX - 18, canvas.height/2);
+      ctx.rotate(-Math.PI/2); ctx.fillStyle='rgba(251,191,36,1)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='center';
+      ctx.fillText('STREFA 1:1 (1080 px)', 0, 0); ctx.restore();
 
-    ctx.restore();
+      ctx.restore();
+    }
 
     // ─ SAFE ZONE (red) ──────────────────────────────────────
     if (document.getElementById('showGuides') && document.getElementById('showGuides').checked) {
       ctx.save();
-      ctx.strokeStyle='rgba(239,68,68,0.85)'; ctx.lineWidth=3; ctx.setLineDash([14,8]);
+      ctx.strokeStyle='rgba(239,68,68,1)'; ctx.lineWidth=4; ctx.setLineDash([16, 6]);
       ctx.strokeRect(M, M, canvas.width-M*2, canvas.height-M*2);
       ctx.setLineDash([]);
-      ctx.fillStyle='rgba(239,68,68,0.06)';
+      ctx.fillStyle='rgba(239,68,68,0.08)';
       ctx.fillRect(0,0,canvas.width,M); ctx.fillRect(0,canvas.height-M,canvas.width,M);
       ctx.fillRect(0,M,M,canvas.height-M*2); ctx.fillRect(canvas.width-M,M,M,canvas.height-M*2);
       // label
-      ctx.fillStyle='rgba(239,68,68,0.85)'; ctx.font='bold 12px "Geist Mono",monospace'; ctx.textAlign='left';
+      ctx.fillStyle='rgba(239,68,68,1)'; ctx.font='bold 12px "Geist Mono",monospace'; ctx.textAlign='left';
       ctx.fillText('— SAFE ZONE (teksty i logotypy wewnątrz)', M+5, M+8);
       ctx.restore();
     }
@@ -1249,14 +1277,14 @@ function draw() {
     // ─ 3:4 COLUMN LINES (blue) ──────────────────────────────
     if (document.getElementById('showGrid34') && document.getElementById('showGrid34').checked) {
       ctx.save();
-      ctx.strokeStyle='rgba(9,126,255,0.65)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
+      ctx.strokeStyle='rgba(9,126,255,0.9)'; ctx.lineWidth=3; ctx.setLineDash([12, 6]);
       ctx.beginPath(); ctx.moveTo(34,0); ctx.lineTo(34,canvas.height); ctx.moveTo(1046,0); ctx.lineTo(1046,canvas.height); ctx.stroke();
-      ctx.strokeStyle='rgba(56,189,248,0.5)';
+      ctx.strokeStyle='rgba(56,189,248,0.95)';
       ctx.beginPath(); ctx.moveTo(135,0); ctx.lineTo(135,canvas.height); ctx.moveTo(945,0); ctx.lineTo(945,canvas.height); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle='rgba(9,126,255,0.8)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='left';
+      ctx.fillStyle='rgba(9,126,255,1)'; ctx.font='bold 11px "Geist Mono",monospace'; ctx.textAlign='left';
       ctx.fillText('← 3:4 (34px)', 38, canvas.height - 40);
-      ctx.fillStyle='rgba(56,189,248,0.8)';
+      ctx.fillStyle='rgba(56,189,248,1)';
       ctx.fillText('← 3:4 od 1:1 (135px)', 140, canvas.height - 40);
       ctx.restore();
     }
@@ -1375,13 +1403,86 @@ canvas.addEventListener('mousemove', e => {
     draw(); return;
   }
   const nx=x-dragging.offsetX, ny=y-dragging.offsetY;
-  if (dragging.id==='photo') { state.bgPhotoX=nx; state.bgPhotoY=ny; canvas.style.cursor='grabbing'; }
+  if (dragging.id==='photo') {
+    if (state.bgPhoto) {
+      let targetX = nx;
+      let targetY = ny;
+      const pw = state.bgPhoto.width * state.bgPhotoScale;
+      const ph = state.bgPhoto.height * state.bgPhotoScale;
+      
+      // Snap X to canvas edges and center
+      if (Math.abs(targetX) < SNAP_DIST) targetX = 0;
+      else if (Math.abs(targetX + pw - canvas.width) < SNAP_DIST) targetX = canvas.width - pw;
+      else if (Math.abs(targetX - (canvas.width - pw)/2) < SNAP_DIST) targetX = (canvas.width - pw)/2;
+
+      // Snap Y to canvas edges, center and crop lines
+      if (Math.abs(targetY) < SNAP_DIST) targetY = 0;
+      else if (Math.abs(targetY + ph - canvas.height) < SNAP_DIST) targetY = canvas.height - ph;
+      else if (Math.abs(targetY - (canvas.height - ph)/2) < SNAP_DIST) targetY = (canvas.height - ph)/2;
+      
+      const cropY = (canvas.height - canvas.width) / 2; // 135px
+      if (Math.abs(targetY - cropY) < SNAP_DIST) targetY = cropY;
+      else if (Math.abs(targetY + ph - (canvas.height - cropY)) < SNAP_DIST) targetY = canvas.height - cropY - ph;
+
+      state.bgPhotoX = targetX;
+      state.bgPhotoY = targetY;
+    } else {
+      state.bgPhotoX = nx;
+      state.bgPhotoY = ny;
+    }
+    canvas.style.cursor='grabbing';
+  }
   else if (dragging.id==='wm') {
-    state.wmX=Math.max(0,Math.min(canvas.width-10,nx));
-    state.wmY=Math.max(0,Math.min(canvas.height-10,ny));
+    if (state.wmImg) {
+      let targetX = nx;
+      let targetY = ny;
+      const wmW = state.wmImg.width * state.wmScale;
+      const wmH = state.wmImg.height * state.wmScale;
+      
+      // Snap watermark to canvas boundaries/centers and Safe Zone
+      if (Math.abs(targetX - M) < SNAP_DIST) targetX = M;
+      else if (Math.abs(targetX + wmW - (canvas.width - M)) < SNAP_DIST) targetX = canvas.width - M - wmW;
+      else if (Math.abs(targetX) < SNAP_DIST) targetX = 0;
+      else if (Math.abs(targetX + wmW - canvas.width) < SNAP_DIST) targetX = canvas.width - wmW;
+      else if (Math.abs(targetX - (canvas.width - wmW)/2) < SNAP_DIST) targetX = (canvas.width - wmW)/2;
+
+      if (Math.abs(targetY - M) < SNAP_DIST) targetY = M;
+      else if (Math.abs(targetY + wmH - (canvas.height - M)) < SNAP_DIST) targetY = canvas.height - M - wmH;
+      else if (Math.abs(targetY) < SNAP_DIST) targetY = 0;
+      else if (Math.abs(targetY + wmH - canvas.height) < SNAP_DIST) targetY = canvas.height - wmH;
+      else if (Math.abs(targetY - (canvas.height - wmH)/2) < SNAP_DIST) targetY = (canvas.height - wmH)/2;
+
+      state.wmX = targetX;
+      state.wmY = targetY;
+    } else {
+      state.wmX = nx;
+      state.wmY = ny;
+    }
   } else if (dragging.id.startsWith('pasted_')) {
     const pi=state.pastedImages.find(p=>p.id===dragging.id);
-    if(pi){pi.x=nx;pi.y=ny;canvas.style.cursor='grabbing';}
+    if(pi){
+      let targetX = nx;
+      let targetY = ny;
+      const pw = pi.baseW * pi.scale;
+      const ph = pi.baseH * pi.scale;
+      
+      // Snap pasted elements to canvas corners, centers and Safe Zone
+      if (Math.abs(targetX - M) < SNAP_DIST) targetX = M;
+      else if (Math.abs(targetX + pw - (canvas.width - M)) < SNAP_DIST) targetX = canvas.width - M - pw;
+      else if (Math.abs(targetX) < SNAP_DIST) targetX = 0;
+      else if (Math.abs(targetX + pw - canvas.width) < SNAP_DIST) targetX = canvas.width - pw;
+      else if (Math.abs(targetX - (canvas.width - pw)/2) < SNAP_DIST) targetX = (canvas.width - pw)/2;
+
+      if (Math.abs(targetY - M) < SNAP_DIST) targetY = M;
+      else if (Math.abs(targetY + ph - (canvas.height - M)) < SNAP_DIST) targetY = canvas.height - M - ph;
+      else if (Math.abs(targetY) < SNAP_DIST) targetY = 0;
+      else if (Math.abs(targetY + ph - canvas.height) < SNAP_DIST) targetY = canvas.height - ph;
+      else if (Math.abs(targetY - (canvas.height - ph)/2) < SNAP_DIST) targetY = (canvas.height - ph)/2;
+
+      pi.x = targetX;
+      pi.y = targetY;
+      canvas.style.cursor='grabbing';
+    }
   } else {
     // ALL text elements: free movement entire canvas, with snap
     const snx=snapValue(nx, snapLines.x);
@@ -1557,50 +1658,86 @@ function renderPreviewGrid() {
 
 function showPreview() {
   isExporting=true; draw();
-  const fullUrl=canvas.toDataURL('image/png',1.0);
-  const cc=document.createElement('canvas'); cc.width=1080; cc.height=1080;
-  cc.getContext('2d').drawImage(canvas,0,135,1080,1080,0,0,1080,1080);
-  const cropUrl=cc.toDataURL('image/png',1.0);
+  let fullUrl, cropUrl;
+  try {
+    fullUrl=canvas.toDataURL('image/png',1.0);
+    const cc=document.createElement('canvas'); cc.width=1080; cc.height=1080;
+    cc.getContext('2d').drawImage(canvas,0,135,1080,1080,0,0,1080,1080);
+    cropUrl=cc.toDataURL('image/png',1.0);
+  } catch(err) {
+    console.error(err);
+    alert('Błąd podglądu. Upewnij się, że wklejone/wgrane obrazy nie pochodzą z innego serwera (CORS).');
+    isExporting=false; draw();
+    return;
+  }
   isExporting=false; draw();
   previewFullUrl=fullUrl; previewCropUrl=cropUrl;
   renderPreviewGrid();
 
-  // Post mockup
+  // Post mockup (Vertical Instagram Mobile Card)
   const pc=document.getElementById('previewPost'); pc.innerHTML='';
-  const split=document.createElement('div');
-  split.style.cssText='display:flex;width:100%;background:#fff;min-height:350px';
-  // Image column — use object-fit:cover with the 4:5 ratio properly
-  const imgCol=document.createElement('div');
-  imgCol.style.cssText='flex:0 0 auto;width:55%;background:#000;display:flex;align-items:stretch;overflow:hidden';
+  const card=document.createElement('div');
+  card.style.cssText='display:flex; flex-direction:column; width:100%; background:#ffffff; color:#262626; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; border-radius:8px; overflow:hidden;';
+
+  // 1. Header
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:flex; align-items:center; padding:12px 14px; gap:10px; border-bottom:1px solid #f0f0f0';
+  hdr.innerHTML=`
+    <div style="width:32px; height:32px; border-radius:50%; background:#097EFF; display:flex; align-items:center; justify-content:center; font-size:14px; color:white; font-weight:bold">🧰</div>
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; line-height:1.2;">
+      <span style="font-size:13px; font-weight:600; color:#262626">flatpackhelp</span>
+      <span style="font-size:11px; color:#8e8e8e">Belfast & NI</span>
+    </div>
+    <span style="font-size:18px; color:#262626; cursor:pointer; font-weight:bold; letter-spacing:1px">•••</span>
+  `;
+  card.appendChild(hdr);
+
+  // 2. Image (4:5 container)
   const imgWrap=document.createElement('div');
-  imgWrap.style.cssText='width:100%;aspect-ratio:4/5;overflow:hidden;position:relative';
+  imgWrap.style.cssText='width:100%; aspect-ratio:4/5; overflow:hidden; background:#f0f0f0; position:relative';
   const imgEl=document.createElement('img');
   imgEl.src=fullUrl;
-  imgEl.style.cssText='width:100%;height:100%;object-fit:contain;display:block;background:#000';
-  imgWrap.appendChild(imgEl); imgCol.appendChild(imgWrap);
-  split.appendChild(imgCol);
-  // Info column
-  const infoCol=document.createElement('div');
-  infoCol.style.cssText='flex:1;display:flex;flex-direction:column;background:#fff;min-width:0';
-  const hdr=document.createElement('div');
-  hdr.style.cssText='display:flex;align-items:center;padding:10px;gap:8px;border-bottom:1px solid #efefef';
-  hdr.innerHTML='<div style="width:30px;height:30px;border-radius:50%;background:#097EFF;display:flex;align-items:center;justify-content:center;font-size:13px;color:white">🧰</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:#262626">flatpackhelp</div><div style="font-size:10px;color:#8e8e8e">Belfast & NI</div></div><span style="font-size:16px;color:#262626;cursor:pointer">···</span>';
-  infoCol.appendChild(hdr);
+  imgEl.style.cssText='width:100%; height:100%; object-fit:cover; display:block;';
+  imgWrap.appendChild(imgEl);
+  card.appendChild(imgWrap);
+
+  // 3. Actions
+  const actions=document.createElement('div');
+  actions.style.cssText='display:flex; justify-content:space-between; align-items:center; padding:12px 14px 10px;';
+  actions.innerHTML=`
+    <div style="display:flex; gap:16px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" style="cursor:pointer"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" style="cursor:pointer"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" style="cursor:pointer"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </div>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" style="cursor:pointer"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+  `;
+  card.appendChild(actions);
+
+  // 4. Likes
+  const likes=document.createElement('div');
+  likes.style.cssText='padding:0 14px 6px; font-size:13px; font-weight:700; color:#262626';
+  likes.textContent='1 284 polubień';
+  card.appendChild(likes);
+
+  // 5. Caption & Hashtags
   const cap=document.createElement('div');
-  cap.style.cssText='flex:1;padding:10px;font-size:12px;color:#262626;overflow-y:auto;line-height:1.5;border-bottom:1px solid #efefef';
-  const kv=document.getElementById('kickerText').value, mv=document.getElementById('mainText').value, pv=document.getElementById('paraText').value;
-  let ft=`<span style="font-weight:700">flatpackhelp</span> `;
-  if(kv)ft+=`<br><span style="color:#8e8e8e;font-size:10px;font-weight:700">${kv}</span><br>`;
-  ft+=`<strong>${mv}</strong>`;
-  if(pv)ft+=`<br><br>${pv}`;
-  ft+=`<br><br><span style="color:#00376b">#flatpackhelp #ikeapax #handyman #belfast</span>`;
-  cap.innerHTML=ft; infoCol.appendChild(cap);
-  const act=document.createElement('div');
-  act.style.cssText='padding:8px 10px;font-size:11px;font-weight:700;color:#262626;border-top:1px solid #efefef';
-  act.textContent='1 284 polubień';
-  infoCol.appendChild(act);
-  split.appendChild(infoCol);
-  pc.appendChild(split);
+  cap.style.cssText='padding:0 14px 14px; font-size:13px; color:#262626; line-height:1.5; word-break:break-word; max-height:160px; overflow-y:auto;';
+  
+  const kv=document.getElementById('kickerText').value;
+  const mv=document.getElementById('mainText').value;
+  const pv=document.getElementById('paraText').value;
+  
+  let ft=`<span style="font-weight:700; margin-right:6px;">flatpackhelp</span>`;
+  if (kv) ft+=`<span style="color:#8e8e8e; font-size:11px; font-weight:700; text-transform:uppercase; display:block; margin:2px 0;">${kv}</span>`;
+  ft+=`<span>${mv.replace(/\n/g, ' ')}</span>`;
+  if (pv) ft+=`<span style="display:block; margin-top:4px; color:#4a4a4a;">${pv}</span>`;
+  ft+=`<span style="color:#00376b; display:block; margin-top:6px;">#flatpackhelp #ikeapax #handyman #belfast</span>`;
+  
+  cap.innerHTML=ft;
+  card.appendChild(cap);
+
+  pc.appendChild(card);
   document.getElementById('previewModal').style.display='flex';
 }
 
@@ -1684,9 +1821,11 @@ function serializeState() {
     showApla:state.showApla,aplaStyle:state.aplaStyle,aplaX:state.aplaX,aplaY:state.aplaY,aplaW:state.aplaW,aplaH:state.aplaH,
     showLogo:state.showLogo,logoX:state.logoX,logoY:state.logoY,logoScale:state.logoScale,
     logoImgSrc:state.logoImg?state.logoImg.src:null,
+    wmImgSrc:state.wmImg?state.wmImg.src:null,
     wmScale:state.wmScale,wmOpacity:state.wmOpacity,wmX:state.wmX,wmY:state.wmY,
     brandText:state.brandText,brandAlign:state.brandAlign,brandX:state.brandX,brandY:state.brandY,
     slideX:state.slideX,slideY:state.slideY,
+    showCanvas45:document.getElementById('showCanvas45')?document.getElementById('showCanvas45').checked:true,
     showGuides:document.getElementById('showGuides')?document.getElementById('showGuides').checked:true,
     showCrop:document.getElementById('showCrop')?document.getElementById('showCrop').checked:true,
     showGrid34:document.getElementById('showGrid34')?document.getElementById('showGrid34').checked:true,
@@ -1735,7 +1874,7 @@ function applySerializedState(saved) {
   setNum('wmOpacity',state.wmOpacity||40,'%','wmOpacityVal');
 
   const sg=id=>document.getElementById(id)?document.getElementById(id).checked=saved[id]??true:null;
-  sg('showGuides'); sg('showCrop'); sg('showGrid34');
+  sg('showCanvas45'); sg('showGuides'); sg('showCrop'); sg('showGrid34');
   const sl=document.getElementById('showSlideNum'); if(sl)sl.checked=saved.showSlideNum??false;
   const sa=document.getElementById('showApla'); if(sa){sa.checked=state.showApla;toggleAplaControls(state.showApla);}
   const pbb=document.getElementById('paraBoldBtn'); if(pbb)pbb.classList.toggle('active',state.paraBold);
@@ -1773,6 +1912,25 @@ function applySerializedState(saved) {
     document.getElementById('logoScaleRow').style.display=state.showLogo?'flex':'none';
   } else { state.logoImg=null; state.showLogo=false; document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active')); document.getElementById('logoScaleRow').style.display='none'; }
 
+  // watermark
+  if(saved.wmImgSrc){
+    const img=new Image();
+    img.onload=()=>{
+      state.wmImg=img;
+      document.getElementById('wmControls').style.display='block';
+      document.querySelectorAll('.wm-preset-logo').forEach(w=>{
+        const ti=w.querySelector('img');
+        w.classList.toggle('active',ti&&(saved.wmImgSrc.includes(ti.getAttribute('src').split('/').pop())||ti.getAttribute('src').split('/').pop()===saved.wmImgSrc.split('/').pop()));
+      });
+      draw();
+    };
+    img.src=saved.wmImgSrc;
+  } else {
+    state.wmImg=null;
+    document.getElementById('wmControls').style.display='none';
+    document.querySelectorAll('.wm-preset-logo').forEach(w=>w.classList.remove('active'));
+  }
+
   // background photo
   if(saved.bgPhotoSrc){
     const img=new Image();
@@ -1803,14 +1961,15 @@ function resetProject() {
     bgType:'color',bgColor:'#000000',bgPhoto:null,pastedImages:[],gradient:false,
     kickerText:'',mainText:'',paraText:'',showLogo:false,showApla:false,
     words:[],brandText:'',globalFont:'bold',
-    showGuides:true,showCrop:true,showGrid34:true,
+    showCanvas45:true,showGuides:true,showCrop:true,showGrid34:true,
     overlayOpacity:0,paraY:null,wmImg:null,
   });
   ['mainText','kickerText','paraText','brandText'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  ['showGuides','showCrop','showGrid34'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=true;});
+  ['showCanvas45','showGuides','showCrop','showGrid34'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=true;});
   const ssn=document.getElementById('showSlideNum');if(ssn)ssn.checked=false;
   const sa=document.getElementById('showApla');if(sa){sa.checked=false;toggleAplaControls(false);}
   document.querySelectorAll('.logo-thumb-wrapper').forEach(w=>w.classList.remove('active'));
+  document.querySelectorAll('.wm-preset-logo').forEach(w=>w.classList.remove('active'));
   document.getElementById('logoScaleRow').style.display='none';
   document.getElementById('photoScaleContainer').style.display='none';
   document.getElementById('photoWarnBox').style.display='none';
