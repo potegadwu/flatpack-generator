@@ -147,13 +147,13 @@ canvas:active { cursor: grabbing; }
 <button class="color-swatch" id="gradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="toggleGradient()" title="Gradient"></button>
 </div>
 <div class="row" style="margin-top:12px; align-items:center; gap:12px;">
-<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:10px 16px;font-size:0.85rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;">Wgraj tło</label>
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:10px 16px;font-size:0.85rem;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;display:inline-block;white-space:nowrap;color:#fff;">Wgraj zdjęcie</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <div style="font-size:0.65rem;color:var(--muted);line-height:1.4;flex:1;">Możesz wklejać grafiki ze schowka (Ctrl+V). Najedź myszką i wciśnij Delete, aby usunąć grafikę lub tło.</div>
 </div>
 <div style="margin-top:12px; padding:8px 10px; background:rgba(9, 126, 255, 0.05); border:1px dashed rgba(9, 126, 255, 0.3); border-radius:6px; font-size:0.7rem; color:var(--text); line-height:1.4">
-  <strong style="color:var(--accent)">Optymalny rozmiar tła:</strong> 1080 × 1350 px (pion 4:5).<br>
-  <span style="color:var(--muted)">Generator automatycznie powiększy zdjęcie by wypełniło całą ramkę, dlatego unikaj zbyt małych plików, by nie straciły na jakości.</span>
+  <strong style="color:var(--accent)">Optymalny rozmiar zdjęcia:</strong> 1080 × 1350 px (pion 4:5).<br>
+  <span style="color:var(--muted)">Generator automatycznie dopasuje zdjęcie, by wypełniło ramkę. Cały post ma format 4:5, a obszar 1:1 (siatka IG) jest oznaczony na canvasie białą linią.</span>
 </div>
 <div class="row" style="margin-top:10px; display:none; align-items:center;" id="photoScaleContainer">
 <label>Skala:</label>
