@@ -117,7 +117,7 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 }
 
 /* Gradient direction picker */
-.grad-grid { display: flex; flex-direction: row; gap: 4px; margin-top: 6px; }
+.grad-grid { display: flex; flex-direction: row; gap: 4px; margin-top: 6px; flex-wrap: nowrap; }
 .grad-swatch {
   width: 34px; height: 34px; border-radius: 6px; border: 2px solid transparent;
   cursor: pointer; transition: border-color 0.15s; position: relative; overflow: hidden;
@@ -160,6 +160,7 @@ canvas { display: block; max-height: calc(100vh - 40px); max-width: calc(100% - 
 <button class="color-swatch" style="background:#FF5722" onclick="setBgColor('#FF5722', this)" title="Pomarańczowy"></button>
 <button class="color-swatch" style="background:#FFFFFF;border:1px solid #ddd" onclick="setBgColor('#FFFFFF', this)" title="Biały"></button>
 <button class="color-swatch" style="background:#000000" onclick="setBgColor('#000000', this)" title="Czarny"></button>
+<button class="color-swatch" id="bgGradientSwatch" style="background:linear-gradient(180deg, #097EFF, #1E3A8A)" onclick="setBgGradient(this)" title="Gradient"></button>
 </div>
 
 <!-- GRADIENT PICKER - visual squares -->
@@ -662,6 +663,13 @@ function setBgColor(hex, btn) {
   clearPhoto(); draw();
 }
 
+function setBgGradient(btn) {
+  state.bgType = 'gradient'; state.gradient = true;
+  document.querySelectorAll('#bgColors .color-swatch').forEach(s => s.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  clearPhoto(); draw();
+}
+
 // ── PHOTO ──────────────────────────────────────────────────
 function handlePhoto(e) {
   const file = e.target.files[0]; if (!file) return;
@@ -671,7 +679,7 @@ function handlePhoto(e) {
     img.onload = () => {
       state.bgPhoto = img; state.bgType = 'photo';
       fitPhoto();
-      checkPhotoSize(img);
+      checkPhotoCoverage();
       document.querySelector('#bgColors .color-swatch.active')?.classList.remove('active');
       document.getElementById('photoScaleContainer').style.display = 'flex';
       draw();
@@ -701,11 +709,38 @@ function fitPhoto() {
   document.getElementById('photoScaleVal').textContent = state.bgPhotoScale.toFixed(2) + 'x';
 }
 
-function checkPhotoSize(img) {
+function checkPhotoCoverage() {
   const warn = document.getElementById('photoWarnBox');
-  // Cover 4:5 needs >= 1080x1350; cover 1:1 needs >= 1080x1080
-  const ok = img.width >= 1080 && img.height >= 1080;
-  warn.style.display = ok ? 'none' : 'block';
+  if (!warn) return;
+  if (!state.bgPhoto || state.bgType !== 'photo') {
+    warn.style.display = 'none';
+    return;
+  }
+  const img = state.bgPhoto;
+  if (img.width < 1080 || img.height < 1080) {
+    warn.innerHTML = `⚠️ <strong>Zdjęcie ma niską rozdzielczość (${img.width}×${img.height}px)!</strong> Bezpieczny obszar 4:5 wymaga min. 1080×1350px. Zdjęcie może być rozmyte lub mieć pasy.`;
+    warn.style.display = 'block';
+    return;
+  }
+  const pw = img.width * state.bgPhotoScale;
+  const ph = img.height * state.bgPhotoScale;
+  const left = state.bgPhotoX;
+  const right = state.bgPhotoX + pw;
+  const top = state.bgPhotoY;
+  const bottom = state.bgPhotoY + ph;
+  
+  const covers45 = (left <= 0.5 && right >= canvas.width - 0.5 && top <= 0.5 && bottom >= canvas.height - 0.5);
+  const covers11 = (left <= 0.5 && right >= canvas.width - 0.5 && top <= 135.5 && bottom >= 1214.5);
+  
+  if (!covers45) {
+    warn.innerHTML = `⚠️ <strong>Zdjęcie nie pokrywa całego obszaru (4:5)!</strong> Na górze, na dole lub po bokach pojawią się czarne pasy. Przeskaluj zdjęcie (rolką) i przesuń je do zielonej krawędzi canvas.`;
+    warn.style.display = 'block';
+  } else if (!covers11) {
+    warn.innerHTML = `⚠️ <strong>Zdjęcie nie pokrywa strefy siatki (1:1)!</strong> Na kafelku profilu (środek 1080×1080px) pojawią się czarne pasy. Rozciągnij je tak, by zakrywało żółte przerywane linie.`;
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
 }
 
 function clearPhoto() {
@@ -1294,6 +1329,10 @@ function draw() {
   if (state.bgType==='photo' && state.bgPhoto) hitBoxes.photo={x:0,y:0,w:canvas.width,h:canvas.height};
   else hitBoxes.photo=null;
   if (state.pastedImages) state.pastedImages.forEach(pi=>hitBoxes[pi.id]={x:pi.x,y:pi.y,w:pi.baseW*pi.scale,h:pi.baseH*pi.scale});
+
+  if (!isExporting) {
+    checkPhotoCoverage();
+  }
 
   if (typeof saveStateDebounced==='function' && !isExporting) saveStateDebounced();
 }
@@ -1896,8 +1935,12 @@ function applySerializedState(saved) {
 
   // bg swatches
   document.querySelectorAll('#bgColors .color-swatch').forEach(b=>{
-    const bg=b.style.background.toLowerCase();
-    b.classList.toggle('active',state.bgType==='color'&&!state.gradient&&bg.includes((state.bgColor||'').toLowerCase()));
+    if (b.id === 'bgGradientSwatch') {
+      b.classList.toggle('active', state.bgType === 'gradient' || state.gradient);
+    } else {
+      const bg=b.style.background.toLowerCase();
+      b.classList.toggle('active',state.bgType==='color'&&!state.gradient&&bg.includes((state.bgColor||'').toLowerCase()));
+    }
   });
 
   // logo
@@ -2053,6 +2096,6 @@ document.getElementById('guidePopup').addEventListener('mouseenter', () => {
 document.getElementById('guidePopup').addEventListener('mouseleave', () => {
   hideGuidePopup();
 });
-
+</script>
 </body>
 </html>
