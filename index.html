@@ -333,25 +333,25 @@ canvas:active { cursor: grabbing; }
 
 <div class="section">
 <div class="section-title">Bezpieczne strefy IG (Linie)</div>
-<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Służą jako podgląd, gdzie Instagram może przyciąć obrazek w aplikacji.</div>
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Cały post ma format 4:5 (1080 × 1350 px).</div>
 
 <div class="toggle-row">
-<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny</label>
+<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone)</label>
 <input type="checkbox" id="showGuides" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Estetyczna granica. Teksty nie powinny wychodzić poza nią, by obrazek miał oddech.</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Margines 80px. Teksty i logotypy nie powinny wychodzić poza nią, by zachować estetykę.</div>
 
 <div class="toggle-row">
-<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1</label>
+<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1 (1080x1080)</label>
 <input type="checkbox" id="showCrop" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG brutalnie utnie górę i dół na siatce Twojego profilu (w klasycznym widoku).</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG przytnie górę i dół do kwadratu (odcinając po 135px z góry i z dołu) na siatce profilu.</div>
 
 <div class="toggle-row">
 <label><strong style="color:rgba(9, 126, 255, 1)">—</strong> Kafelki profilu: Pion 3:4</label>
 <input type="checkbox" id="showGrid34" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG. Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG (pionowy 3:4). Sprawdź, czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
 <!-- Nakładki Gallery (Postaci i Elementy PNG) -->

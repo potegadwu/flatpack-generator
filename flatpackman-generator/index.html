@@ -97,13 +97,13 @@ canvas:active{cursor:grabbing}
 <button class="color-swatch" style="background:#FFFFFF;border:1px solid #555" onclick="setBgColor('#FFFFFF', this)"></button>
 </div>
 <div class="row" style="margin-top:10px; align-items:center;">
-<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:8px 12px;margin:0;">Wgraj tło</label>
+<label class="small-btn" for="photoUpload" style="cursor:pointer;text-align:center;padding:8px 12px;margin:0;">Wgraj zdjęcie</label>
 <input type="file" id="photoUpload" accept="image/*" hidden onchange="handlePhoto(event)">
 <div style="font-size:0.65rem;color:var(--muted);line-height:1.3;flex:1;">Możesz wklejać grafiki ze schowka (Ctrl+V). Najedź myszką i wciśnij Delete, aby usunąć grafikę lub tło.</div>
 </div>
 <div style="margin-top:12px; padding:8px 10px; background:rgba(56, 189, 248, 0.1); border:1px dashed rgba(56, 189, 248, 0.4); border-radius:6px; font-size:0.7rem; color:var(--text); line-height:1.4">
-  <strong style="color:rgba(56, 189, 248, 1)">Optymalny rozmiar tła:</strong> 1080 × 1350 px (pion 4:5).<br>
-  <span style="color:var(--muted)">Generator automatycznie powiększy zdjęcie by wypełniło całą ramkę, dlatego unikaj zbyt małych plików, by nie straciły na jakości.</span>
+  <strong style="color:rgba(56, 189, 248, 1)">Optymalny rozmiar zdjęcia:</strong> 1080 × 1350 px (pion 4:5).<br>
+  <span style="color:var(--muted)">Generator automatycznie dopasuje zdjęcie, by wypełniło ramkę. Cały post ma format 4:5, a obszar 1:1 (siatka IG) jest oznaczony na canvasie białą linią.</span>
 </div>
 <div class="row" style="margin-top:10px; display:none" id="photoScaleContainer">
 <label>Skala:</label>
@@ -217,25 +217,25 @@ canvas:active{cursor:grabbing}
 
 <div class="section">
 <div class="section-title">Bezpieczne strefy IG (Linie)</div>
-<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Służą jako podgląd, gdzie Instagram może przyciąć obrazek w aplikacji.</div>
+<div style="font-size:0.65rem; color:var(--muted); line-height:1.3; margin-bottom:12px;">Te linie <strong style="color:#fff">nie zapiszą się</strong> na pliku graficznym. Cały post ma format 4:5 (1080 × 1350 px).</div>
 
 <div class="toggle-row">
-<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny</label>
+<label><strong style="color:rgba(239,68,68,1)">—</strong> Margines wewnętrzny (Safe Zone)</label>
 <input type="checkbox" id="showGuides" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Estetyczna granica. Teksty nie powinny wychodzić poza nią, by obrazek miał oddech.</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Czerwona linia. Margines 80px. Teksty nie powinny wychodzić poza nią, by zachować marginesy estetyczne.</div>
 
 <div class="toggle-row">
-<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1</label>
+<label><strong style="color:rgba(255,255,255,0.7)">—</strong> Kafelki profilu: Kwadrat 1:1 (1080x1080)</label>
 <input type="checkbox" id="showCrop" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG brutalnie utnie górę i dół na siatce Twojego profilu (w klasycznym widoku).</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-bottom:12px; margin-top:-4px; line-height:1.3">Biała linia. Pokazuje, jak IG przytnie górę i dół do kwadratu (odcinając po 135px z góry i z dołu) na siatce profilu.</div>
 
 <div class="toggle-row">
 <label><strong style="color:rgba(56, 189, 248, 1)">—</strong> Kafelki profilu: Pion 3:4</label>
 <input type="checkbox" id="showGrid34" checked onchange="draw()">
 </div>
-<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG. Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
+<div style="font-size:0.65rem; color:var(--muted); margin-top:-4px; line-height:1.3">Niebieska linia. Nowy, testowany układ siatki na IG (pionowy 3:4). Sprawdź czy po bokach nic ważnego nie zostanie ucięte.</div>
 </div>
 
 <div class="section" style="border:none;padding-bottom:30px">
